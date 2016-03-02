@@ -1,6 +1,6 @@
-# ![Oddworks](http://s3-us-west-2.amazonaws.com/odd-networks-assets/odd-networks.png)
+![Oddworks](http://s3-us-west-2.amazonaws.com/odd-networks-assets/odd-networks.png)
 
-Oddworks is an open source video distribution platform built to destroy the barriers to streaming television. Use it to:
+__Oddworks__ is an open source video distribution platform built to destroy the barriers to streaming television. Use it to:
 
 * Deliver your video content to TV connected devices like __Apple TV__ and __Roku__.
 * Proxy, cache, and __bend the space time continuum__ between your content management system and existing online video platform (Vimeo, YouTube, Ooyala, Brightcove).
@@ -9,7 +9,7 @@ Oddworks is an open source video distribution platform built to destroy the barr
 
 _You become your own video distribution channel!_
 
-__Join us in [Slack](http://slack.oddnetworks.com/).__
+__Join us in [Slack](http://slack.oddnetworks.com/).__ We'd love to see your beaming face.
 
 ### Platform
 The Oddworks Platform consists of two main concepts:
@@ -20,14 +20,14 @@ The Oddworks Platform consists of two main concepts:
 ### Content Server
 The Oddworks Content Server is made up of several loosely coupled components:
 
-* [seneca-odd-catalog](https://github.com/oddnetworks/seneca-odd-catalog)
-* [seneca-odd-auth](https://github.com/oddnetworks/seneca-odd-auth)
-* [seneca-odd-views](https://github.com/oddnetworks/seneca-odd-views)
-* [odd-schemas](https://github.com/oddnetworks/odd-schemas)
-* [seneca-odd-identity](https://github.com/oddnetworks/seneca-odd-identity)
+* [seneca-odd-catalog](https://github.com/oddnetworks/seneca-odd-catalog) To handle general get, create, and update operations on your published content.
+* [seneca-odd-auth](https://github.com/oddnetworks/seneca-odd-auth) Used to compartmentalize the device linking and authentication logic.
+* [seneca-odd-identity](https://github.com/oddnetworks/seneca-odd-identity) Provides get, create, and update operations for identity and authentication resources.
+* [seneca-odd-views](https://github.com/oddnetworks/seneca-odd-views) A flexible module for building and caching structured views for your apps.
+* [odd-schemas](https://github.com/oddnetworks/odd-schemas) Used to type check incoming data entities.
 * __Oddworks__ Content Server (you are here)
 
-All of these components are automatically installed as dependencies when you setup the Oddworks Content Server. Oddworks uses [NPM]() for dependency and package management (see [Technology](#technology) below).
+All of these components are automatically installed as dependencies when you setup the Oddworks Content Server. Oddworks uses [NPM](https://www.npmjs.com/) for dependency and package management (see [Technology](#technology) below).
 
 The Oddworks Content Server is still currently under the microscope in an internal security audit before being made available in this repository. We're planning for a release inside a week - (March 3 - 10, 2016).
 
@@ -53,14 +53,12 @@ What's planned?
 * Roku TV app
 * What would you like to have?
 
-### Example
-
 ### Technology
 The Oddworks Platform is written for the [Node.js](https://nodejs.org/) runtime, and uses the well known [Express.js](http://expressjs.com/) framework for HTTP communication.
 
 Oddworks is designed to be database agnostic so long as the underlying database can support JSON document storage, including some RDMSs like PostgreSQL. Currently the only supported and tested database is MongoDB.
 
-Although communication between the devices and the REST API is typically done in a synchronous way, the inner guts of the system is designed to communicate via asynchronous message passing. This makes it easier to extend the platform with plugins and other loosely coupled modules without worrying about upstream changes like in tightly coupled platforms.
+Although communication between the devices and the REST API is typically done in a synchronous way, the inner guts of the system is designed to communicate via asynchronous message passing. This makes it easier to extend the platform with plugins and other loosely coupled modules without worrying about upstream changes like you would in tightly coupled platforms.
 
 ### Battle Tested
 The Oddworks Platform is born from an experienced team battle hardened in the trenches of video gaming. The concept began to take shape during work with [Major League Gaming](http://www.majorleaguegaming.com/), [Riot Games](http://www.riotgames.com/),
@@ -71,7 +69,7 @@ and [Warner Brothers / Turbine Games](http://www.turbine.com/). Today, the Oddwo
 * [ITPro TV](https://itpro.tv/)
 
 ### Motivation
-The Oddworks Platform was designed and developed by [Odd Networks](https://www.oddnetworks.com/) to lower the barrier for developers and content owners to create your own streaming content network. We believe in the future of television and, with the Oddworks open source platform, we hope you'll make that future a reality.
+The Oddworks Platform was designed and developed by [Odd Networks](https://www.oddnetworks.com/) to lower the barrier for developers and content owners to create your own streaming content network. Based on our experience in video gaming we thought that TV could use a big improvement. We believe in the future of television and, with the Oddworks open source platform, we hope you'll make that future a reality.
 
 We proudly stand behind our open source work and, in addition to maintaining the Oddworks project, Odd Networks also provides hosted services, a Pro Dashboard, a Live Stream Generator, and a Recommendation Service.
 
