@@ -8,28 +8,60 @@ Components
 Platform
 --------
 
-# Oddworks (Community Edition)
-Description
+*Oddworks (Community Edition)*
+Release Date: 
+Repository:
+Description:
 
-# Sync Service
+*Sync Service*
+Release Date: 
+Repository:
+Description:
 
-# Image Service
+*Image Service*
+Release Date: 
+Repository:
+Description:
 
 SDKs
 ----
+*Apple TV / Mobile / Tablet*
+Release Date: 
+Repository:
+Description:
 
-# Apple TV / Mobile / Tablet
-
-# Android TV / Mobile / Tablet
+*Android TV / Mobile / Tablet*
+Release Date: 
+Repository:
+Description:
 
 Multiscreen Apps
 ----------------
 
-# Roku (Coming Soon)
-# iOS (Coming Soon)
-# Android (Coming Soon)
-# XBOX One (Closed)
-# Windows 10 Universal (Coming Soon)
+*Roku*
+Release Date: Coming Soon
+Repository:
+Description:
+
+*iOS*
+Release Date: Coming Soon
+Repository:
+Description:
+
+*Android*
+Release Date: Coming Soon
+Repository:
+Description:
+
+*XBOX One*
+Release Date: Closed due to license restrictions
+Repository:
+Description:
+
+*Windows 10 Universal*
+Release Date: Coming Soon
+Repository:
+Description:
 
 
 License
