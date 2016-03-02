@@ -39,8 +39,8 @@ The Oddworks Content Server is currently under the microscope in an internal sec
 ### TV Connected and Mobile Device SDKs
 The Oddworks SDKs are developed and used in production, but require auditing before we make them publicly available. We expect them to be ready in a week(ish) - (March 3 - 10, 2016).
 
-* Android SDK - Used for mobile, tablet, Android TV, and Fire TV.
-* iOS SDK - Used for iPhone, iPad, and Apple TV.
+* Android SDK - Used for mobile, tablet, Android TV, and Fire TV. Check out the [docs](http://android.guide.oddnetworks.com/) now.
+* iOS SDK - Used for iPhone, iPad, and Apple TV. Check out the [docs](http://apple.guide.oddnetworks.com/) now.
 
 With plans for (several weeks later):
 
@@ -49,6 +49,8 @@ With plans for (several weeks later):
 
 ### Multiscreen Apps
 In addition to the SDKs there are plans to have open source apps which leverage the SDKs available to you as well. You could use these as reference implementations, a hobby project, or make some tweaks and ship your own streaming channel!
+
+Although the source repositories are not open source yet there are some [downloads available now](https://www.oddnetworks.com/documentation/sampleapps/) from the website.
 
 What's planned?
 
