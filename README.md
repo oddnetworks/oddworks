@@ -14,6 +14,8 @@ _You become your own video distribution channel!_
 * Submit an [issue](https://github.com/oddnetworks/oddworks/issues).
 * Check out the [API sample responses](https://www.oddnetworks.com/documentation/oddworks/).
 
+> The Oddworks Content Server is still currently under the microscope in an internal security audit before being made available in this repository. We're planning for a release inside a week - (March 3 - 10, 2016).
+
 ### Platform
 The Oddworks Platform consists of two main concepts:
 
