@@ -14,7 +14,7 @@ _You become your own video distribution channel!_
 * Submit an [issue](https://github.com/oddnetworks/oddworks/issues).
 * Check out the [API sample responses](https://www.oddnetworks.com/documentation/oddworks/).
 
-> The Oddworks Content Server is still currently under the microscope in an internal security audit before being made available in this repository. We're planning for a release inside a week - (March 3 - 10, 2016).
+> The Oddworks Content Server is currently under the microscope in an internal security audit before being made available in this repository. We're planning for a release inside a week - (March 3 - 10, 2016).
 
 ### Platform
 The Oddworks Platform consists of two main concepts:
@@ -34,7 +34,7 @@ The Oddworks Content Server is made up of several loosely coupled components:
 
 All of these components are automatically installed as dependencies when you setup the Oddworks Content Server. Oddworks uses [NPM](https://www.npmjs.com/) for dependency and package management (see [Technology](#technology) below).
 
-The Oddworks Content Server is still currently under the microscope in an internal security audit before being made available in this repository. We're planning for a release inside a week - (March 3 - 10, 2016).
+The Oddworks Content Server is currently under the microscope in an internal security audit before being made available in this repository. We're planning for a release inside a week - (March 3 - 10, 2016).
 
 ### TV Connected and Mobile Device SDKs
 The Oddworks SDKs are developed and used in production, but require auditing before we make them publicly available. We expect them to be ready in a week(ish) - (March 3 - 10, 2016).
