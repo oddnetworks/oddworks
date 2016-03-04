@@ -9,7 +9,7 @@ __Oddworks__ is an open source video distribution platform built to destroy the 
 
 _You become your own video distribution channel!_
 
-* __Join us in [Slack](http://slack.oddnetworks.com/).__ We'd love to see your beaming face.
+* __Join us in [Slack](http://oddworks.slack.com/).__ We'd love to see your beaming face.
 * Say hello on [Twitter](https://twitter.com/OddNetworks).
 * Submit an [issue](https://github.com/oddnetworks/oddworks/issues).
 * Check out the [API sample responses](https://www.oddnetworks.com/documentation/oddworks/).
