@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - 'stable'
+  - '4'
+  - '0.12'
+services:
+  - elasticsearch
+before_script:
+  - sleep 10
