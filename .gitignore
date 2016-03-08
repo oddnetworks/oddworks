@@ -1,0 +1,40 @@
+# OS X
+.DS_Store*
+Icon?
+._*
+
+.env
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.vscode/*
+
+# Linux
+.directory
+*~
+
+
+# npm
+node_modules
+*.log
+*.gz
+
+# vagrant
+.vagrant/
+
+public/css/*
+.sass-cache/*
+
+logs/*
+pids/*
+.idea
+
+data/**/*.DELETE
+
+#so eslint can be used with eslint-config-xo without adding unnecessary files to repo
+.eslintrc
+
+#intellij
+api.iml

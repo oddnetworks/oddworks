@@ -1,5 +1,7 @@
 ![Oddworks](http://s3-us-west-2.amazonaws.com/odd-networks-assets/odd-networks.png)
 
+[![Build Status](https://travis-ci.org/oddnetworks/oddworks.svg?branch=master)](https://travis-ci.org/oddnetworks/oddworks)
+
 __Oddworks__ is an open source video distribution platform built to destroy the barriers to streaming television. Use it to:
 
 * Deliver your video content to TV connected devices like __Apple TV__ and __Roku__.

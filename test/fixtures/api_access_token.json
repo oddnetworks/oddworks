@@ -1,0 +1,11 @@
+{
+  "encoded_jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJkZXZpY2VJRCI6ImUyOGI0ZjFjLTgyZTItNDYwZS04NjgxLTY2Y2ZmMGFjZjkwZiIsInNjb3BlIjpbImRldmljZSJdLCJpYXQiOjE0NTczNjUyNTR9.5hTO5hXCDf9vab5LK8Kr3tOOVziBJiLkWnmWB0W4GZ4",
+  "decoded_jwt": {
+                  "version": 1,
+                  "deviceID": "e28b4f1c-82e2-460e-8681-66cff0acf90f",
+                  "scope": [
+                            "device"
+                          ]
+                 },
+  "secret_key": "testing"
+}
