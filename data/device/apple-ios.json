@@ -1,0 +1,19 @@
+{
+	"id": "apple-ios",
+	"type": "device",
+	"organization": "odd-networks",
+	"deviceType": "APPLE_IOS",
+	"category": "MOBILE",
+	"active": true,
+	"features": {
+		"authentication": {
+			"type": "link",
+			"url": "http://oddnetworks.com/login"
+		}
+	},
+	"views": {
+		"homepage": "odd-networks-homepage",
+		"splash": "odd-networks-splash",
+		"menu": "odd-networks-menu"
+	}
+}

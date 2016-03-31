@@ -1,0 +1,13 @@
+{
+	"id": "homepage-promotions",
+	"type": "collection",
+	"organization": "odd-networks",
+	"relationships": {
+		"entries": {
+			"data": [{
+				"id": "daily-show",
+				"type": "promotion"
+			}]
+		}
+	}
+}

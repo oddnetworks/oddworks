@@ -1,0 +1,17 @@
+{
+	"id": "roku-roku",
+	"type": "device",
+	"organization": "odd-networks",
+	"deviceType": "ROKU_ROKU",
+	"category": "TV",
+	"active": true,
+	"features": {
+		"authentication": {
+			"type": "link",
+			"url": "http://oddnetworks.com/login"
+		}
+	},
+	"views": {
+		"homepage": "odd-networks-homepage"
+	}
+}

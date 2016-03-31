@@ -1,0 +1,13 @@
+{
+	"id": "featured-media",
+	"type": "collection",
+	"organization": "odd-networks",
+	"relationships": {
+		"entries": {
+			"data": [{
+				"id": "continuous-live-stream",
+				"type": "video"
+			}]
+		}
+	}
+}
