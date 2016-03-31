@@ -1,7 +1,9 @@
 'use strict';
 
+require('dotenv').config({silent: true});
+
 const _ = require('lodash');
-const redis = require('redis-mock').createClient();
+const Promise = require('bluebird');
 const oddcast = require('oddcast');
 const boom = require('boom');
 const express = require('express');
@@ -13,6 +15,15 @@ const server = express();
 bus.events.use({}, oddcast.inprocessTransport());
 bus.commands.use({}, oddcast.inprocessTransport());
 bus.requests.use({}, oddcast.inprocessTransport());
+
+if (process.env.NODE_ENV === 'development') {
+	const redis = require('redis-mock').createClient();
+	Promise.promisifyAll(redis);
+	require('./data/seed')(redis);
+} else {
+	const redis = require('redis').createClient(process.env.REDIS_URI);
+	Promise.promisifyAll(redis);
+}
 
 // Set up the services you want to use
 const identityService = require('./services/identity');
@@ -88,7 +99,7 @@ server.use(function handleError(err, req, res, next) {
 });
 
 if (!module.parent) {
-	server.listen(process.env.PORT || 3000, err => {
+	server.listen(process.env.PORT, err => {
 		console.log('Server is running.');
 	});
 }

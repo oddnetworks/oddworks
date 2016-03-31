@@ -54,7 +54,8 @@
     "optimist": "^0.6.1",
     "query-string": "^3.0.0",
     "redis": "^2.4.2",
-    "redis-mock": "^0.5.1"
+    "redis-mock": "^0.5.1",
+    "winston": "^2.2.0"
   },
   "devDependencies": {
     "mock-express-request": "^0.1.1",
