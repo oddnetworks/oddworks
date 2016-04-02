@@ -1,45 +1,37 @@
-const _ = require('lodash');
 const Promise = require('bluebird');
-const router = require('express').Router();
+const router = require('express').Router(); // eslint-disable-line
 
 const service = exports = module.exports = {};
+let config = {};
 
 service.initialize = (bus, options) => {
-	const self = this;
-	this.bus = bus;
-	this.options = options || {};
+	config.bus = bus;
+	config.options = options;
 
 	bus.queryHandler({role: 'catalog', cmd: 'fetch'}, payload => {
 		if (payload.id) {
-			return self.options.redis.hgetAsync(payload.type, payload.id)
-				.then(object => {
-					return JSON.parse(object);
-				});
+			return bus.query({role: 'store', cmd: 'get', type: payload.type}, {type: payload.type, id: payload.id});
 		}
 
-		return self.options.redis.hgetallAsync(payload.type)
-			.then(objects => {
-				objects = _.map(_.toArray(objects), object => {
-					return JSON.parse(object);
-				});
-				return objects;
-			});
+		return bus.query({role: 'store', cmd: 'get', type: payload.type}, {type: payload.type});
 	});
 
 	return Promise.resolve(true);
 };
 
 service.router = (bus, options) => {
-	['collection', 'promotion', 'video', 'view'].forEach(type => {
+	const types = options.types || ['collection', 'promotion', 'video', 'view'];
+
+	types.forEach(type => {
 		router.get(`/${type}s`, (req, res) => {
-			bus.query({role: 'catalog', cmd: 'fetch'}, {type: type})
+			bus.query({role: 'catalog', cmd: 'fetch'}, {type})
 				.then(object => {
 					res.send(object);
 				});
 		});
 
 		router.get(`/${type}s/:id`, (req, res) => {
-			bus.query({role: 'catalog', cmd: 'fetch'}, {type: type, id: req.params.id})
+			bus.query({role: 'catalog', cmd: 'fetch'}, {type, id: req.params.id})
 				.then(object => {
 					res.send(object);
 				});

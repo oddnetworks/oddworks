@@ -11,16 +11,18 @@ service.initialize = (bus, options) => {
 	this.options = options || {};
 
 	bus.queryHandler({role: 'identity', cmd: 'verify'}, payload => {
-		return jwt.verifyAsync(payload.token, self.options.jwtSecret)
+		return new Promise((resolve) => {
+			jwt.verifyAsync(payload.token, self.options.jwtSecret)
 				.then(token => {
 					return Promise.join(
-							self.options.redis.hgetAsync('organization', token.organization),
-							self.options.redis.hgetAsync('device', token.device)
+							bus.query({role: 'store', cmd: 'get', type: 'organization'}, {id: token.organization, type: 'organization'}),
+							bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: token.device, type: 'device'})
 						);
 				})
-				.then((organization, device) => {
-					return {organization, device};
+				.then((identity) => {
+					return resolve({organization: identity[0], device: identity[1]});
 				});
+		});
 	});
 
 	return Promise.resolve(true);
