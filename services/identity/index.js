@@ -18,11 +18,11 @@ service.initialize = (bus, options) => {
 				.then(token => {
 					return Promise.join(
 							bus.query({role: 'store', cmd: 'get', type: 'organization'}, {id: token.organization, type: 'organization'}),
-							bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: token.device, type: 'device'})
+							bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: token.device, type: 'device'}),
+							(organization, device) => {
+								return resolve({organization, device});
+							}
 						);
-				})
-				.then((identity) => {
-					return resolve({organization: identity[0], device: identity[1]});
 				});
 		});
 	});
