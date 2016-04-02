@@ -1,6 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
+const uuid = require('uuid');
 
 const store = exports = module.exports = {};
 
@@ -16,3 +17,4 @@ store.initialize = (bus, options) => {
 		});
 	}
 };
+		payload.id = payload.id || uuid.v4();
