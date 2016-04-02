@@ -84,6 +84,10 @@ Promise
 		// POST /events
 		// server.use('/events', eventsService.router());
 
+		// Attach config endpoint
+		// GET /config
+		server.use('/', identityService.router(bus));
+
 		// Attach catalog endpoints with specific middleware, the authorization service is passed in as middleware to protect/decorate the entities as well
 		// GET /videos
 		// GET /videos/:id
