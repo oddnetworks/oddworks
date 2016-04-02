@@ -5,7 +5,7 @@ const Promise = require('bluebird');
 const glob = Promise.promisifyAll(require('glob')).GlobAsync;
 const winston = require('winston');
 
-module.exports = (redis) => {
+module.exports = (bus) => {
 	return glob('./**/*.json', {cwd: __dirname})
 		.then(files => {
 			return _.map(files, file => {
@@ -16,7 +16,7 @@ module.exports = (redis) => {
 			return Promise.all(
 				_.map(objects, object => {
 					winston.info(`Seeding ${object.type} ${object.id}`);
-					return redis.hsetAsync(object.type, object.id, JSON.stringify(object));
+					return bus.query({role: 'store', cmd: 'set', type: object.type}, object);
 				})
 			);
 		});

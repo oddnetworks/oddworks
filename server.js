@@ -20,27 +20,46 @@ bus.commands.use({}, oddcast.inprocessTransport());
 bus.requests.use({}, oddcast.inprocessTransport());
 
 // TODO: This is gross, consider a refactor
-if (process.env.NODE_ENV === 'development') {
-	Promise.promisifyAll(redis);
-	require('./data/seed')(redis);
-} else {
+if (process.env.NODE_ENV !== 'development') {
 	redis = require('redis').createClient(process.env.REDIS_URI);
-	Promise.promisifyAll(redis);
 }
 
-// Set up the services you want to use
+// Set up the store and services you want to use
+const memoryStore = require('./stores/memory');
+const redisStore = require('./stores/redis');
 const identityService = require('./services/identity');
 const catalogService = require('./services/catalog');
 // const authorizationService = require('./services/authorization');
 // const eventsService = require('./services/events');
 
 Promise
+	// Initialize your stores
 	.join(
-		identityService.initialize(bus, {redis, jwtSecret: process.env.JWT_SECRET}),
-		catalogService.initialize(bus, {redis})
-		// authorizationService.initialize(bus, {redis}),
-		// eventsService.initialize(bus, {redis})
+		memoryStore.initialize(bus, {types: ['device', 'organization']}),
+		redisStore.initialize(bus, {redis, types: ['collection', 'promotion', 'video', 'view']})
 	)
+
+	// Seed the stores if in development mode
+	.then(() => {
+		if (process.env.NODE_ENV === 'development') {
+			return require('./data/seed')(bus);
+		}
+
+		return true;
+	})
+
+	// Initialize your services
+	.then(() => {
+		return Promise
+			.join(
+				identityService.initialize(bus, {jwtSecret: process.env.JWT_SECRET}),
+				catalogService.initialize(bus, {})
+				// authorizationService.initialize(bus, {redis}),
+				// eventsService.initialize(bus, {redis})
+			);
+	})
+
+	// Start configuring express
 	.then(() => {
 		// Standard express middleware
 		middleware(server);
@@ -106,6 +125,9 @@ Promise
 				console.log('Server is running.');
 			});
 		}
+	})
+	.catch(err => {
+		console.log(err.stack);
 	});
 
 module.exports = server;
