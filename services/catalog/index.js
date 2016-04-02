@@ -25,17 +25,19 @@ service.router = (bus, options) => {
 	const types = options.types || ['collection', 'promotion', 'video', 'view'];
 
 	types.forEach(type => {
-		router.get(`/${type}s`, (req, res) => {
+		router.get(`/${type}s`, (req, res, next) => {
 			bus.query({role: 'catalog', cmd: 'fetch'}, {type})
-				.then(object => {
-					res.send(object);
+				.then(objects => {
+					res.body = objects;
+					next();
 				});
 		});
 
-		router.get(`/${type}s/:id`, (req, res) => {
+		router.get(`/${type}s/:id`, (req, res, next) => {
 			bus.query({role: 'catalog', cmd: 'fetch'}, {type, id: req.params.id})
 				.then(object => {
-					res.send(object);
+					res.body = object;
+					next();
 				});
 		});
 	});

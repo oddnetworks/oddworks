@@ -92,9 +92,13 @@ Promise
 		server.use(catalogService.router(bus, {middleware: []}));
 
 		server.get('/', (req, res) => {
-			res.send({
+			res.body = {
 				message: 'Server is running'
-			});
+			};
+		});
+
+		server.use((req, res) => {
+			res.send(res.body);
 		});
 
 		// 404
