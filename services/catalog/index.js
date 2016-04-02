@@ -1,3 +1,5 @@
+'use strict';
+
 const Promise = require('bluebird');
 const router = require('express').Router(); // eslint-disable-line
 

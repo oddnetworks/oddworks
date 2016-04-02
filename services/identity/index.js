@@ -1,3 +1,5 @@
+'use strict';
+
 const Promise = require('bluebird');
 const boom = require('boom');
 const jwt = require('jsonwebtoken');
