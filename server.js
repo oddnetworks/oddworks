@@ -29,6 +29,7 @@ const memoryStore = require('./stores/memory');
 const redisStore = require('./stores/redis');
 const identityService = require('./services/identity');
 const catalogService = require('./services/catalog');
+const jsonAPIService = require('./services/json-api');
 // const authorizationService = require('./services/authorization');
 // const eventsService = require('./services/events');
 
@@ -53,7 +54,8 @@ Promise
 		return Promise
 			.join(
 				identityService.initialize(bus, {jwtSecret: process.env.JWT_SECRET}),
-				catalogService.initialize(bus, {})
+				catalogService.initialize(bus, {}),
+				jsonAPIService.initialize(bus, {})
 				// authorizationService.initialize(bus, {redis}),
 				// eventsService.initialize(bus, {redis})
 			);
@@ -96,6 +98,9 @@ Promise
 				message: 'Server is running'
 			};
 		});
+
+		// Serialize all data into the JSON API Spec
+		server.use(jsonAPIService.middleware());
 
 		server.use((req, res) => {
 			res.send(res.body);
