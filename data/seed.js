@@ -18,7 +18,7 @@ module.exports = (bus) => {
 			return Promise.all(
 				_.map(objects, object => {
 					winston.info(`Seeding ${object.type} ${object.id}`);
-					return bus.query({role: 'store', cmd: 'set', type: object.type}, object);
+					return bus.sendCommand({role: 'store', cmd: 'set', type: object.type}, object);
 				})
 			);
 		});

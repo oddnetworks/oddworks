@@ -14,6 +14,7 @@ store.initialize = (bus, options) => {
 			options.types.forEach(type => {
 				bus.queryHandler({role: 'store', cmd: 'get', type: type}, get);
 				bus.queryHandler({role: 'store', cmd: 'set', type: type}, set);
+				bus.commandHandler({role: 'store', cmd: 'set', type: type}, set);
 			});
 
 			resolve(true);

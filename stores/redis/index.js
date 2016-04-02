@@ -18,6 +18,7 @@ store.initialize = (bus, options) => {
 			config.options.types.forEach(type => {
 				bus.queryHandler({role: 'store', cmd: 'get', type}, get);
 				bus.queryHandler({role: 'store', cmd: 'set', type}, set);
+				bus.commandHandler({role: 'store', cmd: 'set', type}, set);
 			});
 
 			resolve(true);
@@ -50,6 +51,6 @@ function set(payload) {
 	return new Promise((resolve) => {
 		payload.id = payload.id || uuid.v4();
 		config.options.redis.hsetAsync(payload.type, payload.id, JSON.stringify(payload));
-		return resolve(true);
+		return resolve(payload);
 	});
 }
