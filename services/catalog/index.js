@@ -1,21 +1,50 @@
 'use strict';
 
+const _ = require('lodash');
 const Promise = require('bluebird');
 const router = require('express').Router(); // eslint-disable-line
 
 const service = exports = module.exports = {};
 let config = {};
+const videoKeys = ['ads', 'player', 'sharing', 'overlay'];
 
 service.initialize = (bus, options) => {
 	config.bus = bus;
 	config.options = options;
 
 	bus.queryHandler({role: 'catalog', cmd: 'fetch'}, payload => {
-		if (payload.id) {
-			return bus.query({role: 'store', cmd: 'get', type: payload.type}, {type: payload.type, id: payload.id});
-		}
+		return new Promise((resolve) => {
+			if (payload.id) {
+				return bus.query({role: 'store', cmd: 'get', type: payload.type}, {type: payload.type, id: payload.id})
+					.then(object => {
+						if (payload.type === 'video' && payload.organization && payload.device) {
+							return bus.query({role: 'identity', cmd: 'config'}, {organization: payload.organization, device: payload.device})
+								.then(config => {
+									object = _.merge({}, _.pick(config.features, videoKeys), object);
+									return resolve(object);
+								});
+						}
 
-		return bus.query({role: 'store', cmd: 'get', type: payload.type}, {type: payload.type});
+						return resolve(object);
+					});
+			}
+
+			return bus.query({role: 'store', cmd: 'get', type: payload.type}, {type: payload.type})
+				.then(objects => {
+					if (payload.type === 'video' && payload.organization && payload.device) {
+						return bus.query({role: 'identity', cmd: 'config'}, {organization: payload.organization, device: payload.device})
+							.then(config => {
+								objects = _.map(objects, object => {
+									return _.merge({}, _.pick(config.features, videoKeys), object);
+								});
+
+								return resolve(objects);
+							});
+					}
+
+					return resolve(objects);
+				});
+		});
 	});
 
 	return Promise.resolve(true);
@@ -26,7 +55,7 @@ service.router = (bus, options) => {
 
 	types.forEach(type => {
 		router.get(`/${type}s`, (req, res, next) => {
-			bus.query({role: 'catalog', cmd: 'fetch'}, {type})
+			bus.query({role: 'catalog', cmd: 'fetch'}, {type, organization: req.identity.organization.id, device: req.identity.device.id})
 				.then(objects => {
 					res.body = objects;
 					next();
@@ -34,7 +63,7 @@ service.router = (bus, options) => {
 		});
 
 		router.get(`/${type}s/:id`, (req, res, next) => {
-			bus.query({role: 'catalog', cmd: 'fetch'}, {type, id: req.params.id})
+			bus.query({role: 'catalog', cmd: 'fetch'}, {type, id: req.params.id, organization: req.identity.organization.id, device: req.identity.device.id})
 				.then(object => {
 					res.body = object;
 					next();
