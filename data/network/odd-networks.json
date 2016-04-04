@@ -1,6 +1,6 @@
 {
 	"id": "odd-networks",
-	"type": "organization",
+	"type": "network",
 	"title": "Odd Networks",
 	"features": {
 		"authentication": {

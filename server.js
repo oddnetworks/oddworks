@@ -36,7 +36,7 @@ const jsonAPIService = require('./services/json-api');
 Promise
 	// Initialize your stores
 	.join(
-		memoryStore.initialize(bus, {types: ['device', 'organization']}),
+		memoryStore.initialize(bus, {types: ['device', 'network']}),
 		redisStore.initialize(bus, {redis, types: ['collection', 'promotion', 'video', 'view']})
 	)
 

@@ -1,7 +1,7 @@
 {
 	"id": "daily-show",
 	"type": "promotion",
-	"organization": "odd-networks",
+	"network": "odd-networks",
 	"title": "Odd Networks Daily Show",
 	"description": "Promote your content with Odd Networks!",
 	"images": {

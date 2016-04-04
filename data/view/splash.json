@@ -1,7 +1,7 @@
 {
 	"id": "splash",
 	"type": "view",
-	"organization": "odd-networks",
+	"network": "odd-networks",
 	"title": "Odd Networks Splash",
 	"relationships": {
 		"promotion": {

@@ -1,7 +1,7 @@
 {
 	"id": "daily-show-video-1",
 	"type": "video",
-	"organization": "odd-networks",
+	"network": "odd-networks",
 	"title": "Daily Show: Video 1",
 	"description": "",
 	"images": {

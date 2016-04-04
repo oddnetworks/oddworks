@@ -21,10 +21,10 @@ service.initialize = (bus, options) => {
 				.then(token => {
 					Promise
 						.join(
-							bus.query({role: 'store', cmd: 'get', type: 'organization'}, {id: token.organization, type: 'organization'}),
+							bus.query({role: 'store', cmd: 'get', type: 'network'}, {id: token.network, type: 'network'}),
 							bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: token.device, type: 'device'}),
-							(organization, device) => {
-								resolve({organization, device});
+							(network, device) => {
+								resolve({network, device});
 							}
 						);
 				});
@@ -35,10 +35,10 @@ service.initialize = (bus, options) => {
 		return new Promise(resolve => {
 			Promise
 				.join(
-					bus.query({role: 'store', cmd: 'get', type: 'organization'}, {id: payload.organization, type: 'organization'}),
+					bus.query({role: 'store', cmd: 'get', type: 'network'}, {id: payload.network, type: 'network'}),
 					bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: payload.device, type: 'device'}),
-					(organization, device) => {
-						const config = composeConfig({organization, device});
+					(network, device) => {
+						const config = composeConfig({network, device});
 						resolve(config);
 					}
 				);
@@ -68,10 +68,10 @@ service.middleware = (options) => {
 
 service.router = (options) => {
 	router.get(`/config`, (req, res, next) => {
-		config.bus.query({role: 'identity', cmd: 'config'}, {organization: req.identity.organization.id, device: req.identity.device.id})
+		config.bus.query({role: 'identity', cmd: 'config'}, {network: req.identity.network.id, device: req.identity.device.id})
 			.then(config => {
 				res.body = {
-					id: `${req.identity.organization.id}:${req.identity.device.id}`,
+					id: `${req.identity.network.id}:${req.identity.device.id}`,
 					type: 'config',
 					features: config.features,
 					views: config.views
@@ -88,9 +88,9 @@ service.router = (options) => {
 };
 
 function composeConfig(identity) {
-	const organizationFeatures = _.keys(identity.organization.features);
+	const networkFeatures = _.keys(identity.network.features);
 	const deviceFeatures = _.keys(identity.device.features);
-	const features = _.union(organizationFeatures, deviceFeatures);
+	const features = _.union(networkFeatures, deviceFeatures);
 
 	const confg = {
 		features: {},
@@ -98,9 +98,9 @@ function composeConfig(identity) {
 	};
 
 	_.each(features, key => {
-		const organizationKey = identity.organization.features[key];
+		const networkKey = identity.network.features[key];
 		const deviceKey = identity.device.features[key];
-		const mergedKey = _.merge({}, organizationKey, deviceKey);
+		const mergedKey = _.merge({}, networkKey, deviceKey);
 
 		confg.features[key] = mergedKey;
 	});

@@ -8,11 +8,11 @@ const jwt = require('jsonwebtoken');
 const chalk = require('chalk');
 
 commander
-	.command('generate-token <organization> <device>')
-	.action((organization, device) => {
+	.command('generate-token <network> <device>')
+	.action((network, device) => {
 		const payload = {
 			version: 1,
-			organization,
+			network,
 			device,
 			scope: ['device']
 		};

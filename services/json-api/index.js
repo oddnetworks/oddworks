@@ -35,7 +35,7 @@ service.middleware = (bus, options) => {
 			self: `${baseUrl}${req.originalUrl}`
 		};
 		res.body.meta = {
-			organization: req.identity.organization.id,
+			network: req.identity.network.id,
 			device: req.identity.device.deviceType
 		};
 

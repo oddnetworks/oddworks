@@ -1,7 +1,7 @@
 {
 	"id": "apple-ios",
 	"type": "device",
-	"organization": "odd-networks",
+	"network": "odd-networks",
 	"deviceType": "APPLE_IOS",
 	"category": "MOBILE",
 	"active": true,

@@ -1,7 +1,7 @@
 {
 	"id": "continuous-live-stream",
 	"type": "video",
-	"organization": "odd-networks",
+	"network": "odd-networks",
 	"title": "Live TV",
 	"description": "",
 	"images": {

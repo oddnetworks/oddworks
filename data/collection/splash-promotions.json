@@ -1,7 +1,7 @@
 {
 	"id": "splash-promotions",
 	"type": "collection",
-	"organization": "odd-networks",
+	"network": "odd-networks",
 	"relationships": {
 		"entries": {
 			"data": [{

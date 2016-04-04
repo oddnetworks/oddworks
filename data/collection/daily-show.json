@@ -1,7 +1,7 @@
 {
 	"id": "daily-show",
 	"type": "collection",
-	"organization": "odd-networks",
+	"network": "odd-networks",
 	"title": "Odd Networks Daily Show",
 	"relationships": {
 		"entries": {

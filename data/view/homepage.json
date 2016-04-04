@@ -1,7 +1,7 @@
 {
 	"id": "homepage",
 	"type": "view",
-	"organization": "odd-networks",
+	"network": "odd-networks",
 	"title": "Odd Networks Homepage",
 	"relationships": {
 		"promotion": {

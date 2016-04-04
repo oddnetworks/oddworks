@@ -1,7 +1,7 @@
 {
 	"id": "roku-roku",
 	"type": "device",
-	"organization": "odd-networks",
+	"network": "odd-networks",
 	"deviceType": "ROKU_ROKU",
 	"category": "TV",
 	"active": true,

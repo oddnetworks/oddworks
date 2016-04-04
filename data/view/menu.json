@@ -1,7 +1,7 @@
 {
 	"id": "menu",
 	"type": "view",
-	"organization": "odd-networks",
+	"network": "odd-networks",
 	"title": "Odd Networks Menu",
 	"description": "",
 	"relationships": {
