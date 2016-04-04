@@ -25,7 +25,11 @@ store.initialize = (bus, options) => {
 };
 
 function get(payload) {
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
+		if (!payload.type) {
+			return reject(new Error('payload.type is require'));
+		}
+
 		if (payload.id) {
 			return resolve(STORE[payload.type][payload.id]);
 		}
@@ -35,7 +39,7 @@ function get(payload) {
 }
 
 function set(payload) {
-	return new Promise((resolve) => {
+	return new Promise(resolve => {
 		payload.id = payload.id || uuid.v4();
 		STORE[payload.type] = STORE[payload.type] || {};
 		STORE[payload.type][payload.id] = payload;

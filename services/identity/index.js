@@ -15,14 +15,16 @@ service.initialize = (bus, options) => {
 	config.options = options || {};
 
 	bus.queryHandler({role: 'identity', cmd: 'verify'}, payload => {
-		return new Promise((resolve) => {
-			jwt.verifyAsync(payload.token, config.options.jwtSecret)
+		return new Promise(resolve => {
+			jwt
+				.verifyAsync(payload.token, config.options.jwtSecret)
 				.then(token => {
-					return Promise.join(
+					Promise
+						.join(
 							bus.query({role: 'store', cmd: 'get', type: 'organization'}, {id: token.organization, type: 'organization'}),
 							bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: token.device, type: 'device'}),
 							(organization, device) => {
-								return resolve({organization, device});
+								resolve({organization, device});
 							}
 						);
 				});
@@ -30,13 +32,14 @@ service.initialize = (bus, options) => {
 	});
 
 	bus.queryHandler({role: 'identity', cmd: 'config'}, payload => {
-		return new Promise((resolve) => {
-			return Promise.join(
+		return new Promise(resolve => {
+			Promise
+				.join(
 					bus.query({role: 'store', cmd: 'get', type: 'organization'}, {id: payload.organization, type: 'organization'}),
 					bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: payload.device, type: 'device'}),
 					(organization, device) => {
 						const config = composeConfig({organization, device});
-						return resolve(config);
+						resolve(config);
 					}
 				);
 		});
@@ -45,11 +48,11 @@ service.initialize = (bus, options) => {
 	return Promise.resolve(true);
 };
 
-service.middleware = (bus, options) => {
+service.middleware = (options) => {
 	return (req, res, next) => {
 		const token = req.get(options.header);
 		if (token) {
-			bus.query({role: 'identity', cmd: 'verify'}, {token})
+			config.bus.query({role: 'identity', cmd: 'verify'}, {token})
 				.then(identity => {
 					req.identity = identity;
 					next();
@@ -63,9 +66,9 @@ service.middleware = (bus, options) => {
 	};
 };
 
-service.router = (bus, options) => {
+service.router = (options) => {
 	router.get(`/config`, (req, res, next) => {
-		bus.query({role: 'identity', cmd: 'config'}, {organization: req.identity.organization.id, device: req.identity.device.id})
+		config.bus.query({role: 'identity', cmd: 'config'}, {organization: req.identity.organization.id, device: req.identity.device.id})
 			.then(config => {
 				res.body = {
 					id: `${req.identity.organization.id}:${req.identity.device.id}`,

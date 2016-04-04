@@ -67,7 +67,7 @@ Promise
 		middleware(server);
 
 		// Decode the JWT set on the X-Access-Token header and attach to req.identity
-		server.use(identityService.middleware(bus, {header: 'x-access-token'}));
+		server.use(identityService.middleware({header: 'x-access-token'}));
 
 		// Decode the JWT set on the Authorization header and attach to req.authorization
 		// server.use(authorizationService.middleware({header: 'Authorization'}));
@@ -86,7 +86,7 @@ Promise
 
 		// Attach config endpoint
 		// GET /config
-		server.use('/', identityService.router(bus));
+		server.use('/', identityService.router());
 
 		// Attach catalog endpoints with specific middleware, the authorization service is passed in as middleware to protect/decorate the entities as well
 		// GET /videos
@@ -95,7 +95,7 @@ Promise
 		// GET /collections/:id
 		// GET /views
 		// GET /views/:id
-		server.use(catalogService.router(bus, {middleware: []}));
+		server.use(catalogService.router({middleware: []}));
 
 		server.get('/', (req, res) => {
 			res.body = {

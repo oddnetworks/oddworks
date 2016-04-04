@@ -29,7 +29,11 @@ store.initialize = (bus, options) => {
 };
 
 function get(payload) {
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
+		if (!payload.type) {
+			return reject(new Error('payload.type is require'));
+		}
+
 		if (payload.id) {
 			return config.options.redis.hgetAsync(payload.type, payload.id)
 				.then(object => {
@@ -48,7 +52,7 @@ function get(payload) {
 }
 
 function set(payload) {
-	return new Promise((resolve) => {
+	return new Promise(resolve => {
 		payload.id = payload.id || uuid.v4();
 		config.options.redis.hsetAsync(payload.type, payload.id, JSON.stringify(payload));
 		return resolve(payload);
