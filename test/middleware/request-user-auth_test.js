@@ -17,7 +17,7 @@ test('Middleware: request-user-auth - with authentication required and valid Aut
 			entityId: '2'
 		},
 		identity: {
-			organization: {
+			network: {
 				features: {authentication: {enabled: true}}
 			},
 			device: {
@@ -43,7 +43,7 @@ test('Middleware: request-user-auth - with authentication required and missing A
 			entityId: '2'
 		},
 		identity: {
-			organization: {
+			network: {
 				features: {authentication: {enabled: true}}
 			},
 			device: {
@@ -68,7 +68,7 @@ test('Middleware: request-user-auth - with authentication required and non-user 
 			entityId: '2'
 		},
 		identity: {
-			organization: {
+			network: {
 				features: {authentication: {enabled: true}}
 			},
 			device: {
@@ -95,7 +95,7 @@ test('Middleware: request-user-auth - with authentication required and invalid A
 			entityId: '2'
 		},
 		identity: {
-			organization: {
+			network: {
 				features: {authentication: {enabled: true}}
 			},
 			device: {

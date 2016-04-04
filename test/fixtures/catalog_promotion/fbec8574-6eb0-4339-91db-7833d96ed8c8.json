@@ -4,7 +4,7 @@
   "attributes" : {
     "title" : "Promotion",
     "description" : "Sample Promotion",
-    "organization": "odd-networks",
+    "network": "odd-networks",
     "images" : {
       "aspect16x9" : "http://image.oddworks.io/poker-central/promotions/1/16x9.png",
       "aspect4x3" : "http://dummyimage.com/4:3x1440&text=Promo",

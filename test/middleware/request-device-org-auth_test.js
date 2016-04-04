@@ -23,10 +23,10 @@ test('Middleware: request-device-org-auth', function (t) {
 	requestAuth(req, {}, function () {
 		t.equal(req.identity.device.deviceType, 'MICROSOFT_XBOX360');
 		t.ok(req.identity.device.views);
-		t.equal(req.identity.organization.id, 'odd-networks');
-		t.ok(req.identity.organization.features);
-		t.notOk(req.identity.organization.key);
-		t.notOk(req.identity.organization.secret);
+		t.equal(req.identity.network.id, 'odd-networks');
+		t.ok(req.identity.network.features);
+		t.notOk(req.identity.network.key);
+		t.notOk(req.identity.network.secret);
 		t.end();
 	});
 });

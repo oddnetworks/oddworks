@@ -32,7 +32,7 @@ seneca.use({name: 'device', init: function () {
 
 var deviceUserProfile = {
 	id: '56099956dcf43b1100a26fc9',
-	organizationID: 'odd-networks',
+	networkID: 'odd-networks',
 	deviceType: 'ROKU_ROKU',
 	clientUserID: '123456',
 	clientProfile: {
@@ -57,7 +57,7 @@ seneca.ready(function onReady() {
 	});
 
 	seneca.add({role: 'device-auth', cmd: 'fetchConfig'}, function (args, done) {
-		if (args.organization === 'levintv') {
+		if (args.network === 'levintv') {
 			done(null, {
 				id: 'levintv',
 				userCodeExpiresIn: 1800,
@@ -86,7 +86,7 @@ seneca.ready(function onReady() {
 		}
 	});
 
-	seneca.add({role: 'identity', cmd: 'fetchOrganization'}, function (args, done) {
+	seneca.add({role: 'identity', cmd: 'fetchnetwork'}, function (args, done) {
 		done(null, {
 			id: 'odd-networks',
 			features: {
@@ -107,7 +107,7 @@ seneca.ready(function onReady() {
 	seneca.add({role: 'identity', cmd: 'fetchDevice'}, function (args, done) {
 		done(null, {
 			id: 'device-id',
-			organization: 'odd-networks',
+			network: 'odd-networks',
 			deviceType: 'MICROSOFT_XBOX360',
 			features: {
 				ads: {
@@ -125,7 +125,7 @@ seneca.ready(function onReady() {
 	seneca.add({role: 'catalog', cmd: 'fetchVideo', id: '999'}, function (args, done) {
 		done(null, {
 			id: '999',
-			organization: 'odd-networks',
+			network: 'odd-networks',
 			title: 'test'
 		});
 	});

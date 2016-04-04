@@ -8,10 +8,10 @@ module.exports = function requestUserEntitlement(req, res, next) {
 	var act = Promise.promisify(seneca.act, seneca);
 
 	if (req.identity.user) {
-		var organizationID = req.identity.user.deviceUserProfile.organizationID;
+		var networkID = req.identity.user.deviceUserProfile.networkID;
 		var entitlementCredentials = req.identity.user.deviceUserProfile.entitlementCredentials;
 
-		act({role: 'entitlement', cmd: 'verify', organizationID: organizationID, entitlementCredentials: entitlementCredentials})
+		act({role: 'entitlement', cmd: 'verify', networkID: networkID, entitlementCredentials: entitlementCredentials})
 			.then(function (userEntitlements) {
 				if (userEntitlements.length === 0) {
 					next(boom.unauthorized('Empty user entitlements.'));

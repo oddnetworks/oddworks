@@ -4,7 +4,7 @@
   "attributes": {
     "title": "Collection",
     "description": "Sample Collection",
-		"organization": "odd-networks",
+		"network": "odd-networks",
     "images": {
       "aspect16x9": "http://image.oddworks.io/eooyala/kyZ2J1dTrM3ZbA7zOZyx80Gxfb00lNix/promo260129410.jpg"
     },

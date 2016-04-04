@@ -5,7 +5,7 @@
     "locale": "en-us",
     "title": "Sample Video",
     "description": "Sample Video",
-    "organization": "odd-networks",
+    "network": "odd-networks",
     "images": {
       "aspect16x9": "http://image.oddworks.io/eooyala/ZlOXI2djrPI66Fe1c2mDHzy7Tb8gmRVE/promo261773769.jpg",
       "aspect4x3": "http://dummyimage.com/4:3x1440&text=Metallica+Rules",

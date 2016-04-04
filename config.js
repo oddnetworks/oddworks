@@ -30,7 +30,7 @@ module.exports = deepFreeze({
 	},
 	'opbeat': {
 		appId: process.env.OPBEAT_APP_ID,
-		organizationId: process.env.OPBEAT_ORGANIZATION_ID,
+		networkId: process.env.OPBEAT_network_ID,
 		secretToken: process.env.OPBEAT_SECRET_TOKEN,
 		logLevel: process.env.OPBEAT_LOG_LEVEL || 'info',
 		active: (env === 'production' || env === 'staging'),

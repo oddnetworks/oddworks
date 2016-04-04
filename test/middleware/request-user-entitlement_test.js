@@ -14,7 +14,7 @@ test('Middleware: request-user-entitlement - with valid user entitlementCredenti
 
 	var req = {
 		app: app,
-		organization: 'poker-central',
+		network: 'poker-central',
 		identity: {
 			user: {
 				deviceUserProfile: {
@@ -36,7 +36,7 @@ test('Middleware: request-user-entitlement - with valid user entitlementCredenti
 
 	var req = {
 		app: app,
-		organization: 'poker-central',
+		network: 'poker-central',
 		identity: {
 			user: {
 				deviceUserProfile: {
@@ -59,7 +59,7 @@ test('Middleware: request-user-entitlement - with invalid user entitlementCreden
 
 	var req = {
 		app: app,
-		organization: 'poker-central',
+		network: 'poker-central',
 		identity: {
 			user: {
 				deviceUserProfile: {
