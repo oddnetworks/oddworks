@@ -63,8 +63,11 @@ Promise
 
 	// Start configuring express
 	.then(() => {
+		server.disable('x-powered-by');
+		server.set('trust proxy', 'loopback, linklocal, uniquelocal');
+
 		// Standard express middleware
-		middleware(server);
+		server.use(middleware());
 
 		// Decode the JWT set on the X-Access-Token header and attach to req.identity
 		server.use(identityService.middleware({header: 'x-access-token'}));
