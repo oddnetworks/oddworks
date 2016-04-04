@@ -1,8 +1,8 @@
 {
-  "name": "odd-device-api",
-  "version": "1.7.1",
+  "name": "oddworks",
+  "version": "2.0.0",
   "description": "An example Oddworks API written in Express.js",
-  "main": "service.js",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js -e js,json",
     "test": "npm run lint && npm run tape",
