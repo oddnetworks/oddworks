@@ -60,6 +60,7 @@
     "query-string": "^3.0.0",
     "redis": "^2.4.2",
     "redis-mock": "^0.5.1",
+    "redis-search": "0.0.1",
     "uuid": "^2.0.1",
     "winston": "^2.2.0"
   },
