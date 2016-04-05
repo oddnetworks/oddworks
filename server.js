@@ -70,7 +70,7 @@ Promise
 		server.use(middleware());
 
 		// Decode the JWT set on the X-Access-Token header and attach to req.identity
-		server.use(identityService.middleware({header: 'x-access-token'}));
+		server.use(identityService.middleware.verifyAccess({header: 'x-access-token'}));
 
 		// Decode the JWT set on the Authorization header and attach to req.authorization
 		// server.use(authorizationService.middleware({header: 'Authorization'}));

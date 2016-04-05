@@ -14,15 +14,15 @@ service.initialize = (bus, options) => {
 	config.bus = bus;
 	config.options = options || {};
 
-	bus.queryHandler({role: 'identity', cmd: 'verify'}, payload => {
+	config.bus.queryHandler({role: 'identity', cmd: 'verify'}, payload => {
 		return new Promise(resolve => {
 			jwt
 				.verifyAsync(payload.token, config.options.jwtSecret)
 				.then(token => {
 					Promise
 						.join(
-							bus.query({role: 'store', cmd: 'get', type: 'network'}, {id: token.network, type: 'network'}),
-							bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: token.device, type: 'device'}),
+							config.bus.query({role: 'store', cmd: 'get', type: 'network'}, {id: token.network, type: 'network'}),
+							config.bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: token.device, type: 'device'}),
 							(network, device) => {
 								resolve({network, device});
 							}
@@ -31,12 +31,33 @@ service.initialize = (bus, options) => {
 		});
 	});
 
-	bus.queryHandler({role: 'identity', cmd: 'config'}, payload => {
+	config.bus.queryHandler({role: 'identity', cmd: 'authenticate'}, payload => {
+		return new Promise(resolve => {
+			jwt
+				.verifyAsync(payload.token, config.options.jwtSecret)
+				.then(token => {
+					const id = `${token.network}:${token.device}:${token.user}`;
+					return config.bus.query({role: 'store', cmd: 'get', type: 'linked-device'}, {id: id, type: 'linked-device'});
+				})
+				.then(linkedDevice => {
+					resolve(linkedDevice);
+				});
+		});
+	});
+
+	config.bus.queryHandler({role: 'identity', cmd: 'user'}, payload => {
+		return new Promise(resolve => {
+			// Get the user from the whatever user management system, local or 3rd party depending on service config
+			resolve(true);
+		});
+	});
+
+	config.bus.queryHandler({role: 'identity', cmd: 'config'}, payload => {
 		return new Promise(resolve => {
 			Promise
 				.join(
-					bus.query({role: 'store', cmd: 'get', type: 'network'}, {id: payload.network, type: 'network'}),
-					bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: payload.device, type: 'device'}),
+					config.bus.query({role: 'store', cmd: 'get', type: 'network'}, {id: payload.network, type: 'network'}),
+					config.bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: payload.device, type: 'device'}),
 					(network, device) => {
 						const config = composeConfig({network, device});
 						resolve(config);
@@ -48,22 +69,42 @@ service.initialize = (bus, options) => {
 	return Promise.resolve(true);
 };
 
-service.middleware = (options) => {
-	return (req, res, next) => {
-		const token = req.get(options.header);
-		if (token) {
-			config.bus.query({role: 'identity', cmd: 'verify'}, {token})
-				.then(identity => {
-					req.identity = identity;
-					next();
-				})
-				.catch(err => {
-					next(boom.unauthorized(err.message));
-				});
-		} else {
-			next(boom.unauthorized('Invalid Token'));
-		}
-	};
+service.middleware = {
+	verifyAccess(options) {
+		return (req, res, next) => {
+			const token = req.get(options.header);
+			if (token) {
+				config.bus.query({role: 'identity', cmd: 'verify'}, {token})
+					.then(identity => {
+						req.identity = identity;
+						next();
+					})
+					.catch(err => {
+						next(boom.unauthorized(err.message));
+					});
+			} else {
+				next(boom.unauthorized('Invalid Access Token'));
+			}
+		};
+	},
+
+	authenticateUser(options) {
+		return (req, res, next) => {
+			const token = req.get(options.header);
+			if (token) {
+				config.bus.query({role: 'identity', cmd: 'authenticate'}, {token})
+					.then(identity => {
+						req.identity = identity;
+						next();
+					})
+					.catch(err => {
+						next(boom.unauthorized(err.message));
+					});
+			} else {
+				next(boom.unauthorized('Invalid Authentication Token'));
+			}
+		};
+	}
 };
 
 service.router = (options) => {
