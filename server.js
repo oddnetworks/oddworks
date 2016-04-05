@@ -40,15 +40,6 @@ Promise
 		redisStore.initialize(bus, {redis, types: ['collection', 'promotion', 'video', 'view']})
 	)
 
-	// Seed the stores if in development mode
-	.then(() => {
-		if (process.env.NODE_ENV === 'development') {
-			return require('./data/seed')(bus);
-		}
-
-		return true;
-	})
-
 	// Initialize your services
 	.then(() => {
 		return Promise
@@ -59,6 +50,15 @@ Promise
 				// authorizationService.initialize(bus, {redis}),
 				// eventsService.initialize(bus, {redis})
 			);
+	})
+
+	// Seed the stores if in development mode
+	.then(() => {
+		if (process.env.NODE_ENV === 'development') {
+			return require('./data/seed')(bus);
+		}
+
+		return true;
 	})
 
 	// Start configuring express
