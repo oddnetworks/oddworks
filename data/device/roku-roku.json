@@ -14,5 +14,5 @@
 	"views": {
 		"homepage": "odd-networks-homepage"
 	},
-	"x-access-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJvcmdhbml6YXRpb24iOiJvZGQtbmV0d29ya3MiLCJkZXZpY2UiOiJyb2t1LXJva3UiLCJzY29wZSI6WyJkZXZpY2UiXSwiaWF0IjoxNDU4NTg5OTgwfQ.t9cVpdRdwWiGxqY5OKN1ZydMCKkrKMCJ3vzAjYpyhNo"
+	"jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJvcmdhbml6YXRpb24iOiJvZGQtbmV0d29ya3MiLCJkZXZpY2UiOiJyb2t1LXJva3UiLCJzY29wZSI6WyJkZXZpY2UiXSwiaWF0IjoxNDU4NTg5OTgwfQ.t9cVpdRdwWiGxqY5OKN1ZydMCKkrKMCJ3vzAjYpyhNo"
 }

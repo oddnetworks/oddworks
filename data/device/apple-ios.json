@@ -16,5 +16,5 @@
 		"splash": "odd-networks-splash",
 		"menu": "odd-networks-menu"
 	},
-	"x-access-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJvcmdhbml6YXRpb24iOiJvZGQtbmV0d29ya3MiLCJkZXZpY2UiOiJhcHBsZS1pb3MiLCJzY29wZSI6WyJkZXZpY2UiXSwiaWF0IjoxNDU4NTg5OTgwfQ.Tps_LBrTsMvN7Axx27mea3lUx1Q-ujZKY1cJ3AbHTOM"
+	"jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJvcmdhbml6YXRpb24iOiJvZGQtbmV0d29ya3MiLCJkZXZpY2UiOiJhcHBsZS1pb3MiLCJzY29wZSI6WyJkZXZpY2UiXSwiaWF0IjoxNDU4NTg5OTgwfQ.Tps_LBrTsMvN7Axx27mea3lUx1Q-ujZKY1cJ3AbHTOM"
 }
