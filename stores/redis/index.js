@@ -16,9 +16,9 @@ store.initialize = (bus, options) => {
 	return new Promise((resolve, reject) => {
 		if (config.options.types) {
 			config.options.types.forEach(type => {
-				bus.queryHandler({role: 'store', cmd: 'get', type}, get);
-				bus.queryHandler({role: 'store', cmd: 'set', type}, set);
-				bus.commandHandler({role: 'store', cmd: 'set', type}, set);
+				config.bus.queryHandler({role: 'store', cmd: 'get', type}, get);
+				config.bus.queryHandler({role: 'store', cmd: 'set', type}, set);
+				config.bus.commandHandler({role: 'store', cmd: 'set', type}, set);
 			});
 
 			resolve(true);

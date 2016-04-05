@@ -27,6 +27,7 @@ if (process.env.NODE_ENV !== 'development') {
 // Set up the store and services you want to use
 const memoryStore = require('./stores/memory');
 const redisStore = require('./stores/redis');
+const redisSearchStore = require('./stores/redis-search');
 const identityService = require('./services/identity');
 const catalogService = require('./services/catalog');
 const jsonAPIService = require('./services/json-api');
@@ -37,7 +38,8 @@ Promise
 	// Initialize your stores
 	.join(
 		memoryStore.initialize(bus, {types: ['device', 'network']}),
-		redisStore.initialize(bus, {redis, types: ['collection', 'promotion', 'video', 'view']})
+		redisStore.initialize(bus, {redis, types: ['collection', 'promotion', 'video', 'view']}),
+		redisSearchStore.initialize(bus, {redis, types: ['collection', 'video']})
 	)
 
 	// Initialize your services

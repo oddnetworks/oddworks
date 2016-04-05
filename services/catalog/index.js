@@ -47,6 +47,31 @@ service.initialize = (bus, options) => {
 		});
 	});
 
+	config.bus.queryHandler({role: 'catalog', cmd: 'search'}, payload => {
+		return new Promise(resolve => {
+			config.bus.query({role: 'store', cmd: 'query'}, payload)
+				.then(objects => {
+					resolve(_.flatten(objects));
+				});
+		});
+	});
+
+	config.bus.commandHandler({role: 'catalog', cmd: 'create', searchable: true}, payload => {
+		config.bus.sendCommand({role: 'catalog', cmd: 'create'}, payload);
+		config.bus.sendCommand({role: 'catalog', cmd: 'index'}, payload);
+		return Promise.resolve(true);
+	});
+
+	config.bus.commandHandler({role: 'catalog', cmd: 'create'}, payload => {
+		config.bus.sendCommand({role: 'store', cmd: 'set', type: payload.type}, payload);
+		return Promise.resolve(true);
+	});
+
+	config.bus.commandHandler({role: 'catalog', cmd: 'index'}, payload => {
+		config.bus.sendCommand({role: 'store', cmd: 'index', type: payload.type}, payload);
+		return Promise.resolve(true);
+	});
+
 	return Promise.resolve(true);
 };
 
@@ -69,6 +94,14 @@ service.router = (options) => {
 					next();
 				});
 		});
+	});
+
+	router.get('/search', (req, res, next) => {
+		config.bus.query({role: 'catalog', cmd: 'search'}, {query: req.query.q})
+			.then(objects => {
+				res.body = objects;
+				next();
+			});
 	});
 
 	return router;
