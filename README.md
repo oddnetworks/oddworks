@@ -29,14 +29,53 @@ The Oddworks Platform consists of two main concepts:
 2. The __Oddworks Device SDKs__ which are designed to consume the content from the Oddworks Content Server as well as report usage data back to it.
 
 ## Content Server
-The Oddworks Content Server is made up of several loosely coupled components:
 
-* [seneca-odd-catalog](https://github.com/oddnetworks/seneca-odd-catalog) To handle general get, create, and update operations on your published content.
-* [seneca-odd-auth](https://github.com/oddnetworks/seneca-odd-auth) Used to compartmentalize the device linking and authentication logic.
-* [seneca-odd-identity](https://github.com/oddnetworks/seneca-odd-identity) Provides get, create, and update operations for identity and authentication resources.
-* [seneca-odd-views](https://github.com/oddnetworks/seneca-odd-views) A flexible module for building and caching structured views for your apps.
-* [odd-schemas](https://github.com/oddnetworks/odd-schemas) Used to type check incoming data entities.
-* __Oddworks__ Content Server (you are here)
+### Running
+
+Clone the repo to your machine and run the following commands.
+
+```
+> npm install
+> npm run dev
+```
+
+The server should be running at http://localhost:3000 with all the required data seeded into the databases. Next you can hit the API however you want. Here is an example curl command with a preset token we generated for you.
+
+```
+> curl -X GET -H "x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJvcmdhbml6YXRpb24iOiJvZGQtbmV0d29ya3MiLCJkZXZpY2UiOiJhcHBsZS1pb3MiLCJzY29wZSI6WyJkZXZpY2UiXSwiaWF0IjoxNDU4NTg5OTgwfQ.Tps_LBrTsMvN7Axx27mea3lUx1Q-ujZKY1cJ3AbHTOM" -H "Accept: application/json" -H "Cache-Control: no-cache" "http://localhost:3000/videos"
+```
+
+### CLI
+
+The server also comes with a built-in CLI to aid in some common tasks you will need to do like generating device token to distribute. More documentation is coming, but you can see the available commands by running the following:
+
+```
+> oddworks --help
+```
+
+### About
+
+The Oddworks Content Server is made up of several loosely coupled services.
+
+- Identity (responsible for networks, devices, users, authentication, and entitlements)
+- Catalog (responsible for views, collections, and videos)
+- JSON API (responsible for decorating responses into the JSON API Spec format)
+
+The implementation of these can be found in the `/services` folder.
+
+The content server is also database agnostic in which you can store your entitles in whatever database engine you like or a combination of any.
+
+Currently we have official support for the following:
+
+- In-memory (best used for development and testing)
+- Redis
+- Redis Search (a full text search implementation based on the N-gram algorithm)
+- MongoDB (coming soon)
+- Elasticsearch (coming soon)
+
+With the stores above you can pick your poison for your specific needs.
+
+The implementation of these can be found in the `/stores` folder.
 
 All of these components are automatically installed as dependencies when you setup the Oddworks Content Server. Oddworks uses [NPM](https://www.npmjs.com/) for dependency and package management (see [Technology](#technology) below).
 
