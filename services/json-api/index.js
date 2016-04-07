@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const boom = require('boom');
 const Promise = require('bluebird');
 
 const service = exports = module.exports = {};
@@ -17,6 +18,10 @@ service.initialize = (bus, options) => {
 
 service.middleware = (bus, options) => {
 	return (req, res, next) => {
+		if (_.isEmpty(req.body)) {
+			return next(boom.notFound());
+		}
+
 		const baseUrl = `${req.protocol}://${req.get('host')}`;
 
 		let data = _.cloneDeep(res.body);
