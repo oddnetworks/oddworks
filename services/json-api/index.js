@@ -92,11 +92,13 @@ function serialize(object, baseUrl) {
 	});
 
 	object.attributes = _.cloneDeep(attributes);
-	object.relationships = object.relationships || {};
-	object.links = {
-		self: `${baseUrl}/${object.type}s/${object.id}`
-	};
-	object.meta = object.meta || {};
+	if (object.id && object.type) {
+		object.relationships = object.relationships || {};
+		object.links = {
+			self: `${baseUrl}/${object.type}s/${object.id}`
+		};
+		object.meta = object.meta || {};
+	}
 
 	return object;
 }
