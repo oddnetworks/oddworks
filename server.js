@@ -113,14 +113,10 @@ Promise
 		// Serialize all data into the JSON API Spec
 		server.use(jsonAPIService.middleware());
 
-		server.use((req, res) => {
-			res.send(res.body);
-		});
+		server.use((req, res) => res.send(res.body));
 
 		// 404
-		server.use((req, res, next) => {
-			next(boom.notFound());
-		});
+		server.use((req, res, next) => next(boom.notFound()));
 
 		// 5xx
 		server.use(function handleError(err, req, res, next) {
@@ -145,8 +141,6 @@ Promise
 			});
 		}
 	})
-	.catch(err => {
-		console.log(err.stack);
-	});
+	.catch(err => console.log(err.stack));
 
 module.exports = server;

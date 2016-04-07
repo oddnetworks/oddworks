@@ -42,14 +42,8 @@ function query(payload) {
 			}
 
 			Promise
-				.map(ids, id => {
-					return Promise.map(config.options.types, type => {
-						return config.bus.query({role: 'store', cmd: 'get', type}, {id, type});
-					});
-				})
-				.then(objects => {
-					resolve(_.compact(_.flatten(objects)));
-				});
+				.map(ids, id => Promise.map(config.options.types, type => config.bus.query({role: 'store', cmd: 'get', type}, {id, type})))
+				.then(objects => resolve(_.compact(_.flatten(objects))));
 		});
 	});
 }

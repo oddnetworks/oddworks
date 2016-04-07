@@ -35,13 +35,13 @@ function get(payload) {
 		}
 
 		if (payload.id) {
-			return config.options.redis.hgetAsync(payload.type, payload.id)
-				.then(object => {
-					return resolve(JSON.parse(object));
-				});
+			return config.options.redis
+				.hgetAsync(payload.type, payload.id)
+				.then(object => resolve(JSON.parse(object)));
 		}
 
-		return config.options.redis.hgetallAsync(payload.type)
+		return config.options.redis
+			.hgetallAsync(payload.type)
 			.then(objects => {
 				objects = _.map(_.toArray(objects), object => {
 					return JSON.parse(object);

@@ -83,14 +83,13 @@ service.middleware = {
 		return (req, res, next) => {
 			const token = req.get(options.header);
 			if (token) {
-				config.bus.query({role: 'identity', cmd: 'verify'}, {token})
+				config.bus
+					.query({role: 'identity', cmd: 'verify'}, {token})
 					.then(identity => {
 						req.identity = identity;
 						next();
 					})
-					.catch(err => {
-						next(boom.unauthorized('Invalid Access Token'));
-					});
+					.catch(() => next(boom.unauthorized('Invalid Access Token')));
 			} else {
 				next(boom.unauthorized('Invalid Access Token'));
 			}
@@ -101,14 +100,13 @@ service.middleware = {
 		return (req, res, next) => {
 			const token = req.get(options.header);
 			if (token) {
-				config.bus.query({role: 'identity', cmd: 'authenticate'}, {token})
+				config.bus
+					.query({role: 'identity', cmd: 'authenticate'}, {token})
 					.then(identity => {
 						req.identity = identity;
 						next();
 					})
-					.catch(err => {
-						next(boom.unauthorized('Invalid Authentication Token'));
-					});
+					.catch(() => next(boom.unauthorized('Invalid Authentication Token')));
 			} else {
 				next(boom.unauthorized('Invalid Authentication Token'));
 			}
@@ -118,7 +116,8 @@ service.middleware = {
 
 service.router = (options) => {
 	router.get(`/config`, (req, res, next) => {
-		config.bus.query({role: 'identity', cmd: 'config'}, {network: req.identity.network.id, device: req.identity.device.id})
+		config.bus
+			.query({role: 'identity', cmd: 'config'}, {network: req.identity.network.id, device: req.identity.device.id})
 			.then(config => {
 				res.body = {
 					id: `${req.identity.network.id}:${req.identity.device.id}`,
@@ -129,9 +128,7 @@ service.router = (options) => {
 
 				next();
 			})
-			.catch(err => {
-				next(boom.wrap(err));
-			});
+			.catch(err => next(boom.wrap(err)));
 	});
 
 	return router;

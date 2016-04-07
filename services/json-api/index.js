@@ -26,15 +26,10 @@ service.initialize = (bus, options) => {
 				.compact()
 				.value();
 
-			Promise.map(include, object => {
-				return config.bus.query({role: 'catalog', cmd: 'fetch'}, object);
-			})
-			.then(objects => {
-				resolve(objects);
-			})
-			.catch(err => {
-				reject(err);
-			});
+			Promise
+				.map(include, object => config.bus.query({role: 'catalog', cmd: 'fetch'}, object))
+				.then(objects => resolve(objects))
+				.catch(err => reject(err));
 		});
 	});
 
@@ -75,9 +70,7 @@ service.middleware = (bus, options) => {
 					res.body.included = included;
 					next();
 				})
-				.catch(err => {
-					next(boom.badRequest(err.message));
-				});
+				.catch(err => next(boom.badRequest(err.message)));
 		} else {
 			next();
 		}

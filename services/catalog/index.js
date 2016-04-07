@@ -15,30 +15,29 @@ service.initialize = (bus, options) => {
 	config.bus.queryHandler({role: 'catalog', cmd: 'fetch'}, payload => {
 		return new Promise((resolve, reject) => {
 			if (payload.id) {
-				config.bus.query({role: 'store', cmd: 'get', type: payload.type}, {type: payload.type, id: payload.id})
+				config.bus
+					.query({role: 'store', cmd: 'get', type: payload.type}, {type: payload.type, id: payload.id})
 					.then(object => {
 						if (payload.type === 'video' && payload.network && payload.device) {
-							config.bus.query({role: 'identity', cmd: 'config'}, {network: payload.network, device: payload.device})
+							config.bus
+								.query({role: 'identity', cmd: 'config'}, {network: payload.network, device: payload.device})
 								.then(config => {
 									object = _.merge({}, _.pick(config.features, videoKeys), object);
 									resolve(object);
 								})
-								.catch(err => {
-									reject(err);
-								});
+								.catch(err => reject(err));
 						}
 
 						resolve(object);
 					})
-					.catch(err => {
-						reject(err);
-					});
+					.catch(err => reject(err));
 			}
 
 			config.bus.query({role: 'store', cmd: 'get', type: payload.type}, {type: payload.type})
 				.then(objects => {
 					if (payload.type === 'video' && payload.network && payload.device) {
-						config.bus.query({role: 'identity', cmd: 'config'}, {network: payload.network, device: payload.device})
+						config.bus
+							.query({role: 'identity', cmd: 'config'}, {network: payload.network, device: payload.device})
 							.then(config => {
 								objects = _.map(objects, object => {
 									return _.merge({}, _.pick(config.features, videoKeys), object);
@@ -46,9 +45,7 @@ service.initialize = (bus, options) => {
 
 								resolve(objects);
 							})
-							.catch(err => {
-								reject(err);
-							});
+							.catch(err => reject(err));
 					}
 
 					resolve(objects);
@@ -58,13 +55,10 @@ service.initialize = (bus, options) => {
 
 	config.bus.queryHandler({role: 'catalog', cmd: 'search'}, payload => {
 		return new Promise((resolve, reject) => {
-			config.bus.query({role: 'store', cmd: 'query'}, payload)
-				.then(objects => {
-					resolve(_.flatten(objects));
-				})
-				.catch(err => {
-					reject(err);
-				});
+			config.bus
+				.query({role: 'store', cmd: 'query'}, payload)
+				.then(objects => resolve(_.flatten(objects)))
+				.catch(err => reject(err));
 		});
 	});
 
@@ -92,7 +86,8 @@ service.router = (options) => {
 
 	types.forEach(type => {
 		router.get(`/${type}s`, (req, res, next) => {
-			config.bus.query({role: 'catalog', cmd: 'fetch'}, {type, network: req.identity.network.id, device: req.identity.device.id})
+			config.bus
+				.query({role: 'catalog', cmd: 'fetch'}, {type, network: req.identity.network.id, device: req.identity.device.id})
 				.then(objects => {
 					res.body = objects;
 					next();
@@ -100,7 +95,8 @@ service.router = (options) => {
 		});
 
 		router.get(`/${type}s/:id`, (req, res, next) => {
-			config.bus.query({role: 'catalog', cmd: 'fetch'}, {type, id: req.params.id, network: req.identity.network.id, device: req.identity.device.id})
+			config.bus
+				.query({role: 'catalog', cmd: 'fetch'}, {type, id: req.params.id, network: req.identity.network.id, device: req.identity.device.id})
 				.then(object => {
 					res.body = object;
 					next();
@@ -109,7 +105,8 @@ service.router = (options) => {
 	});
 
 	router.get('/search', (req, res, next) => {
-		config.bus.query({role: 'catalog', cmd: 'search'}, {query: req.query.q})
+		config.bus
+			.query({role: 'catalog', cmd: 'search'}, {query: req.query.q})
 			.then(objects => {
 				res.body = objects;
 				next();
