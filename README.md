@@ -32,11 +32,19 @@ The Oddworks Platform consists of two main concepts:
 
 ### Running
 
+#### First Time Setup
+
 Clone the repo to your machine and run the following commands.
 
 ```
-> npm install
-> npm run dev
+> npm install // Install all the dependancies
+> npm run setup // Sets up environment variables and the CLI
+```
+
+#### Starting the Development Server
+
+```
+> npm run dev // Run in development mode and watches for file changes
 ```
 
 The server should be running at http://localhost:3000 with all the required data seeded into the databases. Next you can hit the API however you want. Here is an example curl command with a preset token we generated for you.

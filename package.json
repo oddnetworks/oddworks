@@ -7,13 +7,14 @@
     "oddworks": "cli/index.js"
   },
   "scripts": {
-    "dev": "npm run env && nodemon server.js -e js,json",
+    "env": "if [ ! -f '.env' ]; then cp .env.sample .env; fi",
+    "setup": "npm link && npm run env",
+    "dev": "nodemon server.js -e js,json",
     "test": "npm run lint && npm run tape",
     "tape": "tape 'test/**/*_test.js' | tap-spec",
     "lint": "xo",
     "start": "node index.js -e js,json",
-    "sec": "./node_modules/.bin/nsp check -o json --warn-only",
-    "env": "if [ ! -f '.env' ]; then cp .env.sample .env; fi"
+    "sec": "./node_modules/.bin/nsp check -o json --warn-only"
   },
   "engines": {
     "npm": "2.11.x",
