@@ -18,7 +18,7 @@ service.initialize = (bus, options) => {
 
 service.middleware = (bus, options) => {
 	return (req, res, next) => {
-		if (_.isEmpty(req.body)) {
+		if (_.isEmpty(res.body)) {
 			return next(boom.notFound());
 		}
 
