@@ -124,8 +124,6 @@ Promise
 		// 5xx
 		server.use(function handleError(err, req, res, next) {
 			if (err) {
-				console.error(err.stack);
-
 				var statusCode = _.get(err, 'output.statusCode', (err.status || 500));
 				if (!_.has(err, 'output.payload')) {
 					err = boom.wrap(err, err.status);
