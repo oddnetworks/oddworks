@@ -13,6 +13,31 @@ service.initialize = (bus, options) => {
 	config.bus = bus;
 	config.options = options;
 
+	config.bus.queryHandler({role: 'json-api', cmd: 'included'}, payload => {
+		return new Promise((resolve, reject) => {
+			let include = payload.include.split(',');
+			include = _(include)
+				.map(relationship => {
+					if (!payload.object.relationships[relationship]) {
+						reject(new Error(`relationships.${relationship} does not exist on object '${payload.object.id}'`));
+					}
+					return payload.object.relationships[relationship].data;
+				})
+				.compact()
+				.value();
+
+			Promise.map(include, object => {
+				return config.bus.query({role: 'catalog', cmd: 'fetch'}, object);
+			})
+			.then(objects => {
+				resolve(objects);
+			})
+			.catch(err => {
+				reject(err);
+			});
+		});
+	});
+
 	return Promise.resolve(true);
 };
 
@@ -34,7 +59,6 @@ service.middleware = (bus, options) => {
 		} else {
 			data = serialize(data, baseUrl);
 		}
-
 		res.body.data = data;
 		res.body.links = {
 			self: `${baseUrl}${req.originalUrl}`
@@ -44,7 +68,19 @@ service.middleware = (bus, options) => {
 			device: req.identity.device.deviceType
 		};
 
-		next();
+		if (!_.isArray(data) && _.isString(req.query.include)) {
+			res.body.included = [];
+			config.bus.query({role: 'json-api', cmd: 'included'}, {object: res.body.data, include: req.query.include})
+				.then(included => {
+					res.body.included = included;
+					next();
+				})
+				.catch(err => {
+					next(boom.badRequest(err.message));
+				});
+		} else {
+			next();
+		}
 	};
 };
 
