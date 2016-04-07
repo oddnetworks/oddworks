@@ -103,10 +103,11 @@ Promise
 		// GET /views/:id
 		server.use(catalogService.router({middleware: []}));
 
-		server.get('/', (req, res) => {
+		server.get('/', (req, res, next) => {
 			res.body = {
 				message: 'Server is running'
 			};
+			next();
 		});
 
 		// Serialize all data into the JSON API Spec
