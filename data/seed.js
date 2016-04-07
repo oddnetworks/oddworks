@@ -2,10 +2,10 @@
 
 const path = require('path');
 
+const chalk = require('chalk');
 const _ = require('lodash');
 const Promise = require('bluebird');
 const glob = Promise.promisifyAll(require('glob')).GlobAsync;
-const winston = require('winston');
 const searchableTypes = ['collection', 'video'];
 
 module.exports = (bus) => {
@@ -16,6 +16,8 @@ module.exports = (bus) => {
 			});
 		})
 		.then(objects => {
+			console.log('');
+			console.log(chalk.blue(`Loading test data...`));
 			return Promise.all(
 				_.map(objects, object => {
 					const searchable = Boolean(_.indexOf(searchableTypes, object.type) + 1);
@@ -23,7 +25,7 @@ module.exports = (bus) => {
 					if (searchable) {
 						pattern = {role: 'catalog', cmd: 'create', searchable: true};
 					}
-					winston.info(`Seeding ${object.type} ${object.id}`);
+					console.log(chalk.blue(`* ${object.type} ${object.id}`));
 					return bus.sendCommand(pattern, object);
 				})
 			);

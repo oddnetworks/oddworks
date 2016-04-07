@@ -2,6 +2,7 @@
 
 require('dotenv').config({silent: true});
 
+const chalk = require('chalk');
 const _ = require('lodash');
 const Promise = require('bluebird');
 const oddcast = require('oddcast');
@@ -140,7 +141,8 @@ Promise
 
 		if (!module.parent) {
 			server.listen(process.env.PORT, () => {
-				console.log('Server is running.');
+				console.log('');
+				console.log(chalk.green(`Server is running on port: ${process.env.PORT}`));
 			});
 		}
 	})
