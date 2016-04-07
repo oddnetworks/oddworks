@@ -13,7 +13,7 @@ const middleware = require('./middleware');
 const bus = oddcast.bus();
 const server = express();
 
-let redis = require('redis-mock').createClient();
+let redis = require('fakeredis').createClient();
 
 bus.events.use({}, oddcast.inprocessTransport());
 bus.commands.use({}, oddcast.inprocessTransport());

@@ -41,6 +41,7 @@
     "express": "^4.13.3",
     "express-real-ip": "^1.0.0",
     "express-slash": "^2.0.1",
+    "fakeredis": "^1.0.3",
     "filepath": "^1.0.0",
     "glob": "^5.0.15",
     "header-parser": "^1.0.0",
@@ -59,7 +60,6 @@
     "optimist": "^0.6.1",
     "query-string": "^3.0.0",
     "redis": "^2.4.2",
-    "redis-mock": "^0.5.1",
     "redis-search": "0.0.1",
     "uuid": "^2.0.1",
     "winston": "^2.2.0"
