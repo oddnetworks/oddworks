@@ -15,7 +15,7 @@ service.initialize = (bus, options) => {
 	config.options = options || {};
 
 	config.bus.queryHandler({role: 'identity', cmd: 'verify'}, payload => {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			jwt
 				.verifyAsync(payload.token, config.options.jwtSecret)
 				.then(token => {
@@ -27,12 +27,15 @@ service.initialize = (bus, options) => {
 								resolve({network, device});
 							}
 						);
+				})
+				.catch(err => {
+					reject(err);
 				});
 		});
 	});
 
 	config.bus.queryHandler({role: 'identity', cmd: 'authenticate'}, payload => {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			jwt
 				.verifyAsync(payload.token, config.options.jwtSecret)
 				.then(token => {
@@ -41,6 +44,9 @@ service.initialize = (bus, options) => {
 				})
 				.then(linkedDevice => {
 					resolve(linkedDevice);
+				})
+				.catch(err => {
+					reject(err);
 				});
 		});
 	});
@@ -53,7 +59,7 @@ service.initialize = (bus, options) => {
 	});
 
 	config.bus.queryHandler({role: 'identity', cmd: 'config'}, payload => {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			Promise
 				.join(
 					config.bus.query({role: 'store', cmd: 'get', type: 'network'}, {id: payload.network, type: 'network'}),
@@ -62,7 +68,10 @@ service.initialize = (bus, options) => {
 						const config = composeConfig({network, device});
 						resolve(config);
 					}
-				);
+				)
+				.catch(err => {
+					reject(err);
+				});
 		});
 	});
 
@@ -80,7 +89,7 @@ service.middleware = {
 						next();
 					})
 					.catch(err => {
-						next(boom.unauthorized(err.message));
+						next(boom.unauthorized('Invalid Access Token'));
 					});
 			} else {
 				next(boom.unauthorized('Invalid Access Token'));
@@ -98,7 +107,7 @@ service.middleware = {
 						next();
 					})
 					.catch(err => {
-						next(boom.unauthorized(err.message));
+						next(boom.unauthorized('Invalid Authentication Token'));
 					});
 			} else {
 				next(boom.unauthorized('Invalid Authentication Token'));

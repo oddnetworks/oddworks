@@ -13,7 +13,7 @@ service.initialize = (bus, options) => {
 	config.options = options;
 
 	config.bus.queryHandler({role: 'catalog', cmd: 'fetch'}, payload => {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			if (payload.id) {
 				config.bus.query({role: 'store', cmd: 'get', type: payload.type}, {type: payload.type, id: payload.id})
 					.then(object => {
@@ -22,10 +22,16 @@ service.initialize = (bus, options) => {
 								.then(config => {
 									object = _.merge({}, _.pick(config.features, videoKeys), object);
 									resolve(object);
+								})
+								.catch(err => {
+									reject(err);
 								});
 						}
 
 						resolve(object);
+					})
+					.catch(err => {
+						reject(err);
 					});
 			}
 
@@ -39,6 +45,9 @@ service.initialize = (bus, options) => {
 								});
 
 								resolve(objects);
+							})
+							.catch(err => {
+								reject(err);
 							});
 					}
 
@@ -48,10 +57,13 @@ service.initialize = (bus, options) => {
 	});
 
 	config.bus.queryHandler({role: 'catalog', cmd: 'search'}, payload => {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			config.bus.query({role: 'store', cmd: 'query'}, payload)
 				.then(objects => {
 					resolve(_.flatten(objects));
+				})
+				.catch(err => {
+					reject(err);
 				});
 		});
 	});
