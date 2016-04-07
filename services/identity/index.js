@@ -28,9 +28,7 @@ service.initialize = (bus, options) => {
 							}
 						);
 				})
-				.catch(err => {
-					reject(err);
-				});
+				.catch(err => reject(err));
 		});
 	});
 
@@ -42,12 +40,8 @@ service.initialize = (bus, options) => {
 					const id = `${token.network}:${token.device}:${token.user}`;
 					return config.bus.query({role: 'store', cmd: 'get', type: 'linked-device'}, {id: id, type: 'linked-device'});
 				})
-				.then(linkedDevice => {
-					resolve(linkedDevice);
-				})
-				.catch(err => {
-					reject(err);
-				});
+				.then(linkedDevice => resolve(linkedDevice))
+				.catch(err => reject(err));
 		});
 	});
 
@@ -64,14 +58,9 @@ service.initialize = (bus, options) => {
 				.join(
 					config.bus.query({role: 'store', cmd: 'get', type: 'network'}, {id: payload.network, type: 'network'}),
 					config.bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: payload.device, type: 'device'}),
-					(network, device) => {
-						const config = composeConfig({network, device});
-						resolve(config);
-					}
+					(network, device) => resolve(composeConfig({network, device}))
 				)
-				.catch(err => {
-					reject(err);
-				});
+				.catch(err => reject(err));
 		});
 	});
 
