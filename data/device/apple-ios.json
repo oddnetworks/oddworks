@@ -16,5 +16,5 @@
 		"splash": "odd-networks-splash",
 		"menu": "odd-networks-menu"
 	},
-	"jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJvcmdhbml6YXRpb24iOiJvZGQtbmV0d29ya3MiLCJkZXZpY2UiOiJhcHBsZS1pb3MiLCJzY29wZSI6WyJkZXZpY2UiXSwiaWF0IjoxNDU4NTg5OTgwfQ.Tps_LBrTsMvN7Axx27mea3lUx1Q-ujZKY1cJ3AbHTOM"
+	"jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJuZXR3b3JrIjoib2RkLW5ldHdvcmtzIiwiZGV2aWNlIjoiYXBwbGUtaW9zIiwic2NvcGUiOlsiZGV2aWNlIl0sImlhdCI6MTQ2MDEyMTE2MH0.euat-IBfliINLUbq66hTPFMzHH8T4zMLZv8beeBhLMY"
 }
