@@ -24,7 +24,11 @@ service.initialize = (bus, options) => {
 							config.bus.query({role: 'store', cmd: 'get', type: 'network'}, {id: token.network, type: 'network'}),
 							config.bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: token.device, type: 'device'}),
 							(network, device) => {
-								resolve({network, device});
+								if (!network.length && !device.length) {
+									resolve({network, device});
+								} else {
+									reject(new Error('network or device not found'));
+								}
 							}
 						);
 				})
@@ -58,7 +62,13 @@ service.initialize = (bus, options) => {
 				.join(
 					config.bus.query({role: 'store', cmd: 'get', type: 'network'}, {id: payload.network, type: 'network'}),
 					config.bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: payload.device, type: 'device'}),
-					(network, device) => resolve(composeConfig({network, device}))
+					(network, device) => {
+						if (!network.length && !device.length) {
+							resolve(composeConfig({network, device}));
+						} else {
+							reject(new Error('network or device not found'));
+						}
+					}
 				)
 				.catch(err => reject(err));
 		});
@@ -109,8 +119,6 @@ service.router = (options) => {
 			.query({role: 'identity', cmd: 'config'}, {network: req.identity.network.id, device: req.identity.device.id})
 			.then(config => {
 				res.body = {
-					id: `${req.identity.network.id}:${req.identity.device.id}`,
-					type: 'config',
 					features: config.features,
 					views: config.views
 				};
