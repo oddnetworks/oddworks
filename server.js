@@ -14,16 +14,11 @@ const middleware = require('./middleware');
 const bus = oddcast.bus();
 const server = express();
 
-let redis = require('fakeredis').createClient();
+const redis = (process.env.NODE_ENV === 'development') ? require('fakeredis').createClient() : require('redis').createClient(process.env.REDIS_URI);
 
 bus.events.use({}, oddcast.inprocessTransport());
 bus.commands.use({}, oddcast.inprocessTransport());
 bus.requests.use({}, oddcast.inprocessTransport());
-
-// TODO: This is gross, consider a refactor
-if (process.env.NODE_ENV !== 'development') {
-	redis = require('redis').createClient(process.env.REDIS_URI);
-}
 
 // Set up the store and services you want to use
 const memoryStore = require('./stores/memory');
