@@ -26,6 +26,7 @@ const redisStore = require('./stores/redis');
 const redisSearchStore = require('./stores/redis-search');
 const identityService = require('./services/identity');
 const catalogService = require('./services/catalog');
+const eventsService = require('./services/events');
 const jsonAPIService = require('./services/json-api');
 // const authorizationService = require('./services/authorization');
 // const eventsService = require('./services/events');
@@ -44,6 +45,13 @@ Promise
 			.join(
 				identityService.initialize(bus, {jwtSecret: process.env.JWT_SECRET}),
 				catalogService.initialize(bus, {}),
+				eventsService.initialize(bus, {
+					redis,
+					analyzers: [
+						eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
+						eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
+					]
+				}),
 				jsonAPIService.initialize(bus, {})
 				// authorizationService.initialize(bus, {redis}),
 				// eventsService.initialize(bus, {redis})
@@ -97,6 +105,8 @@ Promise
 		// GET /views
 		// GET /views/:id
 		server.use(catalogService.router({middleware: []}));
+
+		server.use(eventsService.router());
 
 		server.get('/', (req, res, next) => {
 			res.body = {
