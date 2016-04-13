@@ -4,11 +4,9 @@ require('dotenv').config({silent: true});
 
 const isDevelopment = (process.env.NODE_ENV === 'development');
 
-const path = require('path');
 const chalk = require('chalk');
 const _ = require('lodash');
 const Promise = require('bluebird');
-const glob = Promise.promisifyAll(require('glob')).GlobAsync;
 const oddcast = require('oddcast');
 const boom = require('boom');
 const express = require('express');
