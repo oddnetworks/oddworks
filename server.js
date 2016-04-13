@@ -149,19 +149,6 @@ Promise
 					console.log('');
 					console.log(chalk.green(`Server is running on port: ${process.env.PORT}`));
 					console.log('');
-
-					glob('./data/device/*.json', {cwd: __dirname})
-						.then(files => {
-							return _.map(files, file => {
-								return require(path.join(__dirname, file));
-							});
-						})
-						.then(objects => {
-							console.log(chalk.blue('Sample JWTs...'));
-							_.each(objects, object => {
-								console.log(chalk.blue(`* ${object.id}\n  ${object.jwt}`));
-							});
-						});
 				}
 			});
 		}

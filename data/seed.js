@@ -25,7 +25,7 @@ module.exports = (bus) => {
 					if (searchable) {
 						pattern = {role: 'catalog', cmd: 'create', searchable: true};
 					}
-					console.log(chalk.blue(`* ${object.type} ${object.id}`));
+					console.log(chalk.blue(`${_.capitalize(object.type)}: ${object.id} ${((object.type === 'device') ? object.jwt : '')}`));
 					return bus.sendCommand(pattern, object);
 				})
 			);
