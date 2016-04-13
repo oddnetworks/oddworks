@@ -2,9 +2,13 @@
 
 require('dotenv').config({silent: true});
 
+const isDevelopment = (process.env.NODE_ENV === 'development');
+
+const path = require('path');
 const chalk = require('chalk');
 const _ = require('lodash');
 const Promise = require('bluebird');
+const glob = Promise.promisifyAll(require('glob')).GlobAsync;
 const oddcast = require('oddcast');
 const boom = require('boom');
 const express = require('express');
@@ -14,7 +18,7 @@ const middleware = require('./middleware');
 const bus = oddcast.bus();
 const server = express();
 
-const redis = (process.env.NODE_ENV === 'development') ? require('fakeredis').createClient() : require('redis').createClient(process.env.REDIS_URI);
+const redis = (isDevelopment) ? require('fakeredis').createClient() : require('redis').createClient(process.env.REDIS_URI);
 
 bus.events.use({}, oddcast.inprocessTransport());
 bus.commands.use({}, oddcast.inprocessTransport());
@@ -60,7 +64,7 @@ Promise
 
 	// Seed the stores if in development mode
 	.then(() => {
-		if (process.env.NODE_ENV === 'development') {
+		if (isDevelopment) {
 			return require('./data/seed')(bus);
 		}
 
@@ -141,8 +145,24 @@ Promise
 
 		if (!module.parent) {
 			server.listen(process.env.PORT, () => {
-				console.log('');
-				console.log(chalk.green(`Server is running on port: ${process.env.PORT}`));
+				if (isDevelopment) {
+					console.log('');
+					console.log(chalk.green(`Server is running on port: ${process.env.PORT}`));
+					console.log('');
+
+					glob('./data/device/*.json', {cwd: __dirname})
+						.then(files => {
+							return _.map(files, file => {
+								return require(path.join(__dirname, file));
+							});
+						})
+						.then(objects => {
+							console.log(chalk.blue('Sample JWTs...'));
+							_.each(objects, object => {
+								console.log(chalk.blue(`* ${object.id}\n  ${object.jwt}`));
+							});
+						});
+				}
 			});
 		}
 	})
