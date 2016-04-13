@@ -74,7 +74,11 @@ service.initialize = (bus, options) => {
 	});
 
 	config.bus.commandHandler({role: 'catalog', cmd: 'index'}, payload => {
-		config.bus.sendCommand({role: 'store', cmd: 'index', type: payload.type}, payload);
+		config.bus.query({role: 'catalog', cmd: 'fetch'}, payload)
+			.then(object => {
+				const text = `${object.title} ${object.description}`;
+				config.bus.sendCommand({role: 'store', cmd: 'index', type: payload.type}, {id: object.id, text});
+			});
 		return Promise.resolve(true);
 	});
 

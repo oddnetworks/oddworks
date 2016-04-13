@@ -30,7 +30,7 @@ store.initialize = (bus, options) => {
 };
 
 function index(payload) {
-	config.options.search.index(payload.title, payload.id);
+	config.options.search.index(payload.text, payload.id);
 	return Promise.resolve(true);
 }
 
