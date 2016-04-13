@@ -80,7 +80,7 @@ service.initialize = (bus, options) => {
 service.middleware = {
 	verifyAccess(options) {
 		return (req, res, next) => {
-			const token = req.get(options.header);
+			const token = req.get(options.header || 'x-access-token');
 			if (token) {
 				config.bus
 					.query({role: 'identity', cmd: 'verify'}, {token})
