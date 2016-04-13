@@ -2,13 +2,20 @@
 
 Acts as a proxy to send event data off to 3rd party analytics services.
 
+## Initialization
+
+**Options**
+
+* `redis` - the instance of Redis used to store events for later aggregation
+* `analyzers` - array of [analyzers](/analyzers) that will be sent event payloads
+
 ## Patterns
 
-**observe({role: 'events'}, payload)**
+### observe({role: 'events'}, payload)
 
 ## Router
 
-**POST /events**
+### POST /events
 
 ## Analyzers
 
@@ -17,6 +24,7 @@ Right now there is official support for 2 analyzers. However, you can implement 
 ### Google Analytics
 
 **Analyzer Usage**
+
 ```js
 eventsService.initialize(bus, {
 	redis,
@@ -26,21 +34,22 @@ eventsService.initialize(bus, {
 })
 ```
 
-**Required Payload**
+**Payload**
 
-* sessionId
-* contentType
-* contentId
-* deviceType
-* organization
-* action
-* geoId
-* ip
-* userAgent
+* `action`
+* `contentType`
+* `contentId`
+* `deviceType`
+* `organization`
+* `sessionId` _optional_
+* `geoId` _optional_
+* `ip` _optional_
+* `userAgent` _optional_
 
 ### Mixpanel
 
 **Analyzer Usage**
+
 ```js
 eventsService.initialize(bus, {
 	redis,
@@ -50,16 +59,16 @@ eventsService.initialize(bus, {
 })
 ```
 
-**Required Payload**
+**Payload**
 
-* distinctId
-* contentType
-* contentId
-* deviceType
-* organization
-* action
-* geoId
-* ip
-* userAgent
-* elapsed
-* duration
+* `action`
+* `distinctId`
+* `contentType`
+* `contentId`
+* `deviceType`
+* `organization`
+* `elapsed`
+* `duration`
+* `geoId` _optional_
+* `ip` _optional_
+* `userAgent` _optional_
