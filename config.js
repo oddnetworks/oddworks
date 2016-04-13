@@ -57,8 +57,8 @@ module.exports = deepFreeze({
 			}
 		}
 	},
-	'redis-cache': {
-		redis: {
+	'redis': {
+		cache: {
 			host: redisURI.hostname(),
 			port: redisURI.port(),
 			auth_pass: redisURI.password() // eslint-disable-line
