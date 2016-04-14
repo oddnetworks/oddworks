@@ -18,9 +18,6 @@ commander
 		console.log( chalk.green(' where', chalk.blue('odd-networks'), 'matches an id for a network record in your data store and') );
 		console.log( chalk.green(' where', chalk.blue('apple-ios'), 'matches an id for a device record in your data store.') );
 		console.log('');
-		console.log('after generating the token create an entry in the device record for the jwt');
-		console.log(chalk.green('ex:', chalk.magenta('"jwt" : <the freshly generated token>') ) );
-		console.log('');
 	});
 
 commander
