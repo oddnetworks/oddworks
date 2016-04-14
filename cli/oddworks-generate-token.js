@@ -12,12 +12,10 @@ const COMMAND = 'generate-token';
 commander
 	.on('--help', () => {
 		console.log('  Example Usage:');
+		console.log(chalk.green(`    oddworks ${COMMAND} -n`, chalk.blue('odd-networks'), '-d', chalk.blue('apple-ios')));
 		console.log('');
-		console.log( chalk.green(`    oddworks ${COMMAND} -n`, chalk.blue('odd-networks'), '-d', chalk.blue('apple-ios') ) );
-		console.log('');
-		console.log( chalk.green(' where', chalk.blue('odd-networks'), 'matches an id for a network record in your data store and') );
-		console.log( chalk.green(' where', chalk.blue('apple-ios'), 'matches an id for a device record in your data store.') );
-		console.log('');
+		console.log(chalk.green('    where', chalk.blue('odd-networks'), 'matches an id for a network record in your data store and'));
+		console.log(chalk.green('    where', chalk.blue('apple-ios'), 'matches an id for a device record in your data store.'));
 	});
 
 commander
