@@ -14,7 +14,7 @@ const express = require('express');
 const middleware = require('./middleware');
 
 const bus = oddcast.bus();
-const server = express();
+const app = express();
 
 const redis = (isDevOrTest) ? require('fakeredis').createClient() : require('redis').createClient(process.env.REDIS_URI);
 
@@ -71,17 +71,17 @@ module.exports = Promise
 
 	// Start configuring express
 	.then(() => {
-		server.disable('x-powered-by');
-		server.set('trust proxy', 'loopback, linklocal, uniquelocal');
+		app.disable('x-powered-by');
+		app.set('trust proxy', 'loopback, linklocal, uniquelocal');
 
 		// Standard express middleware
-		server.use(middleware());
+		app.use(middleware());
 
 		// Decode the JWT set on the X-Access-Token header and attach to req.identity
-		server.use(identityService.middleware.verifyAccess({header: 'x-access-token'}));
+		app.use(identityService.middleware.verifyAccess({header: 'x-access-token'}));
 
 		// Decode the JWT set on the Authorization header and attach to req.authorization
-		// server.use(authorizationService.middleware({header: 'Authorization'}));
+		// app.use(authorizationService.middleware({header: 'Authorization'}));
 
 		// Attach auth endpoints
 		// POST /auth/device/code
@@ -89,15 +89,15 @@ module.exports = Promise
 		// POST /auth/device/token
 		// GET /auth/user/:clientUserID/devices
 		// DELETE /auth/user/:clientUserID/devices/:deviceUserProfileID
-		// server.use('/auth', authorizationService.router());
+		// app.use('/auth', authorizationService.router());
 
 		// Attach events endpoint
 		// POST /events
-		// server.use('/events', eventsService.router());
+		// app.use('/events', eventsService.router());
 
 		// Attach config endpoint
 		// GET /config
-		server.use('/', identityService.router());
+		app.use('/', identityService.router());
 
 		// Attach catalog endpoints with specific middleware, the authorization service is passed in as middleware to protect/decorate the entities as well
 		// GET /videos
@@ -106,11 +106,11 @@ module.exports = Promise
 		// GET /collections/:id
 		// GET /views
 		// GET /views/:id
-		server.use(catalogService.router({middleware: []}));
+		app.use(catalogService.router({middleware: []}));
 
-		server.use(eventsService.router());
+		app.use(eventsService.router());
 
-		server.get('/', (req, res, next) => {
+		app.get('/', (req, res, next) => {
 			res.body = {
 				message: 'Server is running'
 			};
@@ -118,15 +118,15 @@ module.exports = Promise
 		});
 
 		// Serialize all data into the JSON API Spec
-		server.use(jsonAPIService.middleware());
+		app.use(jsonAPIService.middleware());
 
-		server.use((req, res) => res.send(res.body));
+		app.use((req, res) => res.send(res.body));
 
 		// 404
-		server.use((req, res, next) => next(boom.notFound()));
+		app.use((req, res, next) => next(boom.notFound()));
 
 		// 5xx
-		server.use(function handleError(err, req, res, next) {
+		app.use(function handleError(err, req, res, next) {
 			if (err) {
 				var statusCode = _.get(err, 'output.statusCode', (err.status || 500));
 				if (!_.has(err, 'output.payload')) {
@@ -142,7 +142,7 @@ module.exports = Promise
 		});
 
 		if (!module.parent) {
-			server.listen(process.env.PORT, () => {
+			app.listen(process.env.PORT, () => {
 				if (isDevOrTest) {
 					console.log('');
 					console.log(chalk.green(`Server is running on port: ${process.env.PORT}`));
@@ -151,6 +151,6 @@ module.exports = Promise
 			});
 		}
 
-		return server;
+		return {bus, app};
 	})
 	.catch(err => console.log(err.stack));
