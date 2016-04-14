@@ -85,7 +85,7 @@ service.initialize = (bus, options) => {
 	return Promise.resolve(true);
 };
 
-service.router = (options) => {
+service.router = options => {
 	const types = options.types || ['collection', 'promotion', 'video', 'view'];
 
 	types.forEach(type => {

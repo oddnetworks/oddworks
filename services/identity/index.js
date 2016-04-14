@@ -52,7 +52,7 @@ service.initialize = (bus, options) => {
 	config.bus.queryHandler({role: 'identity', cmd: 'user'}, payload => {
 		return new Promise(resolve => {
 			// Get the user from the whatever user management system, local or 3rd party depending on service config
-			resolve(true);
+			resolve(payload);
 		});
 	});
 
@@ -113,7 +113,7 @@ service.middleware = {
 	}
 };
 
-service.router = (options) => {
+service.router = options => { // eslint-disable-line
 	router.get(`/config`, (req, res, next) => {
 		config.bus
 			.query({role: 'identity', cmd: 'config'}, {network: req.identity.network.id, device: req.identity.device.id})

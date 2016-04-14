@@ -24,13 +24,13 @@ service.initialize = (bus, options) => {
 	return Promise.resolve(true);
 };
 
-service.router = (options) => {
+service.router = options => {
 	router.post(`/events`, (req, res, next) => {
 		config.bus.broadcast({role: 'events'}, req.body);
 
 		res.status(201);
 		res.body = {
-			message: 'Event Logged'
+			message: 'Event Logged' || options.message
 		};
 		next();
 	});
