@@ -10,8 +10,8 @@
     "env": "if [ ! -f '.env' ]; then cp .env.sample .env; fi",
     "setup": "npm link && npm run env",
     "dev": "nodemon server.js -e js,json",
-    "test": "npm run lint && npm run tape",
-    "tape": "tape 'test/**/*_test.js' | tap-spec",
+    "test": "NODE_ENV=test npm run lint && npm run tape",
+    "tape": "NODE_ENV=test tape 'test/**/*_test.js' | tap-spec",
     "lint": "xo",
     "start": "node index.js -e js,json",
     "sec": "./node_modules/.bin/nsp check -o json --warn-only"
