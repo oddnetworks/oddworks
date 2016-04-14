@@ -2,7 +2,7 @@
 
 require('dotenv').config({silent: true});
 
-const isDevelopment = (process.env.NODE_ENV === 'development');
+const isDevOrTest = (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test');
 
 const chalk = require('chalk');
 const _ = require('lodash');
@@ -16,7 +16,7 @@ const middleware = require('./middleware');
 const bus = oddcast.bus();
 const server = express();
 
-const redis = (isDevelopment) ? require('fakeredis').createClient() : require('redis').createClient(process.env.REDIS_URI);
+const redis = (isDevOrTest) ? require('fakeredis').createClient() : require('redis').createClient(process.env.REDIS_URI);
 
 bus.events.use({}, oddcast.inprocessTransport());
 bus.commands.use({}, oddcast.inprocessTransport());
@@ -33,7 +33,7 @@ const jsonAPIService = require('./services/json-api');
 // const authorizationService = require('./services/authorization');
 // const eventsService = require('./services/events');
 
-Promise
+module.exports = Promise
 	// Initialize your stores
 	.join(
 		memoryStore.initialize(bus, {types: ['device', 'network']}),
@@ -62,7 +62,7 @@ Promise
 
 	// Seed the stores if in development mode
 	.then(() => {
-		if (isDevelopment) {
+		if (isDevOrTest) {
 			return require('./data/seed')(bus);
 		}
 
@@ -143,14 +143,14 @@ Promise
 
 		if (!module.parent) {
 			server.listen(process.env.PORT, () => {
-				if (isDevelopment) {
+				if (isDevOrTest) {
 					console.log('');
 					console.log(chalk.green(`Server is running on port: ${process.env.PORT}`));
 					console.log('');
 				}
 			});
 		}
+
+		return server;
 	})
 	.catch(err => console.log(err.stack));
-
-module.exports = server;
