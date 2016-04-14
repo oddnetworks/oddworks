@@ -14,7 +14,7 @@ module.exports = bus => {
 	return glob('./**/*.json', {cwd: __dirname})
 		.then(files => {
 			return _.map(files, file => {
-				return require(path.join(__dirname, file));
+				return require(path.join(__dirname, file)); // eslint-disable-line
 			});
 		})
 		.then(objects => {

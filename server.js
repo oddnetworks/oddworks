@@ -63,7 +63,7 @@ module.exports = Promise
 	// Seed the stores if in development mode
 	.then(() => {
 		if (isDevOrTest) {
-			return require('./data/seed')(bus);
+			return require('./data/seed')(bus); // eslint-disable-line
 		}
 
 		return true;

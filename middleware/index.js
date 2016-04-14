@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var compression = require('compression');
 var realIp = require('express-real-ip');
 
+/* eslint-disable */
 module.exports = () => {
 	return [
 		realIp(),
@@ -19,3 +20,4 @@ module.exports = () => {
 		compression()
 	];
 };
+/* eslint-enable */
