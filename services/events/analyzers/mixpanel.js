@@ -1,6 +1,6 @@
 const Mixpanel = require('mixpanel');
 
-const Analyzer = exports = module.exports = options => {
+function Analyzer(options) {
 	this.options = options || {};
 
 	try {
@@ -10,15 +10,16 @@ const Analyzer = exports = module.exports = options => {
 	}
 
 	return this;
-};
+}
+module.exports = Analyzer;
 
 Analyzer.prototype = {
 	prepare(payload) {
 		const statsPackage = {
 			/*eslint-disable */
 			'distinct_id': payload.distinctId,
-			'device_type': payload.deviceType,
-			'organization_id': payload.organization,
+			'device_id': payload.device,
+			'network_id': payload.network,
 			'content_type': payload.contentType,
 			'content_id': payload.contentId,
 			'geo_id': payload.geoId,
@@ -32,15 +33,14 @@ Analyzer.prototype = {
 		if (payload.elapsed) {
 			statsPackage['Time Watched'] = payload.elapsed;
 		}
-		if (payload.identity.device.category) {
-			statsPackage.Category = payload.identity.device.category;
+		if (payload.category) {
+			statsPackage.Category = payload.category;
 		}
 		if (payload.duration && payload.duration !== 0) {
-			payload.duration = parseInt(payload.duration, 10) / this.options.timeMultiplier;
-			statsPackage.duration = payload.duration;
+			statsPackage.duration = parseInt(payload.duration, 10);
 		}
-		if (payload.duration && payload.duration !== 0 && payload.elapsed && payload.contentType === 'video') {
-			statsPackage['Completion Percentage'] = getPercentage(parseInt(payload.elapsed, 10) / parseInt(payload.duration, 10));
+		if (statsPackage.duration && statsPackage.duration !== 0 && payload.elapsed && payload.contentType === 'video') {
+			statsPackage['Completion Percentage'] = getPercentage(parseInt(payload.elapsed, 10) / statsPackage.duration);
 		}
 		return statsPackage;
 	},

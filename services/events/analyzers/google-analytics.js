@@ -2,7 +2,7 @@
 
 const ua = require('universal-analytics');
 
-const Analyzer = exports = module.exports = options => {
+function Analyzer(options) {
 	this.options = options || {};
 
 	if (!this.options.trackingId) {
@@ -10,7 +10,8 @@ const Analyzer = exports = module.exports = options => {
 	}
 
 	return this;
-};
+}
+module.exports = Analyzer;
 
 Analyzer.prototype = {
 	prepare(payload) {
