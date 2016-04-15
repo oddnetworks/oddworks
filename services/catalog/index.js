@@ -22,13 +22,13 @@ service.initialize = (bus, options) => {
 							config.bus
 								.query({role: 'identity', cmd: 'config'}, {network: payload.network, device: payload.device})
 								.then(config => {
-									object = _.merge({}, _.pick(config.features, videoKeys), object);
+									object = _.merge({}, object, _.pick(config.features, videoKeys));
 									resolve(object);
 								})
 								.catch(err => reject(err));
+						} else {
+							resolve(object);
 						}
-
-						resolve(object);
 					})
 					.catch(err => reject(err));
 			}
@@ -46,9 +46,9 @@ service.initialize = (bus, options) => {
 								resolve(objects);
 							})
 							.catch(err => reject(err));
+					} else {
+						resolve(objects);
 					}
-
-					resolve(objects);
 				});
 		});
 	});
@@ -63,23 +63,35 @@ service.initialize = (bus, options) => {
 	});
 
 	config.bus.commandHandler({role: 'catalog', cmd: 'create', searchable: true}, payload => {
-		config.bus.sendCommand({role: 'catalog', cmd: 'create'}, payload);
-		config.bus.sendCommand({role: 'catalog', cmd: 'index'}, payload);
-		return Promise.resolve(true);
+		return new Promise((resolve, reject) => {
+			Promise.join(
+				config.bus.sendCommand({role: 'catalog', cmd: 'create'}, payload),
+				config.bus.sendCommand({role: 'catalog', cmd: 'index'}, payload),
+				() => {
+					resolve(true);
+				}
+			)
+			.catch(err => reject(err));
+		});
 	});
 
 	config.bus.commandHandler({role: 'catalog', cmd: 'create'}, payload => {
-		config.bus.sendCommand({role: 'store', cmd: 'set', type: payload.type}, payload);
-		return Promise.resolve(true);
+		return new Promise((resolve, reject) => {
+			config.bus.sendCommand({role: 'store', cmd: 'set', type: payload.type}, payload)
+				.then(() => resolve(true))
+				.catch(err => reject(err));
+		});
 	});
 
 	config.bus.commandHandler({role: 'catalog', cmd: 'index'}, payload => {
-		config.bus.query({role: 'catalog', cmd: 'fetch'}, payload)
-			.then(object => {
-				const text = `${object.title} ${object.description}`;
-				config.bus.sendCommand({role: 'store', cmd: 'index', type: payload.type}, {id: object.id, text});
-			});
-		return Promise.resolve(true);
+		return new Promise((resolve, reject) => {
+			config.bus.query({role: 'catalog', cmd: 'fetch'}, payload)
+				.then(object => {
+					return config.bus.sendCommand({role: 'store', cmd: 'index', type: payload.type}, {id: object.id, text: `${object.title} ${object.description}`});
+				})
+				.then(() => resolve(true))
+				.catch(err => reject(err));
+		});
 	});
 
 	return Promise.resolve(true);

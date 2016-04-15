@@ -30,8 +30,15 @@ store.initialize = (bus, options) => {
 };
 
 function index(payload) {
-	config.options.search.index(payload.text, payload.id);
-	return Promise.resolve(true);
+	return new Promise((resolve, reject) => {
+		config.options.search.index(payload.text, payload.id, err => {
+			if (err) {
+				reject(err);
+			}
+
+			resolve(true);
+		});
+	});
 }
 
 function query(payload) {

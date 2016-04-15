@@ -37,7 +37,8 @@ function get(payload) {
 		if (payload.id) {
 			return config.options.redis
 				.hgetAsync(payload.type, payload.id)
-				.then(object => resolve(JSON.parse(object)));
+				.then(object => resolve(JSON.parse(object)))
+				.catch(err => reject(err));
 		}
 
 		return config.options.redis
@@ -47,14 +48,16 @@ function get(payload) {
 					return JSON.parse(object);
 				});
 				return resolve(objects);
-			});
+			})
+			.catch(err => reject(err));
 	});
 }
 
 function set(payload) {
-	return new Promise(resolve => {
+	return new Promise((resolve, reject) => {
 		payload.id = payload.id || uuid.v4();
-		config.options.redis.hsetAsync(payload.type, payload.id, JSON.stringify(payload));
-		return resolve(payload);
+		config.options.redis.hsetAsync(payload.type, payload.id, JSON.stringify(payload))
+			.then(() => resolve(payload))
+			.catch(err => reject(err));
 	});
 }
