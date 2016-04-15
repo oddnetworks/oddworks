@@ -17,7 +17,9 @@ service.initialize = (bus, options) => {
 
 	config.bus.observe({role: 'events'}, payload => {
 		_.each(config.options.analyzers, analyzer => {
-			analyzer.send(payload);
+			if (analyzer.send) {
+				analyzer.send(payload);
+			}
 		});
 	});
 
