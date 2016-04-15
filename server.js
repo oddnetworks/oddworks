@@ -50,8 +50,10 @@ module.exports = Promise
 				eventsService.initialize(bus, {
 					redis,
 					analyzers: [
-						eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
-						eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
+						/* eslint-disable */
+						new eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
+						new eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
+						/* eslint-enable */
 					]
 				}),
 				jsonAPIService.initialize(bus, {})
