@@ -36,7 +36,7 @@ service.initialize = (bus, options) => {
 	return Promise.resolve(true);
 };
 
-service.middleware = (bus, options) => {
+service.middleware = (bus, options) => { // eslint-disable-line
 	return (req, res, next) => {
 		if (_.isEmpty(res.body)) {
 			return next(boom.notFound());

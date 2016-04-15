@@ -17,20 +17,22 @@ service.initialize = (bus, options) => {
 
 	config.bus.observe({role: 'events'}, payload => {
 		_.each(config.options.analyzers, analyzer => {
-			analyzer.send(payload);
+			if (analyzer.send) {
+				analyzer.send(payload);
+			}
 		});
 	});
 
 	return Promise.resolve(true);
 };
 
-service.router = (options) => {
+service.router = options => {
 	router.post(`/events`, (req, res, next) => {
 		config.bus.broadcast({role: 'events'}, req.body);
 
 		res.status(201);
 		res.body = {
-			message: 'Event Logged'
+			message: 'Event Logged' || options.message
 		};
 		next();
 	});

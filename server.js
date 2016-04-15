@@ -2,7 +2,7 @@
 
 require('dotenv').config({silent: true});
 
-const isDevelopment = (process.env.NODE_ENV === 'development');
+const isDevOrTest = (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test');
 
 const chalk = require('chalk');
 const _ = require('lodash');
@@ -14,9 +14,9 @@ const express = require('express');
 const middleware = require('./middleware');
 
 const bus = oddcast.bus();
-const server = express();
+const app = express();
 
-const redis = (isDevelopment) ? require('fakeredis').createClient() : require('redis').createClient(process.env.REDIS_URI);
+const redis = (isDevOrTest) ? require('fakeredis').createClient() : require('redis').createClient(process.env.REDIS_URI);
 
 bus.events.use({}, oddcast.inprocessTransport());
 bus.commands.use({}, oddcast.inprocessTransport());
@@ -33,7 +33,7 @@ const jsonAPIService = require('./services/json-api');
 // const authorizationService = require('./services/authorization');
 // const eventsService = require('./services/events');
 
-Promise
+module.exports = Promise
 	// Initialize your stores
 	.join(
 		memoryStore.initialize(bus, {types: ['device', 'network']}),
@@ -50,8 +50,10 @@ Promise
 				eventsService.initialize(bus, {
 					redis,
 					analyzers: [
-						eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
-						eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
+						/* eslint-disable */
+						new eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
+						new eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
+						/* eslint-enable */
 					]
 				}),
 				jsonAPIService.initialize(bus, {})
@@ -62,8 +64,8 @@ Promise
 
 	// Seed the stores if in development mode
 	.then(() => {
-		if (isDevelopment) {
-			return require('./data/seed')(bus);
+		if (isDevOrTest) {
+			return require('./data/seed')(bus); // eslint-disable-line
 		}
 
 		return true;
@@ -71,17 +73,17 @@ Promise
 
 	// Start configuring express
 	.then(() => {
-		server.disable('x-powered-by');
-		server.set('trust proxy', 'loopback, linklocal, uniquelocal');
+		app.disable('x-powered-by');
+		app.set('trust proxy', 'loopback, linklocal, uniquelocal');
 
 		// Standard express middleware
-		server.use(middleware());
+		app.use(middleware());
 
 		// Decode the JWT set on the X-Access-Token header and attach to req.identity
-		server.use(identityService.middleware.verifyAccess({header: 'x-access-token'}));
+		app.use(identityService.middleware.verifyAccess({header: 'x-access-token'}));
 
 		// Decode the JWT set on the Authorization header and attach to req.authorization
-		// server.use(authorizationService.middleware({header: 'Authorization'}));
+		// app.use(authorizationService.middleware({header: 'Authorization'}));
 
 		// Attach auth endpoints
 		// POST /auth/device/code
@@ -89,15 +91,15 @@ Promise
 		// POST /auth/device/token
 		// GET /auth/user/:clientUserID/devices
 		// DELETE /auth/user/:clientUserID/devices/:deviceUserProfileID
-		// server.use('/auth', authorizationService.router());
+		// app.use('/auth', authorizationService.router());
 
 		// Attach events endpoint
 		// POST /events
-		// server.use('/events', eventsService.router());
+		// app.use('/events', eventsService.router());
 
 		// Attach config endpoint
 		// GET /config
-		server.use('/', identityService.router());
+		app.use('/', identityService.router());
 
 		// Attach catalog endpoints with specific middleware, the authorization service is passed in as middleware to protect/decorate the entities as well
 		// GET /videos
@@ -106,11 +108,11 @@ Promise
 		// GET /collections/:id
 		// GET /views
 		// GET /views/:id
-		server.use(catalogService.router({middleware: []}));
+		app.use(catalogService.router({middleware: []}));
 
-		server.use(eventsService.router());
+		app.use(eventsService.router());
 
-		server.get('/', (req, res, next) => {
+		app.get('/', (req, res, next) => {
 			res.body = {
 				message: 'Server is running'
 			};
@@ -118,15 +120,15 @@ Promise
 		});
 
 		// Serialize all data into the JSON API Spec
-		server.use(jsonAPIService.middleware());
+		app.use(jsonAPIService.middleware());
 
-		server.use((req, res) => res.send(res.body));
+		app.use((req, res) => res.send(res.body));
 
 		// 404
-		server.use((req, res, next) => next(boom.notFound()));
+		app.use((req, res, next) => next(boom.notFound()));
 
 		// 5xx
-		server.use(function handleError(err, req, res, next) {
+		app.use(function handleError(err, req, res, next) {
 			if (err) {
 				var statusCode = _.get(err, 'output.statusCode', (err.status || 500));
 				if (!_.has(err, 'output.payload')) {
@@ -142,15 +144,15 @@ Promise
 		});
 
 		if (!module.parent) {
-			server.listen(process.env.PORT, () => {
-				if (isDevelopment) {
+			app.listen(process.env.PORT, () => {
+				if (isDevOrTest) {
 					console.log('');
 					console.log(chalk.green(`Server is running on port: ${process.env.PORT}`));
 					console.log('');
 				}
 			});
 		}
+
+		return {bus, app};
 	})
 	.catch(err => console.log(err.stack));
-
-module.exports = server;

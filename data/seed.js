@@ -8,16 +8,20 @@ const Promise = require('bluebird');
 const glob = Promise.promisifyAll(require('glob')).GlobAsync;
 const searchableTypes = ['collection', 'video'];
 
-module.exports = (bus) => {
+const isDev = (process.env.NODE_ENV === 'development');
+
+module.exports = bus => {
 	return glob('./**/*.json', {cwd: __dirname})
 		.then(files => {
 			return _.map(files, file => {
-				return require(path.join(__dirname, file));
+				return require(path.join(__dirname, file)); // eslint-disable-line
 			});
 		})
 		.then(objects => {
-			console.log('');
-			console.log(chalk.blue(`Loading test data...`));
+			if (isDev) {
+				console.log('');
+				console.log(chalk.blue(`Loading test data...`));
+			}
 			return Promise.all(
 				_.map(objects, object => {
 					const searchable = Boolean(_.indexOf(searchableTypes, object.type) + 1);
@@ -25,7 +29,9 @@ module.exports = (bus) => {
 					if (searchable) {
 						pattern = {role: 'catalog', cmd: 'create', searchable: true};
 					}
-					console.log(chalk.blue(`${_.capitalize(object.type)}: ${object.id} ${((object.type === 'device') ? object.jwt : '')}`));
+					if (isDev) {
+						console.log(chalk.blue(`${_.capitalize(object.type)}: ${object.id} ${((object.type === 'device') ? object.jwt : '')}`));
+					}
 					return bus.sendCommand(pattern, object);
 				})
 			);
