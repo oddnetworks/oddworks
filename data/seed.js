@@ -7,6 +7,7 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const glob = Promise.promisifyAll(require('glob')).GlobAsync;
 const searchableTypes = ['collection', 'video'];
+const jwt = require('jsonwebtoken');
 
 const isDev = (process.env.NODE_ENV === 'development');
 
@@ -30,7 +31,17 @@ module.exports = bus => {
 						pattern = {role: 'catalog', cmd: 'create', searchable: true};
 					}
 					if (isDev) {
-						console.log(chalk.blue(`${_.capitalize(object.type)}: ${object.id} ${((object.type === 'device') ? object.jwt : '')}`));
+						
+						const payload = {
+							version: 1,
+							network: object.network,
+							device: object.id,
+							scope: ['device']
+						};	
+							
+						const token = jwt.sign(payload, process.env.JWT_SECRET);
+						
+						console.log(chalk.blue(`${_.capitalize(object.type)}: ${object.id} ${((object.type === 'device') ? token : '')}`));
 					}
 					return bus.sendCommand(pattern, object);
 				})
