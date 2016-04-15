@@ -31,16 +31,14 @@ module.exports = bus => {
 						pattern = {role: 'catalog', cmd: 'create', searchable: true};
 					}
 					if (isDev) {
-						
 						const payload = {
 							version: 1,
 							network: object.network,
 							device: object.id,
 							scope: ['device']
-						};	
-							
+						};
+
 						const token = jwt.sign(payload, process.env.JWT_SECRET);
-						
 						console.log(chalk.blue(`${_.capitalize(object.type)}: ${object.id} ${((object.type === 'device') ? token : '')}`));
 					}
 					return bus.sendCommand(pattern, object);
