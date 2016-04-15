@@ -1,11 +1,88 @@
 'use strict';
 
 const test = require('tape');
+const sinon = require('sinon');
+const request = require('supertest');
 
-const analyzers = require('../../services/events/analyzers');
+let server;
+const oddworks = require('../server');
+const accessToken = require('../data/device/apple-ios').jwt;
+const analyzers = require('../services/events/analyzers');
+const eventsService = require('../services/events');
+const testHelper = require('./test-helper');
 
-test('EVENTS ANALYZERS', t => {
-	t.end();
+const customAnalyzers = [{
+	send(payload) {
+		return payload;
+	}
+}, {
+	send(payload) {
+		return payload;
+	}
+}, {
+	forward(payload) {
+		return payload;
+	}
+}];
+
+test('EVENTS', t => {
+	eventsService.initialize(testHelper.bus, {analyzers: customAnalyzers});
+
+	oddworks
+		.then(result => {
+			server = result;
+			t.end();
+		});
+});
+
+test('Route: /events', t => {
+	t.plan(1);
+
+	request(server.app)
+		.post('/events')
+		.set('Accept', 'application/json')
+		.set('x-access-token', accessToken)
+		.expect(201)
+		.expect('Content-Type', /json/)
+		.end(function (err, res) {
+			t.ok(res.body);
+			t.end(err);
+		});
+});
+
+test(`{role: 'events'}`, t => {
+	t.plan(3);
+
+	const spy1 = sinon.spy(customAnalyzers[0], 'send');
+	const spy2 = sinon.spy(customAnalyzers[1], 'send');
+	const spy3 = sinon.spy(customAnalyzers[2], 'forward');
+
+	const payload = {
+		distinctId: 131313,
+		sessionId: 99999,
+		contentId: 'daily-show-video-1',
+		contentType: 'video',
+		title: 'Daily Show 1',
+		action: 'video:play',
+		network: 'odd-networks',
+		device: 'apple-ios',
+		category: 'MOBILE',
+		elapsed: 10000,
+		duration: 60000
+	};
+
+	testHelper.bus.observe({role: 'events'}, () => {
+		t.ok(spy1.calledOnce, 'analyzer 1 .send() called');
+		t.ok(spy2.calledOnce, 'analyzer 2 .send() called');
+		t.ok(spy3.notCalled, 'analyzer 3 .send() does not exist and .forward() not called');
+
+		customAnalyzers[0].send.restore();
+		customAnalyzers[1].send.restore();
+		customAnalyzers[2].forward.restore();
+		t.end();
+	});
+
+	testHelper.bus.broadcast({role: 'events'}, payload);
 });
 
 test('Google Analytics', t => {
