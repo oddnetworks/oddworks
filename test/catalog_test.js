@@ -4,10 +4,10 @@ const test = require('tape');
 const request = require('supertest');
 
 let server;
-const oddworks = require('../../server');
-const accessToken = require('../../data/device/apple-ios').jwt;
+const oddworks = require('../server');
+const accessToken = require('../data/device/apple-ios').jwt;
 
-test('CATALOG ROUTES', t => {
+test('CATALOG', t => {
 	oddworks
 		.then(result => {
 			server = result;
