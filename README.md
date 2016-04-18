@@ -131,6 +131,10 @@ Get updates on Odd channel's development and chat with the project maintainers a
 * Check out the [API sample responses](https://www.oddchannels.com/documentation/oddworks/).
 * Read and subscribe to [The Official Odd channels Blog](http://blog.oddchannels.com/).
 
+## More Information
+
+For additional help getting [up and running with Oddworks have a look at this blog post](https://medium.com/@OddNetworks/up-and-running-with-the-oddworks-server-199c897c4224#.n0pes4t1n)
+
 ## License
 
 Apache 2.0 © [Odd channels](http://oddchannels.com)
