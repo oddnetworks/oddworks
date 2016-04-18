@@ -1,18 +1,4 @@
 language: node_js
-env:
-  - CXX=g++-4.8
 node_js:
   - 'stable'
   - '4'
-  - '0.12'
-services:
-  - elasticsearch
-before_script:
-  - sleep 10
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-4.8
-    - g++-4.8
