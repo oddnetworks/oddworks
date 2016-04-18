@@ -33,13 +33,13 @@ module.exports = bus => {
 					if (isDev) {
 						const payload = {
 							version: 1,
-							network: object.network,
-							device: object.id,
-							scope: ['device']
+							channel: object.channel,
+							platform: object.id,
+							scope: ['platform']
 						};
 
 						const token = jwt.sign(payload, process.env.JWT_SECRET);
-						console.log(chalk.blue(`${_.capitalize(object.type)}: ${object.id} ${((object.type === 'device') ? token : '')}`));
+						console.log(chalk.blue(`${_.capitalize(object.type)}: ${object.id} ${((object.type === 'platform') ? token : '')}`));
 					}
 					return bus.sendCommand(pattern, object);
 				})

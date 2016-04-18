@@ -1,7 +1,7 @@
 {
 	"id": "featured-media",
 	"type": "collection",
-	"network": "odd-networks",
+	"channel": "odd-networks",
 	"relationships": {
 		"entries": {
 			"data": [{

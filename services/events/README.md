@@ -39,7 +39,7 @@ eventsService.initialize(bus, {
 * `action`
 * `contentType`
 * `contentId`
-* `deviceType`
+* `platformType`
 * `organization`
 * `sessionId` _optional_
 * `geoId` _optional_
@@ -65,7 +65,7 @@ eventsService.initialize(bus, {
 * `distinctId`
 * `contentType`
 * `contentId`
-* `deviceType`
+* `platformType`
 * `organization`
 * `elapsed`
 * `duration`

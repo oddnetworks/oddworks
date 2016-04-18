@@ -1,8 +1,8 @@
 {
 	"id": "menu",
 	"type": "view",
-	"network": "odd-networks",
-	"title": "Odd Networks Menu",
+	"channel": "odd-networks",
+	"title": "Odd channels Menu",
 	"description": "",
 	"relationships": {
 		"items": {

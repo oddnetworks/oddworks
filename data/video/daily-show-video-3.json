@@ -1,7 +1,7 @@
 {
 	"id": "daily-show-video-3",
 	"type": "video",
-	"network": "odd-networks",
+	"channel": "odd-networks",
 	"title": "Daily Show: Video 3",
 	"description": "",
 	"images": {

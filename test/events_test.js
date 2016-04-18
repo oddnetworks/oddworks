@@ -6,7 +6,7 @@ const request = require('supertest');
 
 let server;
 const oddworks = require('../server');
-const accessToken = require('../data/device/apple-ios').jwt;
+const accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaGFubmVsIjoib2RkLW5ldHdvcmtzIiwicGxhdGZvcm0iOiJhcHBsZS1pb3MiLCJzY29wZSI6WyJwbGF0Zm9ybSJdLCJpYXQiOjE0NjA5ODg5NzB9.-k0wFuWD3FFaRZ7btIad9hiJJyEIBqiR4cS8cGeGMoM';
 const analyzers = require('../services/events/analyzers');
 const eventsService = require('../services/events');
 const testHelper = require('./test-helper');
@@ -64,8 +64,8 @@ test(`{role: 'events'}`, t => {
 		contentType: 'video',
 		title: 'Daily Show 1',
 		action: 'video:play',
-		network: 'odd-networks',
-		device: 'apple-ios',
+		channel: 'odd-networks',
+		platform: 'apple-ios',
 		category: 'MOBILE',
 		elapsed: 10000,
 		duration: 60000
@@ -128,16 +128,16 @@ test('Mixpanel', t => {
 		contentType: 'video',
 		title: 'Daily Show 1',
 		action: 'video:play',
-		network: 'odd-networks',
-		device: 'apple-ios',
+		channel: 'odd-networks',
+		platform: 'apple-ios',
 		category: 'MOBILE',
 		elapsed: 10000,
 		duration: 60000
 	};
 	const preparedPayload = mixpanel.prepare(payload);
 	t.equal(preparedPayload.distinct_id, 131313, 'distinct id type is set');
-	t.equal(preparedPayload.network_id, 'odd-networks', 'network id is is app');
-	t.equal(preparedPayload.device_id, 'apple-ios', 'device id is is app');
+	t.equal(preparedPayload.channel_id, 'odd-networks', 'channel id is is app');
+	t.equal(preparedPayload.platform_id, 'apple-ios', 'platform id is is app');
 	t.equal(preparedPayload.content_type, 'video', 'content type set');
 	t.equal(preparedPayload.content_id, 'daily-show-video-1', 'content id set');
 	t.notOk(preparedPayload.geo_id, 'geo id not set');

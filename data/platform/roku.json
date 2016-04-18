@@ -1,9 +1,9 @@
 {
-	"id": "apple-tv",
+	"id": "roku",
 	"type": "platform",
 	"channel": "odd-networks",
-	"platformType": "APPLE_IOS",
-	"category": "MOBILE",
+	"platformType": "ROKU",
+	"category": "TV",
 	"active": true,
 	"features": {
 		"authentication": {
@@ -12,8 +12,6 @@
 		}
 	},
 	"views": {
-		"homepage": "odd-networks-homepage",
-		"splash": "odd-networks-splash",
-		"menu": "odd-networks-menu"
+		"homepage": "odd-networks-homepage"
 	}
 }

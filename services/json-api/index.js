@@ -59,8 +59,8 @@ service.middleware = (bus, options) => { // eslint-disable-line
 			self: `${baseUrl}${req.originalUrl}`
 		};
 		res.body.meta = {
-			network: req.identity.network.id,
-			device: req.identity.device.deviceType
+			channel: req.identity.channel.id,
+			platform: req.identity.platform.platformType
 		};
 
 		if (!_.isArray(data) && _.isString(req.query.include)) {

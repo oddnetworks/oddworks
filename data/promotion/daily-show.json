@@ -1,9 +1,9 @@
 {
 	"id": "daily-show",
 	"type": "promotion",
-	"network": "odd-networks",
-	"title": "Odd Networks Daily Show",
-	"description": "Promote your content with Odd Networks!",
+	"channel": "odd-networks",
+	"title": "Odd channels Daily Show",
+	"description": "Promote your content with Odd channels!",
 	"images": {
 		"aspect16x9": "http://dummyimage.com/16:9x1440&text=Promotion",
 		"aspect4x3": "http://dummyimage.com/4:3x1440&text=Promotion",

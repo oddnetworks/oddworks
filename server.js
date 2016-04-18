@@ -36,7 +36,7 @@ const jsonAPIService = require('./services/json-api');
 module.exports = Promise
 	// Initialize your stores
 	.join(
-		memoryStore.initialize(bus, {types: ['device', 'network']}),
+		memoryStore.initialize(bus, {types: ['platform', 'channel']}),
 		redisStore.initialize(bus, {redis, types: ['collection', 'promotion', 'video', 'view']}),
 		redisSearchStore.initialize(bus, {redis, types: ['collection', 'video']})
 	)
@@ -86,11 +86,11 @@ module.exports = Promise
 		// app.use(authorizationService.middleware({header: 'Authorization'}));
 
 		// Attach auth endpoints
-		// POST /auth/device/code
+		// POST /auth/platform/code
 		// POST /auth/user/authorize
-		// POST /auth/device/token
-		// GET /auth/user/:clientUserID/devices
-		// DELETE /auth/user/:clientUserID/devices/:deviceUserProfileID
+		// POST /auth/platform/token
+		// GET /auth/user/:clientUserID/platforms
+		// DELETE /auth/user/:clientUserID/platforms/:platformUserProfileID
 		// app.use('/auth', authorizationService.router());
 
 		// Attach events endpoint

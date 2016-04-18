@@ -18,8 +18,8 @@ Analyzer.prototype = {
 		const statsPackage = {
 			/*eslint-disable */
 			'distinct_id': payload.distinctId,
-			'device_id': payload.device,
-			'network_id': payload.network,
+			'platform_id': payload.platform,
+			'channel_id': payload.channel,
 			'content_type': payload.contentType,
 			'content_id': payload.contentId,
 			'geo_id': payload.geoId,

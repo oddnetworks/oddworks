@@ -1,7 +1,7 @@
 {
 	"id": "homepage-promotions",
 	"type": "collection",
-	"network": "odd-networks",
+	"channel": "odd-networks",
 	"relationships": {
 		"entries": {
 			"data": [{

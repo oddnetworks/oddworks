@@ -7,6 +7,6 @@ const commander = require('commander');
 
 commander
 	.usage('[cmd]')
-	.command('generate-token', 'Generate a device JWT for the network and device ids specified.')
+	.command('generate-token', 'Generate a platform JWT for the channel and platform ids specified.')
 	.command('token-list', 'List currently available JWT Tokens')
 	.parse(process.argv);

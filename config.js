@@ -7,7 +7,7 @@ const env = process.env.NODE_ENV;
 const hostname = process.env.DOMAIN;
 const protocol = process.env.PROTOCOL;
 const port = env === 'test' ? null : process.env.PORT;
-const mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/device';
+const mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/platform';
 const redisURL = process.env.REDIS_URI || 'redis://localhost:6379';
 const redisURI = new URI(redisURL);
 const elasticSearchHost = process.env.ELASTICSEARCH_URI || process.env.FOUNDELASTICSEARCH_URL || process.env.SEARCHBOX_URL || 'localhost:9200';
@@ -30,12 +30,12 @@ module.exports = deepFreeze({
 	},
 	'opbeat': {
 		appId: process.env.OPBEAT_APP_ID,
-		networkId: process.env.OPBEAT_network_ID,
+		channelId: process.env.OPBEAT_channel_ID,
 		secretToken: process.env.OPBEAT_SECRET_TOKEN,
 		logLevel: process.env.OPBEAT_LOG_LEVEL || 'info',
 		active: (env === 'production' || env === 'staging'),
 		instrument: true,
-		hostname: ('odd-device-api-' + env)
+		hostname: ('odd-platform-api-' + env)
 	},
 	'env': env,
 	'main': {
@@ -71,7 +71,7 @@ module.exports = deepFreeze({
 		// converts milliseconds into seconds (for now)
 		timeMultiplier: 1000
 	},
-	'device-auth': {
+	'platform-auth': {
 		userCodeExpiresIn: 1800,
 		accessTokenRequestInterval: 5
 	},

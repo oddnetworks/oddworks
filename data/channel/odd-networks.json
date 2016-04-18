@@ -1,14 +1,14 @@
 {
 	"id": "odd-networks",
 	"type": "channel",
-	"title": "Odd Networks",
+	"title": "Odd channels",
 	"features": {
 		"authentication": {
 			"enabled": true
 		},
 		"sharing": {
 			"enabled": true,
-			"text": "Watch the @oddnetworks show Live on mobile and TV connected devices!"
+			"text": "Watch the @oddchannels show Live on mobile and TV connected platforms!"
 		},
 		"metrics": {
 			"enabled": true,

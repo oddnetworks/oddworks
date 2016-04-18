@@ -1,6 +1,6 @@
 # Identity Service
 
-Core service for dealing with networks and devices.
+Core service for dealing with channels and platforms.
 
 ## Initialization
 
@@ -12,7 +12,7 @@ Core service for dealing with networks and devices.
 
 ### query({role: 'identity', cmd: 'verify'}, payload)
 
-Verify the JWT to ensure it was signed correctly and the network and device exist.
+Verify the JWT to ensure it was signed correctly and the channel and platform exist.
 
 **Payload**
 
@@ -20,28 +20,28 @@ Verify the JWT to ensure it was signed correctly and the network and device exis
 
 **Result**
 
-* `network`
-* `device`
+* `channel`
+* `platform`
 
 ### query({role: 'identity', cmd: 'config'}, payload)
 
-Verify the JWT to ensure it was signed correctly and the network and device exist.
+Verify the JWT to ensure it was signed correctly and the channel and platform exist.
 
 **Payload**
 
-* `network` - the id of the network
-* `device` - the id of the device
+* `channel` - the id of the channel
+* `platform` - the id of the platform
 
 **Result**
 
-* `features` - the merged result of all resource → device → network feature keys
-* `views` - the view ids for the device
+* `features` - the merged result of all resource → platform → channel feature keys
+* `views` - the view ids for the platform
 
 ## Middlware
 
 ### verifyAccess(options)
 
-This will verify that the JWT used to make the request is valid. If it is then it will attach the found `network` and `device` objects onto `req.identity` for future reference, otherwise, it will throw a `HTTP 401`.
+This will verify that the JWT used to make the request is valid. If it is then it will attach the found `channel` and `platform` objects onto `req.identity` for future reference, otherwise, it will throw a `HTTP 401`.
 
 **Options**
 
@@ -51,4 +51,4 @@ This will verify that the JWT used to make the request is valid. If it is then i
 
 ### GET /config
 
-Responds with the result from the **{role: 'identity', cmd: 'config'}** pattern using the `req.identity` information for `network` and `device`.
+Responds with the result from the **{role: 'identity', cmd: 'config'}** pattern using the `req.identity` information for `channel` and `platform`.

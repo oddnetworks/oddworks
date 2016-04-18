@@ -25,7 +25,7 @@ Analyzer.prototype = {
 
 		var params = {
 			t: 'event',
-			av: payload.deviceType,
+			av: payload.platformType,
 			an: payload.organization,
 			ds: 'app',
 			ec: action[0],

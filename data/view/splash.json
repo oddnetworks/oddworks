@@ -1,8 +1,8 @@
 {
 	"id": "splash",
 	"type": "view",
-	"network": "odd-networks",
-	"title": "Odd Networks Splash",
+	"channel": "odd-networks",
+	"title": "Odd channels Splash",
 	"relationships": {
 		"promotion": {
 			"data": {

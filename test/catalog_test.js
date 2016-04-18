@@ -5,7 +5,7 @@ const request = require('supertest');
 
 let server;
 const oddworks = require('../server');
-const accessToken = require('../data/device/apple-ios').jwt;
+const accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaGFubmVsIjoib2RkLW5ldHdvcmtzIiwicGxhdGZvcm0iOiJhcHBsZS1pb3MiLCJzY29wZSI6WyJwbGF0Zm9ybSJdLCJpYXQiOjE0NjA5ODg5NzB9.-k0wFuWD3FFaRZ7btIad9hiJJyEIBqiR4cS8cGeGMoM';
 
 test('CATALOG', t => {
 	oddworks
@@ -27,7 +27,7 @@ test('Route: /collections/:id', t => {
 		.end(function (err, res) {
 			t.equal(res.body.data.id, 'daily-show', 'id is set');
 			t.equal(res.body.data.type, 'collection', 'type is set');
-			t.equal(res.body.data.attributes.title, 'Odd Networks Daily Show', 'title is set');
+			t.equal(res.body.data.attributes.title, 'Odd channels Daily Show', 'title is set');
 			t.equal(res.body.data.relationships.entries.data.length, 3, 'collection has 3 videos');
 			t.end(err);
 		});
@@ -93,7 +93,7 @@ test('Route: /views/:id', t => {
 		.end(function (err, res) {
 			t.equal(res.body.data.id, 'homepage', 'id is set');
 			t.equal(res.body.data.type, 'view', 'type is set');
-			t.equal(res.body.data.attributes.title, 'Odd Networks Homepage', 'title is set');
+			t.equal(res.body.data.attributes.title, 'Odd channels Homepage', 'title is set');
 			t.equal(res.body.data.relationships.promotion.data.type, 'collection', 'relationship is a collection');
 			t.equal(res.body.data.relationships.featuredMedia.data.type, 'collection', 'relationship is a collection');
 			t.equal(res.body.data.relationships.featuredCollections.data.type, 'collection', 'relationship is a collection');

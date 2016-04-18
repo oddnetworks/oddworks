@@ -22,13 +22,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/oddnetworks/oddworks.git"
+    "url": "https://github.com/oddchannels/oddworks.git"
   },
-  "author": "Odd Networks",
+  "author": "Odd channels",
   "bugs": {
-    "url": "https://github.com/oddnetworks/odd-api/issues"
+    "url": "https://github.com/oddchannels/odd-api/issues"
   },
-  "homepage": "https://github.com/oddnetworks/odd-api",
+  "homepage": "https://github.com/oddchannels/odd-api",
   "dependencies": {
     "async": "^1.4.2",
     "bluebird": "^3.3.4",

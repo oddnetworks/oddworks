@@ -26,8 +26,8 @@ commander
 if (commander.channel && commander.platform) {
 	const payload = {
 		version: 1,
-		network: commander.channel,
-		device: commander.platform,
+		channel: commander.channel,
+		platform: commander.platform,
 		scope: ['platform']
 	};
 	const token = jwt.sign(payload, process.env.JWT_SECRET);

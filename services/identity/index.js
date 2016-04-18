@@ -21,13 +21,13 @@ service.initialize = (bus, options) => {
 				.then(token => {
 					Promise
 						.join(
-							config.bus.query({role: 'store', cmd: 'get', type: 'network'}, {id: token.network, type: 'network'}),
-							config.bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: token.device, type: 'device'}),
-							(network, device) => {
-								if (!network.length && !device.length) {
-									resolve({network, device});
+							config.bus.query({role: 'store', cmd: 'get', type: 'channel'}, {id: token.channel, type: 'channel'}),
+							config.bus.query({role: 'store', cmd: 'get', type: 'platform'}, {id: token.platform, type: 'platform'}),
+							(channel, platform) => {
+								if (!channel.length && !platform.length) {
+									resolve({channel, platform});
 								} else {
-									reject(new Error('network or device not found'));
+									reject(new Error('channel or platform not found'));
 								}
 							}
 						);
@@ -41,10 +41,10 @@ service.initialize = (bus, options) => {
 			jwt
 				.verifyAsync(payload.token, config.options.jwtSecret)
 				.then(token => {
-					const id = `${token.network}:${token.device}:${token.user}`;
-					return config.bus.query({role: 'store', cmd: 'get', type: 'linked-device'}, {id: id, type: 'linked-device'});
+					const id = `${token.channel}:${token.platform}:${token.user}`;
+					return config.bus.query({role: 'store', cmd: 'get', type: 'linked-platform'}, {id: id, type: 'linked-platform'});
 				})
-				.then(linkedDevice => resolve(linkedDevice))
+				.then(linkedplatform => resolve(linkedplatform))
 				.catch(err => reject(err));
 		});
 	});
@@ -60,13 +60,13 @@ service.initialize = (bus, options) => {
 		return new Promise((resolve, reject) => {
 			Promise
 				.join(
-					config.bus.query({role: 'store', cmd: 'get', type: 'network'}, {id: payload.network, type: 'network'}),
-					config.bus.query({role: 'store', cmd: 'get', type: 'device'}, {id: payload.device, type: 'device'}),
-					(network, device) => {
-						if (!network.length && !device.length) {
-							resolve(composeConfig({network, device}));
+					config.bus.query({role: 'store', cmd: 'get', type: 'channel'}, {id: payload.channel, type: 'channel'}),
+					config.bus.query({role: 'store', cmd: 'get', type: 'platform'}, {id: payload.platform, type: 'platform'}),
+					(channel, platform) => {
+						if (!channel.length && !platform.length) {
+							resolve(composeConfig({channel, platform}));
 						} else {
-							reject(new Error('network or device not found'));
+							reject(new Error('channel or platform not found'));
 						}
 					}
 				)
@@ -116,7 +116,7 @@ service.middleware = {
 service.router = options => { // eslint-disable-line
 	router.get(`/config`, (req, res, next) => {
 		config.bus
-			.query({role: 'identity', cmd: 'config'}, {network: req.identity.network.id, device: req.identity.device.id})
+			.query({role: 'identity', cmd: 'config'}, {channel: req.identity.channel.id, platform: req.identity.platform.id})
 			.then(config => {
 				res.body = {
 					features: config.features,
@@ -132,19 +132,19 @@ service.router = options => { // eslint-disable-line
 };
 
 function composeConfig(identity) {
-	const networkFeatures = _.keys(identity.network.features);
-	const deviceFeatures = _.keys(identity.device.features);
-	const features = _.union(networkFeatures, deviceFeatures);
+	const channelFeatures = _.keys(identity.channel.features);
+	const platformFeatures = _.keys(identity.platform.features);
+	const features = _.union(channelFeatures, platformFeatures);
 
 	const confg = {
 		features: {},
-		views: identity.device.views
+		views: identity.platform.views
 	};
 
 	_.each(features, key => {
-		const networkKey = identity.network.features[key];
-		const deviceKey = identity.device.features[key];
-		const mergedKey = _.merge({}, networkKey, deviceKey);
+		const channelKey = identity.channel.features[key];
+		const platformKey = identity.platform.features[key];
+		const mergedKey = _.merge({}, channelKey, platformKey);
 
 		confg.features[key] = mergedKey;
 	});

@@ -8,13 +8,12 @@
 	"features": {
 		"authentication": {
 			"type": "link",
-			"url": "http://oddnetworks.com/login"
+			"url": "http://oddchannels.com/login"
 		}
 	},
 	"views": {
 		"homepage": "odd-networks-homepage",
 		"splash": "odd-networks-splash",
 		"menu": "odd-networks-menu"
-	},
-	"jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJuZXR3b3JrIjoib2RkLW5ldHdvcmtzIiwiZGV2aWNlIjoiYXBwbGUtaW9zIiwic2NvcGUiOlsiZGV2aWNlIl0sImlhdCI6MTQ2MDEyMTE2MH0.euat-IBfliINLUbq66hTPFMzHH8T4zMLZv8beeBhLMY"
+	}
 }
