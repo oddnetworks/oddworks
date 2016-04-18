@@ -50,7 +50,7 @@ Clone the repo to your machine and run the following commands.
 The server should be running at http://localhost:3000 with all the required data seeded into the databases. Next you can hit the API however you want. Here is an example curl command with a preset token we generated for you.
 
 ```
-> curl -X GET -H "x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJvcmdhbml6YXRpb24iOiJvZGQtbmV0d29ya3MiLCJkZXZpY2UiOiJhcHBsZS1pb3MiLCJzY29wZSI6WyJkZXZpY2UiXSwiaWF0IjoxNDU4NTg5OTgwfQ.Tps_LBrTsMvN7Axx27mea3lUx1Q-ujZKY1cJ3AbHTOM" -H "Accept: application/json" -H "Cache-Control: no-cache" "http://localhost:3000/videos"
+> curl -X GET -H "x-access-token: YOUR_TOKEN_HERE" -H "Accept: application/json" "http://localhost:3000/videos"
 ```
 
 ### CLI
