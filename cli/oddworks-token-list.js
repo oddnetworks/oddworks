@@ -32,7 +32,7 @@ function parsePlatform(file) {
 
 		const payload = {
 			version: 1,
-			channel: platform.network,
+			channel: platform.channel,
 			platform: platform.id,
 			scope: ['platform']
 		};
