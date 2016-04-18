@@ -47,7 +47,7 @@ Clone the repo to your machine and run the following commands.
 > npm run dev // Run in development mode and watches for file changes
 ```
 
-The server should be running at http://localhost:3000 with all the required data seeded into the databases. Next you can hit the API however you want. Here is an example curl command with a preset token we generated for you.
+The server should be running at http://localhost:3000 with all the required data seeded into the databases. Next you can hit the API however you want. Here is an example curl command, check the logs for preset tokens we generate for you.
 
 ```
 > curl -X GET -H "x-access-token: YOUR_TOKEN_HERE" -H "Accept: application/json" "http://localhost:3000/videos"
