@@ -1,8 +1,8 @@
 {
 	"id": "roku",
-	"type": "device",
-	"network": "odd-networks",
-	"deviceType": "ROKU",
+	"type": "platform",
+	"channel": "odd-networks",
+	"platformType": "ROKU",
 	"category": "TV",
 	"active": true,
 	"features": {

@@ -1,6 +1,6 @@
 {
 	"id": "odd-networks",
-	"type": "network",
+	"type": "channel",
 	"title": "Odd Networks",
 	"features": {
 		"authentication": {
