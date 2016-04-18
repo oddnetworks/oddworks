@@ -1,0 +1,13 @@
+{
+	"id": "splash-collections",
+	"type": "collection",
+	"channel": "odd-networks",
+	"relationships": {
+		"entries": {
+			"data": [{
+				"id": "daily-show",
+				"type": "collection"
+			}]
+		}
+	}
+}

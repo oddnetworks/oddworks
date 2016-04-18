@@ -1,0 +1,20 @@
+{
+	"id": "daily-show",
+	"type": "collection",
+	"channel": "odd-networks",
+	"title": "Odd channels Daily Show",
+	"relationships": {
+		"entries": {
+			"data": [{
+				"id": "daily-show-video-1",
+				"type": "video"
+			},{
+				"id": "daily-show-video-2",
+				"type": "video"
+			},{
+				"id": "daily-show-video-3",
+				"type": "video"
+			}]
+		}
+	}
+}

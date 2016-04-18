@@ -1,0 +1,13 @@
+{
+	"id": "homepage-videos",
+	"type": "collection",
+	"channel": "odd-networks",
+	"relationships": {
+		"entries": {
+			"data": [{
+				"id": "daily-show-video-2",
+				"type": "video"
+			}]
+		}
+	}
+}

@@ -1,0 +1,19 @@
+{
+	"id": "apple-tv",
+	"type": "platform",
+	"channel": "odd-networks",
+	"platformType": "APPLE_IOS",
+	"category": "MOBILE",
+	"active": true,
+	"features": {
+		"authentication": {
+			"type": "link",
+			"url": "http://oddchannels.com/login"
+		}
+	},
+	"views": {
+		"homepage": "odd-networks-homepage",
+		"splash": "odd-networks-splash",
+		"menu": "odd-networks-menu"
+	}
+}

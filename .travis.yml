@@ -4,11 +4,6 @@ env:
 node_js:
   - 'stable'
   - '4'
-  - '0.12'
-services:
-  - elasticsearch
-before_script:
-  - sleep 10
 addons:
   apt:
     sources:
