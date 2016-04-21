@@ -1,1 +1,15 @@
-{"type":"video","meta":{"source":"itunes","entitled":true},"relationships":{"related":{"data":[{"id":"e67dcdb71ee443a92d40539839d84f10","type":"video"},{"id":"bc49b8d9b477e890501a2808ae31ccc1","type":"video"},{"id":"6562e1f95a0e5cc71c819263367ee71c","type":"video"},{"id":"02c2560ad61f4dc9e09c035f2e530f66","type":"video"},{"id":"dc839543e40ddfdd8390ee40f92b1b3c","type":"video"},{"id":"dde85aad0c8ce7e3cd8d1e37b38e01f1","type":"video"},{"id":"28b91e2cbd0fe3af166e9e1a8c1c1b8b","type":"video"},{"id":"6c18d8899be581ed09ba9f82aa8253e9","type":"video"},{"id":"3a49fc11742372fa53cb69016c91ae59","type":"video"}]}},"id":"963d3b2210a23572344e10d31700c477","links":{"self":"https://beta.oddworks.io/v2/videos/963d3b2210a23572344e10d31700c477"},"attributes":{"title":"Commercial Crew Partner Blue Origin Tests Engine Thrust Chamber Assembly","description":"Blue Origin successfully fires the thrust chamber assembly for its new 100,000 pound thrust BE-3 liquid oxygen, liquid hydrogen rocket engine. The test was part of Blue Origin's work supporting its funded Space Act Agreement with NASA's Commercial Crew Program during Commercial Crew Development Round 2.","images":{"aspect16x9":"https://spaceholder.cc/1920x1080"},"url":"http://www.nasa.gov/mp4/730943main_ccp_022813_blue_origin_engine_test.mp4","duration":1234567,"organization":"nasa"}}
+{
+  "id": "963d3b2210a23572344e10d31700c477",
+  "type": "video",
+  "title": "Commercial Crew Partner Blue Origin Tests Engine Thrust Chamber Assembly",
+  "description": "Blue Origin successfully fires the thrust chamber assembly for its new 100,000 pound thrust BE-3 liquid oxygen, liquid hydrogen rocket engine. The test was part of Blue Origin's work supporting its funded Space Act Agreement with NASA's Commercial Crew Program during Commercial Crew Development Round 2.",
+  "images": {
+    "aspect16x9": "https://spaceholder.cc/1920x1080"
+  },
+  "url": "http://www.nasa.gov/mp4/730943main_ccp_022813_blue_origin_engine_test.mp4",
+  "duration": 1234567,
+  "meta": {
+    "source": "itunes"
+  },
+  "channel": "nasa"
+}

@@ -1,7 +1,7 @@
 {
 	"id": "daily-show",
 	"type": "promotion",
-	"channel": "nasa-sample",
+	"channel": "nasa",
 	"title": "NASA's Daily Show",
 	"description": "Promote your content with Odd channels!",
 	"images": {

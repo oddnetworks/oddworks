@@ -1,1 +1,15 @@
-{"type":"video","meta":{"source":"itunes","entitled":true},"relationships":{"related":{"data":[{"id":"9d788294f5f4e3e24d39b88e350237a4","type":"video"},{"id":"73004256c4cb062ae228d8912f1aa388","type":"video"},{"id":"b2892c0f3411a16dcc3fce93e1d36c66","type":"video"},{"id":"b931f8353efbc720d0e8eef61e391a57","type":"video"},{"id":"943af21ce037461b77c1752073c0a2a1","type":"video"},{"id":"8bc5d4cb43ed2dd3cf772b15012a5e76","type":"video"},{"id":"09acef05dbca11a1451c34bba4be1910","type":"video"},{"id":"4ba358b9c2f0b7401577786213a63102","type":"video"},{"id":"d3c6878904b1ba63f95f0163d2150d29","type":"video"}]}},"id":"b99ab89d33c654277b739dadc53a2822","links":{"self":"https://beta.oddworks.io/v2/videos/b99ab89d33c654277b739dadc53a2822"},"attributes":{"title":"What's Up - April 2016","description":"Jupiter, Mars, the Lyrid meteor shower and 2016's best views of Mercury.","images":{"aspect16x9":"https://spaceholder.cc/1920x1080"},"url":"http://www.nasa.gov/sites/default/files/atoms/video/jpl-20160401-whatsuf-0001-180-cc.mp4","duration":23451380,"organization":"nasa"}}
+{
+  "id": "b99ab89d33c654277b739dadc53a2822",
+  "type": "video",
+  "title": "What's Up - April 2016",
+  "description": "Jupiter, Mars, the Lyrid meteor shower and 2016's best views of Mercury.",
+  "images": {
+    "aspect16x9": "https://spaceholder.cc/1920x1080"
+  },
+  "url": "http://www.nasa.gov/sites/default/files/atoms/video/jpl-20160401-whatsuf-0001-180-cc.mp4",
+  "duration": 23451380,
+  "meta": {
+    "source": "itunes"
+  },
+  "channel": "nasa"
+}

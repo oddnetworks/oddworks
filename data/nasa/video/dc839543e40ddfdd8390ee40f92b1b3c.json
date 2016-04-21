@@ -1,1 +1,15 @@
-{"type":"video","meta":{"source":"itunes","entitled":true},"relationships":{"related":{"data":[{"id":"e67dcdb71ee443a92d40539839d84f10","type":"video"},{"id":"bc49b8d9b477e890501a2808ae31ccc1","type":"video"},{"id":"6562e1f95a0e5cc71c819263367ee71c","type":"video"},{"id":"02c2560ad61f4dc9e09c035f2e530f66","type":"video"},{"id":"963d3b2210a23572344e10d31700c477","type":"video"},{"id":"dde85aad0c8ce7e3cd8d1e37b38e01f1","type":"video"},{"id":"28b91e2cbd0fe3af166e9e1a8c1c1b8b","type":"video"},{"id":"6c18d8899be581ed09ba9f82aa8253e9","type":"video"},{"id":"3a49fc11742372fa53cb69016c91ae59","type":"video"}]}},"id":"dc839543e40ddfdd8390ee40f92b1b3c","links":{"self":"https://beta.oddworks.io/v2/videos/dc839543e40ddfdd8390ee40f92b1b3c"},"attributes":{"title":"SpaceX 2: Liftoff of Falcon 9","description":"Liftoff of the SpaceX Falcon 9 rocket carrying the company's Dragon spacecraft on the SpaceX 2 mission to resupply the International Space Station.","images":{"aspect16x9":"https://spaceholder.cc/1920x1080"},"url":"http://www.nasa.gov/mp4/730933main_ksc_030113_spacex2_launch-pod.mp4","duration":1234567,"organization":"nasa"}}
+{
+  "id": "dc839543e40ddfdd8390ee40f92b1b3c",
+  "type": "video",
+  "title": "SpaceX 2: Liftoff of Falcon 9",
+  "description": "Liftoff of the SpaceX Falcon 9 rocket carrying the company's Dragon spacecraft on the SpaceX 2 mission to resupply the International Space Station.",
+  "images": {
+    "aspect16x9": "https://spaceholder.cc/1920x1080"
+  },
+  "url": "http://www.nasa.gov/mp4/730933main_ksc_030113_spacex2_launch-pod.mp4",
+  "duration": 1234567,
+  "meta": {
+    "source": "itunes"
+  },
+  "channel": "nasa"
+}
