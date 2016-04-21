@@ -8,7 +8,7 @@
 		},
 		"sharing": {
 			"enabled": true,
-			"text": "Watch the @oddchannels show Live on mobile and TV connected platforms!"
+			"text": "Now watching '{{= title}}' on @oddnetworks!"
 		},
 		"metrics": {
 			"enabled": true,
