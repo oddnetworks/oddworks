@@ -48,6 +48,7 @@
     "morgan": "^1.6.1",
     "oddcast": "^2.0.0",
     "redis-search": "0.0.1",
+    "traverse": "^0.6.6",
     "universal-analytics": "^0.3.11",
     "uuid": "^2.0.2"
   },
