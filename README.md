@@ -89,8 +89,8 @@ All of these components are automatically installed as dependencies when you set
 
 ## platform SDKs
 
-* [Apple iOS & tvOS SDK](https://github.com/oddchannels/oddworks-ios-tvos-sdk) Used for iPhone, iPad, and Apple TV.
-* [Android SDK](https://github.com/oddchannels/oddworks-android-sdk) Used for mobile, tablet, Android TV, and Fire TV.
+* [Apple iOS & tvOS SDK](https://github.com/oddnetworks/oddworks-ios-tvos-sdk) Used for iPhone, iPad, and Apple TV.
+* [Android SDK](https://github.com/oddnetworks/oddworks-android-sdk) Used for mobile, tablet, Android TV, and Fire TV.
 
 Coming soon:
 
@@ -99,7 +99,7 @@ Coming soon:
 
 In addition to the SDKs there are plans to have open source sample apps which leverage the SDKs available to you as well. You could use these as reference implementations, a hobby project, or make some tweaks and ship your own streaming channel!
 
-Although the source repositories are not open source yet there are some [downloads available now](https://www.oddchannels.com/documentation/sampleapps/) from the website.
+Although the source repositories are not open source yet there are some [downloads available now](https://www.oddnetworks.com/documentation/sampleapps/) from the website.
 
 ## Technology
 
@@ -115,21 +115,21 @@ For transparency into our release cycle and in striving to maintain backward com
 
 ## Motivation
 
-The Oddworks Platform was designed and developed by [Odd channels](https://www.oddchannels.com/) to lower the barrier for developers and content owners to create your own streaming content channel. Based on our experience in video gaming we thought that TV could use a big improvement. We believe in the future of television and, with the Oddworks open source platform, we hope you'll make that future a reality.
+The Oddworks Platform was designed and developed by [Odd channels](https://www.oddnetworks.com/) to lower the barrier for developers and content owners to create your own streaming content channel. Based on our experience in video gaming we thought that TV could use a big improvement. We believe in the future of television and, with the Oddworks open source platform, we hope you'll make that future a reality.
 
 We proudly stand behind our open source work and, in addition to maintaining the Oddworks project, Odd channels also provides hosted services, a Pro Dashboard, a Live Stream Generator, and a Recommendation Service.
 
-Check out [www.oddchannels.com](https://www.oddchannels.com/)
+Check out [www.oddnetworks.com](https://www.oddnetworks.com/)
 
 ## Community
 
-Get updates on Odd channel's development and chat with the project maintainers and community members.
+Get updates on Odd Networks's development and chat with the project maintainers and community members.
 
-* Follow [@oddchannels on Twitter](https://twitter.com/Oddchannels).
-* Join [the official Slack room](http://slack.oddchannels.com/).
-* Submit an [issue](https://github.com/oddchannels/oddworks/issues).
-* Check out the [API sample responses](https://www.oddchannels.com/documentation/oddworks/).
-* Read and subscribe to [The Official Odd channels Blog](http://blog.oddchannels.com/).
+* Follow [@oddnetworks on Twitter](https://twitter.com/Oddnetworks).
+* Join [the official Slack room](http://slack.oddnetworks.com/).
+* Submit an [issue](https://github.com/oddnetworks/oddworks/issues).
+* Check out the [API sample responses](https://www.oddnetworks.com/documentation/oddworks/).
+* Read and subscribe to [The Official Odd channels Blog](http://blog.oddnetworks.com/).
 
 ## More Information
 
@@ -137,4 +137,4 @@ For additional help getting [up and running with Oddworks have a look at this bl
 
 ## License
 
-Apache 2.0 © [Odd channels](http://oddchannels.com)
+Apache 2.0 © [Odd channels](http://oddnetworks.com)
