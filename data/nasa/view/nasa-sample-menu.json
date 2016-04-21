@@ -1,0 +1,21 @@
+{
+	"id": "nasa-sample-menu",
+	"type": "view",
+	"channel": "nasa-sample",
+	"title": "NASA Sample Menu",
+	"description": "",
+	"relationships": {
+		"items": {
+			"data": [
+				{
+					"id": "022adea4fa446bdd472cc30f43a124a7",
+					"type": "video"
+				},
+				{
+					"id": "ab2d92ee98b6309299e92024a487d4c0",
+					"type": "collection"
+				}
+			]
+		}
+	}
+}

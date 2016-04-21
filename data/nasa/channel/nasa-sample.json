@@ -1,0 +1,42 @@
+{
+	"id": "nasa-sample",
+	"type": "channel",
+	"title": "NASA Sample Videos",
+	"features": {
+		"authentication": {
+			"enabled": false
+		},
+		"sharing": {
+			"enabled": true,
+			"text": "Watch the @oddchannels show Live on mobile and TV connected platforms!"
+		},
+		"metrics": {
+			"enabled": true,
+			"appInit": {
+				"action": "app:init",
+				"enabled": true
+			},
+			"viewLoad": {
+				"action": "view:load",
+				"enabled": true
+			},
+			"videoPlay": {
+				"action": "video:play",
+				"enabled": true
+			},
+			"videoPlaying": {
+				"action": "video:playing",
+				"enabled": false,
+				"interval": 30000
+			},
+			"videoStop": {
+				"action": "video:stop",
+				"enabled": true
+			},
+			"videoError": {
+				"action": "video:error",
+				"enabled": true
+			}
+	}
+	}
+}

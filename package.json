@@ -10,6 +10,7 @@
     "env": "if [ ! -f '.env' ]; then cp .env.sample .env; fi",
     "setup": "npm link && npm run env",
     "dev": "nodemon server.js -e js,json",
+    "nasa": "DATA_DIR=./data/nasa node --max-old-space-size=2048 server.js -e js,json",
     "test": "NODE_ENV=test npm run lint && npm run tape",
     "tape": "NODE_ENV=test tape 'test/**/*_test.js' | tap-spec",
     "lint": "xo",
