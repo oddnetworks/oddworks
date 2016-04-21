@@ -3,7 +3,7 @@
 require('dotenv').config({silent: true});
 
 const isDevOrTest = (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test');
-const dataDir = (process.env.DATA_DIR || './data');
+const dataDir = (process.env.DATA_DIR || './test/data');
 const chalk = require('chalk');
 const _ = require('lodash');
 const Promise = require('bluebird');
