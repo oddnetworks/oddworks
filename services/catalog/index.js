@@ -4,9 +4,10 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const router = require('express').Router(); // eslint-disable-line
 
+const lib = require('./lib');
+
 const service = exports = module.exports = {};
 let config = {};
-const videoKeys = ['ads', 'player', 'sharing', 'overlay'];
 
 service.initialize = (bus, options) => {
 	config.bus = bus;
@@ -22,7 +23,8 @@ service.initialize = (bus, options) => {
 							config.bus
 								.query({role: 'identity', cmd: 'config'}, {channel: payload.channel, platform: payload.platform})
 								.then(config => {
-									object = _.merge({}, object, _.pick(config.features, videoKeys));
+									_.set(object, 'meta.features', lib.composeMetaFeatures(object, config.features));
+
 									resolve(object);
 								})
 								.catch(err => reject(err));
@@ -40,7 +42,8 @@ service.initialize = (bus, options) => {
 							.query({role: 'identity', cmd: 'config'}, {channel: payload.channel, platform: payload.platform})
 							.then(config => {
 								objects = _.map(objects, object => {
-									return _.merge({}, _.pick(config.features, videoKeys), object);
+									_.set(object, 'meta.features', lib.composeMetaFeatures(object, config.features));
+									return object;
 								});
 
 								resolve(objects);

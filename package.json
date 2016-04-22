@@ -13,7 +13,7 @@
     "test": "NODE_ENV=test npm run lint && npm run tape",
     "tape": "NODE_ENV=test tape 'test/**/*_test.js' | tap-spec",
     "lint": "xo",
-    "start": "node index.js -e js,json",
+    "start": "node server.js -e js,json",
     "sec": "./node_modules/.bin/nsp check -o json --warn-only"
   },
   "engines": {
@@ -48,6 +48,7 @@
     "morgan": "^1.6.1",
     "oddcast": "^2.0.0",
     "redis-search": "0.0.1",
+    "traverse": "^0.6.6",
     "universal-analytics": "^0.3.11",
     "uuid": "^2.0.2"
   },
