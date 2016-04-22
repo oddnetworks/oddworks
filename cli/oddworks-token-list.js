@@ -9,6 +9,8 @@ const chalk = require('chalk');
 const fs = require('fs');
 const path = require('path');
 
+const dataDir = (process.env.DATA_DIR || './test/data');
+
 // const COMMAND = 'token-list';
 
 commander
@@ -28,7 +30,7 @@ var count = 0;
 
 function parsePlatform(file) {
 	if (path.extname(file) === '.json') {
-		const platform = JSON.parse(fs.readFileSync('./data/platform/' + file, 'utf8'));
+		const platform = JSON.parse(fs.readFileSync(`${dataDir}/platform/${file}`, 'utf8'));
 
 		const payload = {
 			version: 1,
@@ -47,7 +49,7 @@ function parsePlatform(file) {
 	}
 }
 
-fs.readdir('./data/platform', function (error, files) {
+fs.readdir(`${dataDir}/platform`, function (error, files) {
 	if (error) {
 		console.error(error);
 	}
