@@ -11,8 +11,6 @@ const path = require('path');
 
 const dataDir = (process.env.DATA_DIR || './test/data');
 
-// const COMMAND = 'token-list';
-
 commander
 	.on('--help', () => {
 		console.log('  Example Usage:');
