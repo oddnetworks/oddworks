@@ -13,5 +13,13 @@ service.initialize = (bus, options) => {
 
 	service.options.providers = _.compact(service.options.providers);
 
+	_.each(service.options.providers, provider => {
+		if (provider.sync) {
+			setInterval(() => provider.sync(service.bus), service.options.interval || (60 * 60 * 10 * 1000));
+		}
+	});
+
 	return Promise.resolve(true);
 };
+
+service.providers = providers;

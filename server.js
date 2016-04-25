@@ -30,8 +30,7 @@ const identityService = require('./services/identity');
 const catalogService = require('./services/catalog');
 const eventsService = require('./services/events');
 const jsonAPIService = require('./services/json-api');
-// const authorizationService = require('./services/authorization');
-// const eventsService = require('./services/events');
+const syncService = require('./services/sync');
 
 module.exports = Promise
 	// Initialize your stores
@@ -56,9 +55,15 @@ module.exports = Promise
 						/* eslint-enable */
 					]
 				}),
-				jsonAPIService.initialize(bus, {})
-				// authorizationService.initialize(bus, {redis}),
-				// eventsService.initialize(bus, {redis})
+				jsonAPIService.initialize(bus, {}),
+				syncService.initialize(bus, {
+					interval: 5000,
+					providers: [
+						/* eslint-disable */
+						new syncService.providers.vimeo({token: process.env.VIMEO_APIKEY})
+						/* eslint-enable */
+					]
+				})
 			);
 	})
 
