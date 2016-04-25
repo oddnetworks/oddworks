@@ -5,6 +5,7 @@ const request = require('request-promise');
 const Promise = require('bluebird');
 
 function Provider(options) {
+	this.spid = `vimeo-${new Date().getTime()}`;
 	this.options = options || {};
 
 	if (!this.options.token) {
