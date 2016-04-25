@@ -17,7 +17,7 @@ module.exports = Provider;
 
 Provider.prototype = {
 	fetch() {
-		request({
+		return request({
 			method: 'GET',
 			url: 'https://api.vimeo.com/me/videos',
 			headers: {
@@ -44,8 +44,7 @@ Provider.prototype = {
 		})
 		.then(videos => {
 			return _.map(videos, this.transform.video);
-		})
-		.catch(err => console.log(err));
+		});
 	},
 
 	sync(bus) {
