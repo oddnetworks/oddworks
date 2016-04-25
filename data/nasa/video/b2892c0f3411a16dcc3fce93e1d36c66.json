@@ -1,0 +1,15 @@
+{
+  "id": "b2892c0f3411a16dcc3fce93e1d36c66",
+  "type": "video",
+  "title": "What's Up - January 2016",
+  "description": "A meteor shower, a binocular comet, and the winter circle of stars!",
+  "images": {
+    "aspect16x9": "https://spaceholder.cc/1920x1080"
+  },
+  "url": "http://www.nasa.gov/sites/default/files/atoms/video/jpl-20160101-whatsum-0001-320_1.mp4",
+  "duration": 8829867,
+  "meta": {
+    "source": "itunes"
+  },
+  "channel": "nasa"
+}

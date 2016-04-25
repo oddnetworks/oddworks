@@ -1,0 +1,19 @@
+{
+	"id": "apple-ios",
+	"type": "platform",
+	"channel": "nasa",
+	"platformType": "APPLE_IOS",
+	"category": "MOBILE",
+	"active": true,
+	"features": {
+		"authentication": {
+			"type": "link",
+			"url": "http://oddchannels.com/login"
+		}
+	},
+	"views": {
+		"homepage": "homepage",
+		"splash": "splash",
+		"menu": "menu"
+	}
+}

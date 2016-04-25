@@ -1,0 +1,26 @@
+{
+	"id": "homepage",
+	"type": "view",
+	"channel": "nasa",
+	"title": "Nasa Sample Homepage",
+	"relationships": {
+		"promotion": {
+			"data": {
+				"id": "daily-show",
+				"type": "promotion"
+			}
+		},
+		"featuredMedia": {
+			"data": {
+				"id": "0db5528d4c3c7ae4d5f24cce1c9fae51",
+				"type": "video"
+			}
+		},
+		"featuredCollections": {
+			"data": {
+				"id": "ab2d92ee98b6309299e92024a487d4c0",
+				"type": "collection"
+			}
+		}
+	}
+}

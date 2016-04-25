@@ -3,7 +3,7 @@
 require('dotenv').config({silent: true});
 
 const isDevOrTest = (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test');
-
+const dataDir = (process.env.DATA_DIR || './test/data');
 const chalk = require('chalk');
 const _ = require('lodash');
 const Promise = require('bluebird');
@@ -65,7 +65,7 @@ module.exports = Promise
 	// Seed the stores if in development mode
 	.then(() => {
 		if (isDevOrTest) {
-			return require('./data/seed')(bus); // eslint-disable-line
+			return require(`${dataDir}/seed`)(bus); // eslint-disable-line
 		}
 
 		return true;

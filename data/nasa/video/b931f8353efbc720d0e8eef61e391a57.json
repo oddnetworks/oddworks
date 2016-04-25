@@ -1,0 +1,15 @@
+{
+  "id": "b931f8353efbc720d0e8eef61e391a57",
+  "type": "video",
+  "title": "What's Up - December 2015",
+  "description": "View Mars this month, and get a preview of great Mars views in 2016, the best since 2005!",
+  "images": {
+    "aspect16x9": "https://spaceholder.cc/1920x1080"
+  },
+  "url": "http://www.nasa.gov/sites/default/files/atoms/video/jpl-20151201-whatsum-0001-320.mp4",
+  "duration": 17066543,
+  "meta": {
+    "source": "itunes"
+  },
+  "channel": "nasa"
+}

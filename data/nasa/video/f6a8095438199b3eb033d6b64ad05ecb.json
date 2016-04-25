@@ -1,0 +1,15 @@
+{
+  "id": "f6a8095438199b3eb033d6b64ad05ecb",
+  "type": "video",
+  "title": "NASA EDGE: BisonSat",
+  "description": "NASA EDGE visits the Salish Kootenai College in Pablo, Montana to check out their first CubeSat BisonSat!",
+  "images": {
+    "aspect16x9": "https://spaceholder.cc/1920x1080"
+  },
+  "url": "http://www.nasa.gov/sites/default/files/atoms/video/ne0908_bisonsat.mp4",
+  "duration": 349367006,
+  "meta": {
+    "source": "itunes"
+  },
+  "channel": "nasa"
+}

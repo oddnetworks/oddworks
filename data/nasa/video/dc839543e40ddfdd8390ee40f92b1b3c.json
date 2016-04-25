@@ -1,0 +1,15 @@
+{
+  "id": "dc839543e40ddfdd8390ee40f92b1b3c",
+  "type": "video",
+  "title": "SpaceX 2: Liftoff of Falcon 9",
+  "description": "Liftoff of the SpaceX Falcon 9 rocket carrying the company's Dragon spacecraft on the SpaceX 2 mission to resupply the International Space Station.",
+  "images": {
+    "aspect16x9": "https://spaceholder.cc/1920x1080"
+  },
+  "url": "http://www.nasa.gov/mp4/730933main_ksc_030113_spacex2_launch-pod.mp4",
+  "duration": 1234567,
+  "meta": {
+    "source": "itunes"
+  },
+  "channel": "nasa"
+}

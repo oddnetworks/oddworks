@@ -1,0 +1,15 @@
+{
+  "id": "06d604b1d790d717d98a0dc7721d37f9",
+  "type": "video",
+  "title": "Phobos Passing Overhead",
+  "description": "This movie clip shows Phobos, the larger of the two moons of Mars, passing overhead, as observed by NASA's Mars rover Curiosity in a series of images centered straight overhead starting shortly after sunset.",
+  "images": {
+    "aspect16x9": "https://spaceholder.cc/1920x1080"
+  },
+  "url": "http://www.nasa.gov/sites/default/files/phobos20130701-320.mp4",
+  "duration": 1234567,
+  "meta": {
+    "source": "itunes"
+  },
+  "channel": "nasa"
+}

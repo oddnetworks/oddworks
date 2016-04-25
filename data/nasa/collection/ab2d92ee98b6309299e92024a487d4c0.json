@@ -1,0 +1,42 @@
+{
+  "id": "ab2d92ee98b6309299e92024a487d4c0",
+  "type": "collection",
+  "title": "NASACast: What's Up? Video Podcasts",
+  "images": {
+    "aspect16x9": "https://spaceholder.cc/1920x1080"
+  },
+  "relationships": {
+    "entities": {
+      "data": [
+        {
+          "id": "b99ab89d33c654277b739dadc53a2822",
+          "type": "video"
+        },
+        {
+          "id": "9d788294f5f4e3e24d39b88e350237a4",
+          "type": "video"
+        },
+        {
+          "id": "73004256c4cb062ae228d8912f1aa388",
+          "type": "video"
+        },
+        {
+          "id": "b2892c0f3411a16dcc3fce93e1d36c66",
+          "type": "video"
+        },
+        {
+          "id": "b931f8353efbc720d0e8eef61e391a57",
+          "type": "video"
+        },
+        {
+          "id": "943af21ce037461b77c1752073c0a2a1",
+          "type": "video"
+        }
+      ]
+    }
+  },
+  "meta": {
+    "source": "itunes"
+  },
+  "channel": "nasa"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "980e43e413ec92656b606efbcf30c0a9",
+  "type": "video",
+  "title": "NASA 360 Presents - Possibilities",
+  "description": null,
+  "images": {
+    "aspect16x9": "https://spaceholder.cc/1920x1080"
+  },
+  "url": "http://www.nasa.gov/sites/default/files/nasa_360_-_sacd_cut_2015-01-22_youtube_settingsfinal.mp4",
+  "duration": 217369137,
+  "meta": {
+    "source": "itunes"
+  },
+  "channel": "nasa"
+}
