@@ -10,13 +10,12 @@ const Promise = require('bluebird');
 const oddcast = require('oddcast');
 const boom = require('boom');
 const express = require('express');
+const redis = (isDevOrTest) ? require('fakeredis').createClient() : require('redis').createClient(process.env.REDIS_URI);
 
 const middleware = require('./middleware');
 
 const bus = oddcast.bus();
 const app = express();
-
-const redis = (isDevOrTest) ? require('fakeredis').createClient() : require('redis').createClient(process.env.REDIS_URI);
 
 bus.events.use({}, oddcast.inprocessTransport());
 bus.commands.use({}, oddcast.inprocessTransport());
