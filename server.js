@@ -2,6 +2,7 @@
 
 require('dotenv').config({silent: true});
 
+const notTest = (process.env.NODE_ENV !== 'test');
 const isDevOrTest = (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test');
 const dataDir = (process.env.DATA_DIR || './test/data');
 const chalk = require('chalk');
@@ -41,20 +42,24 @@ module.exports = Promise
 
 	// Initialize your services
 	.then(() => {
-		return Promise
-			.join(
-				identityService.initialize(bus, {jwtSecret: process.env.JWT_SECRET}),
-				catalogService.initialize(bus, {}),
-				eventsService.initialize(bus, {
-					redis,
-					analyzers: [
-						/* eslint-disable */
-						new eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
-						new eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
-						/* eslint-enable */
-					]
-				}),
-				jsonAPIService.initialize(bus, {}),
+		const services = [
+			identityService.initialize(bus, {jwtSecret: process.env.JWT_SECRET}),
+			catalogService.initialize(bus, {}),
+			eventsService.initialize(bus, {
+				redis,
+				analyzers: [
+					/* eslint-disable */
+					new eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
+					new eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
+					/* eslint-enable */
+				]
+			}),
+			jsonAPIService.initialize(bus, {})
+		];
+
+		// Initialize Sync Service if its not test env
+		if (notTest) {
+			services.push(
 				syncService.initialize(bus, {
 					interval: 5000,
 					providers: [
@@ -64,6 +69,9 @@ module.exports = Promise
 					]
 				})
 			);
+		}
+
+		return Promise.all(services);
 	})
 
 	// Seed the stores if in development mode
