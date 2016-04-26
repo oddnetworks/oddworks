@@ -13,15 +13,17 @@ service.initialize = (bus, options) => {
 
 	service.options.providers = _.compact(service.options.providers);
 
-	_.each(service.options.providers, provider => {
-		if (provider.sync) {
-			setInterval(() => provider.sync(service.bus), service.options.interval || (60 * 60 * 10 * 1000));
-		}
-	});
-
 	service.bus.observe({role: 'sync'}, payload => {
 		const provider = _.find(service.options.providers, {spid: payload.spid});
-		provider.sync();
+		provider.sync(service.bus);
+	});
+
+	_.each(service.options.providers, provider => {
+		if (provider.sync) {
+			setInterval(() => {
+				service.bus.broadcast({role: 'sync'}, {spid: provider.spid});
+			}, service.options.interval || (60 * 60 * 10 * 1000));
+		}
 	});
 
 	return Promise.resolve(true);
