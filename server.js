@@ -60,7 +60,7 @@ module.exports = Promise
 					interval: 5000,
 					providers: [
 						/* eslint-disable */
-						new syncService.providers.vimeo({token: process.env.VIMEO_APIKEY})
+						syncService.providers.vimeo({token: process.env.VIMEO_APIKEY})
 						/* eslint-enable */
 					]
 				})
@@ -152,8 +152,15 @@ module.exports = Promise
 			app.listen(process.env.PORT, () => {
 				if (isDevOrTest) {
 					console.log('');
-					console.log(chalk.green(`Server is running on port: ${process.env.PORT}`));
-					console.log('');
+					console.log(chalk.green(`Sync Providers Running`));
+					console.log(chalk.green(`-------------------------`));
+					_.each(syncService.options.providers, provider => {
+						console.log(chalk.blue('SPID: ') + chalk.cyan(provider.spid));
+						console.log('');
+					});
+					console.log(chalk.green(`Server Running`));
+					console.log(chalk.green(`--------------`));
+					console.log(chalk.blue('URL: ') + chalk.cyan(`http://localhost:${process.env.PORT}`));
 				}
 			});
 		}

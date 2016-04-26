@@ -14,7 +14,10 @@ function Provider(options) {
 
 	return this;
 }
-module.exports = Provider;
+
+module.exports = options => {
+	return new Provider(options);
+};
 
 Provider.prototype = {
 	fetch() {
