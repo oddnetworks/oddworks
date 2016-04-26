@@ -49,7 +49,13 @@ Provider.prototype = {
 	},
 
 	sync(bus) {
-		return true;
+		this
+			.fetch()
+			.then(resources => {
+				_.each(resources, resource => {
+					bus.sendCommand({role: 'catalog', cmd: 'create', searchable: true}, resource);
+				});
+			});
 	},
 
 	transform: {
@@ -69,7 +75,6 @@ Provider.prototype = {
 				url: video.player.request.files.hls.url
 			};
 
-			console.log(video);
 			return video;
 		}
 	}
