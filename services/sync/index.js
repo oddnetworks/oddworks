@@ -21,7 +21,7 @@ service.initialize = (bus, options) => {
 
 	service.bus.observe({role: 'sync'}, payload => {
 		const provider = _.find(service.options.providers, {spid: payload.spid});
-		provider.syn();
+		provider.sync();
 	});
 
 	return Promise.resolve(true);
