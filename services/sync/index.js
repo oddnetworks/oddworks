@@ -20,6 +20,10 @@ service.initialize = (bus, options) => {
 
 	_.each(service.options.providers, provider => {
 		if (provider.sync) {
+			// Run sync provider right away
+			service.bus.broadcast({role: 'sync'}, {spid: provider.spid});
+
+			// Set interval for sync provider
 			setInterval(() => {
 				service.bus.broadcast({role: 'sync'}, {spid: provider.spid});
 			}, service.options.interval || (60 * 60 * 10 * 1000));
