@@ -7,7 +7,7 @@ const boom = require('boom');
 const jwt = require('jsonwebtoken');
 Promise.promisifyAll(jwt);
 
-const service= module.exports = {};
+const service = exports = module.exports = {};
 let config = {};
 
 service.initialize = (bus, options) => {
