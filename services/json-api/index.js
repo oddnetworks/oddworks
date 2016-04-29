@@ -4,7 +4,7 @@ const _ = require('lodash');
 const boom = require('boom');
 const Promise = require('bluebird');
 
-const service = exports = module.exports = {};
+const service = module.exports = {};
 let config = {};
 
 const jsonAPIKeys = ['id', 'type', 'relationships', 'meta', 'links'];
