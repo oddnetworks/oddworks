@@ -21,7 +21,7 @@ test('?include={relationship}', t => {
 	t.plan(2);
 
 	request(server.app)
-		.get('/collections/daily-show')
+		.get('/collections/daily-show?include=entities')
 		.set('Accept', 'application/json')
 		.set('x-access-token', accessToken)
 		.expect(200)
