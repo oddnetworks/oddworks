@@ -41,3 +41,5 @@ service.router = options => {
 };
 
 service.analyzers = analyzers;
+
+service.name = 'events';
