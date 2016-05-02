@@ -54,3 +54,5 @@ function query(payload) {
 		});
 	});
 }
+
+store.name = 'redis-search';
