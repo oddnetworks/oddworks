@@ -20,7 +20,7 @@ service.initialize = (bus, options) => {
 				.map(relationship => {
 					if (!payload.object.relationships[relationship]) {
 						reject(new Error(`relationships.${relationship} does not exist on object '${payload.object.id}'`));
-					}		
+					}
 					return payload.object.relationships[relationship].data;
 				})
 				.flatten()
