@@ -1,14 +1,12 @@
 'use strict';
 
-const Promise = require('bluebird');
-const chalk = require('chalk');
 const identityService = require('./identity');
 const catalogService = require('./catalog');
 const jsonAPIService = require('./json-api');
 
-const identityOptions = { jwtSecret: process.env.JWT_SECRET || 'secret' }
+const identityOptions = {jwtSecret: process.env.JWT_SECRET || 'secret'};
 
-function DefaultServices(bus) {
+function DefaultServices() {
 	return [
 		{
 			service: identityService,
@@ -22,7 +20,7 @@ function DefaultServices(bus) {
 			service: jsonAPIService,
 			options: {}
 		}
-	]
+	];
 }
 
 module.exports = DefaultServices;

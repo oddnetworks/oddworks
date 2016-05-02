@@ -3,8 +3,6 @@
 require('dotenv').config({silent: true});
 const deepFreeze = require('deep-freeze');
 
-const oddcast = require('oddcast');
-
 // Require the stores and/or services you want to use
 // const memoryStore = require('./stores/memory');
 // const redisStore = require('./stores/redis');
@@ -18,9 +16,9 @@ const oddcast = require('oddcast');
 
 // The following should be set in your environment
 const port = process.env.PORT || 3000;
-const jwtSecret = process.env.JWT_SECRET || 'secret'
-const dataDir = process.env.DATA_DIR || './test/data'
-const environment = process.env.NODE_ENV || 'development'
+// const jwtSecret = process.env.JWT_SECRET || 'secret';
+const dataDir = process.env.DATA_DIR || './test/data';
+const environment = process.env.NODE_ENV || 'development';
 
 const isDevOrTest = (environment === 'development' || environment === 'test');
 
@@ -30,7 +28,7 @@ module.exports = deepFreeze({
 	env: environment,
 	port: port,
 	dataDir: dataDir,
-	seed: isDevOrTest,
+	seed: isDevOrTest
 
 	// oddcast: {
 		// override the default oddcast options/transports here

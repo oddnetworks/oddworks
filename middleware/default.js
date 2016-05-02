@@ -39,7 +39,6 @@ module.exports = function (app) {
 
 	app.use(eventsService.router());
 
-
 	// Serialize all data into the JSON API Spec
 	app.use(jsonAPIService.middleware());
 };

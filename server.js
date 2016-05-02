@@ -31,17 +31,17 @@ const app = express();
 
 // Initialize oddcast for events, commands, requests
 // use sensible defaults
-bus.events.use(_.get(config, 'config.oddcast.events.options', {}), _.get(config, 'config.oddcast.events.transport', oddcast.inprocessTransport()))
-bus.commands.use(_.get(config, 'config.oddcast.commands.options', {}), _.get(config, 'config.oddcast.commands.transport', oddcast.inprocessTransport()))
-bus.requests.use(_.get(config, 'config.oddcast.requests.options', {}), _.get(config, 'config.oddcast.requests.transport', oddcast.inprocessTransport()))
+bus.events.use(_.get(config, 'config.oddcast.events.options', {}), _.get(config, 'config.oddcast.events.transport', oddcast.inprocessTransport()));
+bus.commands.use(_.get(config, 'config.oddcast.commands.options', {}), _.get(config, 'config.oddcast.commands.transport', oddcast.inprocessTransport()));
+bus.requests.use(_.get(config, 'config.oddcast.requests.options', {}), _.get(config, 'config.oddcast.requests.transport', oddcast.inprocessTransport()));
 
-function initializer (obj) {
-	console.log(chalk.black.bgBlue("Initializing service: " + obj.service.name));
+function initializer(obj) {
+	console.log(chalk.black.bgBlue(`Initializing service: ${obj.service.name}`));
 	return obj.service.initialize(bus, obj.options);
 }
 
-const stores = _.get(config, 'config.stores', new DefaultStores(bus));
-const services = _.get(config, 'config.services', new DefaultServices(bus));
+const stores = _.get(config, 'config.stores', new DefaultStores());
+const services = _.get(config, 'config.services', new DefaultServices());
 const oddworksMiddleware = _.get(config, 'config.middleware', DefaultMiddleware);
 
 module.exports = Promise
@@ -98,7 +98,6 @@ module.exports = Promise
 			}
 		});
 
-		debugger
 		if (!module.parent) {
 			app.listen(config.port, () => {
 				if (config.env === 'development' || config.env === 'test') {
