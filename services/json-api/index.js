@@ -23,6 +23,7 @@ service.initialize = (bus, options) => {
 					}
 					return payload.object.relationships[relationship].data;
 				})
+				.flatten()
 				.compact()
 				.value();
 
