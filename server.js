@@ -1,70 +1,59 @@
 'use strict';
 
-require('dotenv').config({silent: true});
-
-const isDevOrTest = (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test');
-const dataDir = (process.env.DATA_DIR || './test/data');
 const chalk = require('chalk');
 const _ = require('lodash');
 const Promise = require('bluebird');
-const oddcast = require('oddcast');
 const boom = require('boom');
 const express = require('express');
 
+let userConfig = require('./default-config');
+
+try {
+	userConfig = require('./config');
+} catch (e) {
+	console.log(chalk.black.bgRed('./config.js NOT FOUND'));
+	console.log(chalk.red('Loading default server configuration.'));
+	console.log(chalk.red('You may override defaults by creating your own ./config.js file like so:'));
+	console.log(chalk.red('$ cp ./default-config.js ./config.js'));
+}
+
+const config = userConfig;
+
+const DefaultStores = require('./stores/default');
+const DefaultServices = require('./services/default');
+const DefaultMiddleware = require('./middleware/default');
+
 const middleware = require('./middleware');
 
+const oddcast = require('oddcast');
 const bus = oddcast.bus();
 const app = express();
 
-const redis = (isDevOrTest) ? require('fakeredis').createClient() : require('redis').createClient(process.env.REDIS_URI);
+// Initialize oddcast for events, commands, requests
+// use sensible defaults
+bus.events.use(_.get(config, 'config.oddcast.events.options', {}), _.get(config, 'config.oddcast.events.transport', oddcast.inprocessTransport()))
+bus.commands.use(_.get(config, 'config.oddcast.commands.options', {}), _.get(config, 'config.oddcast.commands.transport', oddcast.inprocessTransport()))
+bus.requests.use(_.get(config, 'config.oddcast.requests.options', {}), _.get(config, 'config.oddcast.requests.transport', oddcast.inprocessTransport()))
 
-bus.events.use({}, oddcast.inprocessTransport());
-bus.commands.use({}, oddcast.inprocessTransport());
-bus.requests.use({}, oddcast.inprocessTransport());
+function initializer (obj) {
+	console.log(chalk.black.bgBlue("Initializing service: " + obj.service.name));
+	return obj.service.initialize(bus, obj.options);
+}
 
-// Set up the store and services you want to use
-const memoryStore = require('./stores/memory');
-const redisStore = require('./stores/redis');
-const redisSearchStore = require('./stores/redis-search');
-const identityService = require('./services/identity');
-const catalogService = require('./services/catalog');
-const eventsService = require('./services/events');
-const jsonAPIService = require('./services/json-api');
-// const authorizationService = require('./services/authorization');
-// const eventsService = require('./services/events');
+const stores = _.get(config, 'config.stores', new DefaultStores(bus));
+const services = _.get(config, 'config.services', new DefaultServices(bus));
+const oddworksMiddleware = _.get(config, 'config.middleware', DefaultMiddleware);
 
 module.exports = Promise
-	// Initialize your stores
-	.join(
-		memoryStore.initialize(bus, {types: ['platform', 'channel']}),
-		redisStore.initialize(bus, {redis, types: ['collection', 'promotion', 'video', 'view']}),
-		redisSearchStore.initialize(bus, {redis, types: ['collection', 'video']})
-	)
-
-	// Initialize your services
+	// Initialize stores
+	.all(_.map(stores, initializer))
+	// Initialize services
 	.then(() => {
-		return Promise
-			.join(
-				identityService.initialize(bus, {jwtSecret: process.env.JWT_SECRET}),
-				catalogService.initialize(bus, {}),
-				eventsService.initialize(bus, {
-					redis,
-					analyzers: [
-						/* eslint-disable */
-						new eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
-						new eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
-						/* eslint-enable */
-					]
-				}),
-				jsonAPIService.initialize(bus, {})
-				// authorizationService.initialize(bus, {redis}),
-				// eventsService.initialize(bus, {redis})
-			);
+		return Promise.all(_.map(services, initializer));
 	})
-
 	// Seed the stores if in development mode
 	.then(() => {
-		if (isDevOrTest) {
+		if (_.get('config.seed', false)) {
 			return require(`${dataDir}/seed`)(bus); // eslint-disable-line
 		}
 
@@ -79,38 +68,7 @@ module.exports = Promise
 		// Standard express middleware
 		app.use(middleware());
 
-		// Decode the JWT set on the X-Access-Token header and attach to req.identity
-		app.use(identityService.middleware.verifyAccess({header: 'x-access-token'}));
-
-		// Decode the JWT set on the Authorization header and attach to req.authorization
-		// app.use(authorizationService.middleware({header: 'Authorization'}));
-
-		// Attach auth endpoints
-		// POST /auth/platform/code
-		// POST /auth/user/authorize
-		// POST /auth/platform/token
-		// GET /auth/user/:clientUserID/platforms
-		// DELETE /auth/user/:clientUserID/platforms/:platformUserProfileID
-		// app.use('/auth', authorizationService.router());
-
-		// Attach events endpoint
-		// POST /events
-		// app.use('/events', eventsService.router());
-
-		// Attach config endpoint
-		// GET /config
-		app.use('/', identityService.router());
-
-		// Attach catalog endpoints with specific middleware, the authorization service is passed in as middleware to protect/decorate the entities as well
-		// GET /videos
-		// GET /videos/:id
-		// GET /collections
-		// GET /collections/:id
-		// GET /views
-		// GET /views/:id
-		app.use(catalogService.router({middleware: []}));
-
-		app.use(eventsService.router());
+		oddworksMiddleware(app);
 
 		app.get('/', (req, res, next) => {
 			res.body = {
@@ -118,9 +76,6 @@ module.exports = Promise
 			};
 			next();
 		});
-
-		// Serialize all data into the JSON API Spec
-		app.use(jsonAPIService.middleware());
 
 		app.use((req, res) => res.send(res.body));
 
@@ -143,12 +98,11 @@ module.exports = Promise
 			}
 		});
 
+		debugger
 		if (!module.parent) {
-			app.listen(process.env.PORT, () => {
-				if (isDevOrTest) {
-					console.log('');
-					console.log(chalk.green(`Server is running on port: ${process.env.PORT}`));
-					console.log('');
+			app.listen(config.port, () => {
+				if (config.env === 'development' || config.env === 'test') {
+					console.log(chalk.black.bgGreen(`\nServer is running on port: ${config.port}\n`));
 				}
 			});
 		}
