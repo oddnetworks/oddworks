@@ -46,6 +46,7 @@
     "lodash": "^3.10.0",
     "mixpanel": "^0.3.2",
     "morgan": "^1.6.1",
+    "node-uuid": "^1.4.7",
     "oddcast": "^2.0.0",
     "redis-search": "0.0.1",
     "traverse": "^0.6.6",
