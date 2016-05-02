@@ -1,27 +1,25 @@
 'use strict';
 
+const fs = require('fs');
 const chalk = require('chalk');
 const _ = require('lodash');
 const Promise = require('bluebird');
 const boom = require('boom');
 const express = require('express');
 
-let userConfig = require('./default-config');
+const config = {};
 
-try {
-	userConfig = require('./config');
-} catch (e) {
+if (fs.existsSync('./config.js')) {
+	const userConfig = require('./config');
+	_.defaultsDeep(config, userConfig);
+} else {
 	console.log(chalk.black.bgRed('./config.js NOT FOUND'));
 	console.log(chalk.red('Loading default server configuration.'));
 	console.log(chalk.red('You may override defaults by creating your own ./config.js file like so:'));
 	console.log(chalk.red('$ cp ./default-config.js ./config.js'));
+	const defaultConfig = require('./config-default');
+	_.defaultsDeep(config, defaultConfig);
 }
-
-const config = userConfig;
-
-const DefaultStores = require('./stores/default');
-const DefaultServices = require('./services/default');
-const DefaultMiddleware = require('./middleware/default');
 
 const middleware = require('./middleware');
 
@@ -30,31 +28,26 @@ const bus = oddcast.bus();
 const app = express();
 
 // Initialize oddcast for events, commands, requests
-// use sensible defaults
-bus.events.use(_.get(config, 'config.oddcast.events.options', {}), _.get(config, 'config.oddcast.events.transport', oddcast.inprocessTransport()));
-bus.commands.use(_.get(config, 'config.oddcast.commands.options', {}), _.get(config, 'config.oddcast.commands.transport', oddcast.inprocessTransport()));
-bus.requests.use(_.get(config, 'config.oddcast.requests.options', {}), _.get(config, 'config.oddcast.requests.transport', oddcast.inprocessTransport()));
+bus.events.use(config.oddcast.events.options, config.oddcast.events.transport);
+bus.commands.use(config.oddcast.commands.options, config.oddcast.commands.transport);
+bus.requests.use(config.oddcast.requests.options, config.oddcast.requests.transport);
 
 function initializer(obj) {
 	console.log(chalk.black.bgBlue(`Initializing service: ${obj.service.name}`));
 	return obj.service.initialize(bus, obj.options);
 }
 
-const stores = _.get(config, 'config.stores', new DefaultStores());
-const services = _.get(config, 'config.services', new DefaultServices());
-const oddworksMiddleware = _.get(config, 'config.middleware', DefaultMiddleware);
-
 module.exports = Promise
 	// Initialize stores
-	.all(_.map(stores, initializer))
+	.all(_.map(config.stores, initializer))
 	// Initialize services
 	.then(() => {
-		return Promise.all(_.map(services, initializer));
+		return Promise.all(_.map(config.services, initializer));
 	})
 	// Seed the stores if in development mode
 	.then(() => {
-		if (_.get('config.seed', false)) {
-			return require(`${dataDir}/seed`)(bus); // eslint-disable-line
+		if (config.seed) {
+			return require(`${config.dataDir}/seed`)(bus); // eslint-disable-line
 		}
 
 		return true;
@@ -68,7 +61,7 @@ module.exports = Promise
 		// Standard express middleware
 		app.use(middleware());
 
-		oddworksMiddleware(app);
+		config.middleware(app);
 
 		app.get('/', (req, res, next) => {
 			res.body = {
