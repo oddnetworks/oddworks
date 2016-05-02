@@ -10,17 +10,17 @@ const service = exports = module.exports = {};
 let config = {};
 
 service.initialize = (bus, options) => {
-	config.bus = bus;
+	service.bus = bus;
 	config.options = options;
 
-	config.bus.queryHandler({role: 'catalog', cmd: 'fetch'}, payload => {
+	service.bus.queryHandler({role: 'catalog', cmd: 'fetch'}, payload => {
 		return new Promise((resolve, reject) => {
 			if (payload.id) {
-				config.bus
+				service.bus
 					.query({role: 'store', cmd: 'get', type: payload.type}, {type: payload.type, id: payload.id})
 					.then(object => {
 						if (payload.type === 'video' && payload.channel && payload.platform) {
-							config.bus
+							service.bus
 								.query({role: 'identity', cmd: 'config'}, {channel: payload.channel, platform: payload.platform})
 								.then(config => {
 									_.set(object, 'meta.features', lib.composeMetaFeatures(object, config.features));
@@ -35,10 +35,10 @@ service.initialize = (bus, options) => {
 					.catch(err => reject(err));
 			}
 
-			config.bus.query({role: 'store', cmd: 'get', type: payload.type}, {type: payload.type})
+			service.bus.query({role: 'store', cmd: 'get', type: payload.type}, {type: payload.type})
 				.then(objects => {
 					if (payload.type === 'video' && payload.channel && payload.platform) {
-						config.bus
+						service.bus
 							.query({role: 'identity', cmd: 'config'}, {channel: payload.channel, platform: payload.platform})
 							.then(config => {
 								objects = _.map(objects, object => {
@@ -56,20 +56,20 @@ service.initialize = (bus, options) => {
 		});
 	});
 
-	config.bus.queryHandler({role: 'catalog', cmd: 'search'}, payload => {
+	service.bus.queryHandler({role: 'catalog', cmd: 'search'}, payload => {
 		return new Promise((resolve, reject) => {
-			config.bus
+			service.bus
 				.query({role: 'store', cmd: 'query'}, payload)
 				.then(objects => resolve(_.flatten(objects)))
 				.catch(err => reject(err));
 		});
 	});
 
-	config.bus.commandHandler({role: 'catalog', cmd: 'create', searchable: true}, payload => {
+	service.bus.commandHandler({role: 'catalog', cmd: 'create', searchable: true}, payload => {
 		return new Promise((resolve, reject) => {
 			Promise.join(
-				config.bus.sendCommand({role: 'catalog', cmd: 'create'}, payload),
-				config.bus.sendCommand({role: 'catalog', cmd: 'index'}, payload),
+				service.bus.sendCommand({role: 'catalog', cmd: 'create'}, payload),
+				service.bus.sendCommand({role: 'catalog', cmd: 'index'}, payload),
 				() => {
 					resolve(true);
 				}
@@ -78,19 +78,19 @@ service.initialize = (bus, options) => {
 		});
 	});
 
-	config.bus.commandHandler({role: 'catalog', cmd: 'create'}, payload => {
+	service.bus.commandHandler({role: 'catalog', cmd: 'create'}, payload => {
 		return new Promise((resolve, reject) => {
-			config.bus.sendCommand({role: 'store', cmd: 'set', type: payload.type}, payload)
+			service.bus.sendCommand({role: 'store', cmd: 'set', type: payload.type}, payload)
 				.then(() => resolve(true))
 				.catch(err => reject(err));
 		});
 	});
 
-	config.bus.commandHandler({role: 'catalog', cmd: 'index'}, payload => {
+	service.bus.commandHandler({role: 'catalog', cmd: 'index'}, payload => {
 		return new Promise((resolve, reject) => {
-			config.bus.query({role: 'catalog', cmd: 'fetch'}, payload)
+			service.bus.query({role: 'catalog', cmd: 'fetch'}, payload)
 				.then(object => {
-					return config.bus.sendCommand({role: 'store', cmd: 'index', type: payload.type}, {id: object.id, text: `${object.title} ${object.description}`});
+					return service.bus.sendCommand({role: 'store', cmd: 'index', type: payload.type}, {id: object.id, text: `${object.title} ${object.description}`});
 				})
 				.then(() => resolve(true))
 				.catch(err => reject(err));
@@ -105,7 +105,7 @@ service.router = options => {
 
 	types.forEach(type => {
 		router.get(`/${type}s`, (req, res, next) => {
-			config.bus
+			service.bus
 				.query({role: 'catalog', cmd: 'fetch'}, {type, channel: req.identity.channel.id, platform: req.identity.platform.id})
 				.then(objects => {
 					res.body = objects;
@@ -114,7 +114,7 @@ service.router = options => {
 		});
 
 		router.get(`/${type}s/:id`, (req, res, next) => {
-			config.bus
+			service.bus
 				.query({role: 'catalog', cmd: 'fetch'}, {type, id: req.params.id, channel: req.identity.channel.id, platform: req.identity.platform.id})
 				.then(object => {
 					res.body = object;
@@ -124,7 +124,7 @@ service.router = options => {
 	});
 
 	router.get('/search', (req, res, next) => {
-		config.bus
+		service.bus
 			.query({role: 'catalog', cmd: 'search'}, {query: req.query.q})
 			.then(objects => {
 				res.body = objects;
