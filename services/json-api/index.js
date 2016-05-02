@@ -20,7 +20,7 @@ service.initialize = (bus, options) => {
 				.map(relationship => {
 					if (!payload.object.relationships[relationship]) {
 						reject(new Error(`relationships.${relationship} does not exist on object '${payload.object.id}'`));
-					}
+					}		
 					return payload.object.relationships[relationship].data;
 				})
 				.flatten()
@@ -67,6 +67,7 @@ service.middleware = (bus, options) => { // eslint-disable-line
 		if (!_.isArray(data) && _.isString(req.query.include)) {
 			res.body.included = [];
 			config.bus.query({role: 'json-api', cmd: 'included'}, {object: res.body.data, include: req.query.include})
+				.map(element => serialize(element, baseUrl))
 				.then(included => {
 					res.body.included = included;
 					next();
