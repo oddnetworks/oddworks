@@ -8,21 +8,20 @@ const jwt = require('jsonwebtoken');
 Promise.promisifyAll(jwt);
 
 const service = exports = module.exports = {};
-let config = {};
 
 service.initialize = (bus, options) => {
-	config.bus = bus;
-	config.options = options || {};
+	service.bus = bus;
+	service.options = options || {};
 
-	config.bus.queryHandler({role: 'identity', cmd: 'verify'}, payload => {
+	service.bus.queryHandler({role: 'identity', cmd: 'verify'}, payload => {
 		return new Promise((resolve, reject) => {
 			jwt
-				.verifyAsync(payload.token, config.options.jwtSecret)
+				.verifyAsync(payload.token, service.options.jwtSecret)
 				.then(token => {
-					Promise
+					return Promise
 						.join(
-							config.bus.query({role: 'store', cmd: 'get', type: 'channel'}, {id: token.channel, type: 'channel'}),
-							config.bus.query({role: 'store', cmd: 'get', type: 'platform'}, {id: token.platform, type: 'platform'}),
+							service.bus.query({role: 'store', cmd: 'get', type: 'channel'}, {id: token.channel, type: 'channel'}),
+							service.bus.query({role: 'store', cmd: 'get', type: 'platform'}, {id: token.platform, type: 'platform'}),
 							(channel, platform) => {
 								if (!channel.length && !platform.length) {
 									resolve({channel, platform});
@@ -36,32 +35,32 @@ service.initialize = (bus, options) => {
 		});
 	});
 
-	config.bus.queryHandler({role: 'identity', cmd: 'authenticate'}, payload => {
+	service.bus.queryHandler({role: 'identity', cmd: 'authenticate'}, payload => {
 		return new Promise((resolve, reject) => {
 			jwt
-				.verifyAsync(payload.token, config.options.jwtSecret)
+				.verifyAsync(payload.token, service.options.jwtSecret)
 				.then(token => {
 					const id = `${token.channel}:${token.platform}:${token.user}`;
-					return config.bus.query({role: 'store', cmd: 'get', type: 'linked-platform'}, {id: id, type: 'linked-platform'});
+					return service.bus.query({role: 'store', cmd: 'get', type: 'linked-platform'}, {id: id, type: 'linked-platform'});
 				})
 				.then(linkedplatform => resolve(linkedplatform))
 				.catch(err => reject(err));
 		});
 	});
 
-	config.bus.queryHandler({role: 'identity', cmd: 'user'}, payload => {
+	service.bus.queryHandler({role: 'identity', cmd: 'user'}, payload => {
 		return new Promise(resolve => {
 			// Get the user from the whatever user management system, local or 3rd party depending on service config
 			resolve(payload);
 		});
 	});
 
-	config.bus.queryHandler({role: 'identity', cmd: 'config'}, payload => {
+	service.bus.queryHandler({role: 'identity', cmd: 'config'}, payload => {
 		return new Promise((resolve, reject) => {
 			Promise
 				.join(
-					config.bus.query({role: 'store', cmd: 'get', type: 'channel'}, {id: payload.channel, type: 'channel'}),
-					config.bus.query({role: 'store', cmd: 'get', type: 'platform'}, {id: payload.platform, type: 'platform'}),
+					service.bus.query({role: 'store', cmd: 'get', type: 'channel'}, {id: payload.channel, type: 'channel'}),
+					service.bus.query({role: 'store', cmd: 'get', type: 'platform'}, {id: payload.platform, type: 'platform'}),
 					(channel, platform) => {
 						if (!channel.length && !platform.length) {
 							resolve(composeConfig({channel, platform}));
@@ -79,10 +78,12 @@ service.initialize = (bus, options) => {
 
 service.middleware = {
 	verifyAccess(options) {
+		options = options || {scopes: ['platform']};
+
 		return (req, res, next) => {
 			const token = req.get(options.header || 'x-access-token');
 			if (token) {
-				config.bus
+				service.bus
 					.query({role: 'identity', cmd: 'verify'}, {token})
 					.then(identity => {
 						req.identity = identity;
@@ -99,7 +100,7 @@ service.middleware = {
 		return (req, res, next) => {
 			const token = req.get(options.header);
 			if (token) {
-				config.bus
+				service.bus
 					.query({role: 'identity', cmd: 'authenticate'}, {token})
 					.then(identity => {
 						req.identity = identity;
@@ -114,8 +115,8 @@ service.middleware = {
 };
 
 service.router = options => { // eslint-disable-line
-	router.get(`/config`, (req, res, next) => {
-		config.bus
+	router.get('/config', (req, res, next) => {
+		service.bus
 			.query({role: 'identity', cmd: 'config'}, {channel: req.identity.channel.id, platform: req.identity.platform.id})
 			.then(config => {
 				res.body = {
@@ -127,6 +128,12 @@ service.router = options => { // eslint-disable-line
 			})
 			.catch(err => next(boom.wrap(err)));
 	});
+
+	router.post('/channel', setChannel);
+	router.put('/channel/:id', setChannel);
+
+	router.post('/platform', setChannel);
+	router.put('/platform/:id', setChannel);
 
 	return router;
 };
@@ -150,4 +157,11 @@ function composeConfig(identity) {
 	});
 
 	return confg;
+}
+
+function setChannel(req, res, next) {
+	const payload = req.body;
+	service.bus.sendCommand({role: 'store', cmd: 'set'}, payload);
+
+	next();
 }
