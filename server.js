@@ -1,83 +1,39 @@
 'use strict';
 
-require('dotenv').config({silent: true});
 
-const notTest = (process.env.NODE_ENV !== 'test');
-const isDevOrTest = (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test');
-const dataDir = (process.env.DATA_DIR || './test/data');
 const chalk = require('chalk');
 const _ = require('lodash');
-const Promise = require('bluebird');
-const oddcast = require('oddcast');
 const boom = require('boom');
 const express = require('express');
 const redis = (isDevOrTest) ? require('fakeredis').createClient() : require('redis').createClient(process.env.REDIS_URI);
 
+const StoresUtils = require('./stores/utils');
+const ServicesUtils = require('./services/utils');
+
+const configFile = process.env.CONFIG || './config/default';
+const config = require(configFile);
+
 const middleware = require('./middleware');
 
+const oddcast = require('oddcast');
 const bus = oddcast.bus();
 const app = express();
 
-bus.events.use({}, oddcast.inprocessTransport());
-bus.commands.use({}, oddcast.inprocessTransport());
-bus.requests.use({}, oddcast.inprocessTransport());
+// Initialize oddcast for events, commands, requests
+bus.events.use(config.oddcast.events.options, config.oddcast.events.transport);
+bus.commands.use(config.oddcast.commands.options, config.oddcast.commands.transport);
+bus.requests.use(config.oddcast.requests.options, config.oddcast.requests.transport);
 
-// Set up the store and services you want to use
-const memoryStore = require('./stores/memory');
-const redisStore = require('./stores/redis');
-const redisSearchStore = require('./stores/redis-search');
-const identityService = require('./services/identity');
-const catalogService = require('./services/catalog');
-const eventsService = require('./services/events');
-const jsonAPIService = require('./services/json-api');
-const syncService = require('./services/sync');
-
-module.exports = Promise
-	// Initialize your stores
-	.join(
-		memoryStore.initialize(bus, {types: ['platform', 'channel']}),
-		redisStore.initialize(bus, {redis, types: ['collection', 'promotion', 'video', 'view']}),
-		redisSearchStore.initialize(bus, {redis, types: ['collection', 'video']})
-	)
-
-	// Initialize your services
+module.exports = StoresUtils.load(bus, config.stores)
+	// Initialize stores
 	.then(() => {
-		const services = [
-			identityService.initialize(bus, {jwtSecret: process.env.JWT_SECRET}),
-			catalogService.initialize(bus, {}),
-			eventsService.initialize(bus, {
-				redis,
-				analyzers: [
-					/* eslint-disable */
-					new eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
-					new eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
-					/* eslint-enable */
-				]
-			}),
-			jsonAPIService.initialize(bus, {})
-		];
-
-		// Initialize Sync Service if its not test env
-		if (notTest) {
-			services.push(
-				syncService.initialize(bus, {
-					interval: 5000,
-					providers: [
-						/* eslint-disable */
-						syncService.providers.vimeo({token: process.env.VIMEO_APIKEY})
-						/* eslint-enable */
-					]
-				})
-			);
-		}
-
-		return Promise.all(services);
+		// Initialize services
+		return ServicesUtils.load(bus, config.services);
 	})
-
-	// Seed the stores if in development mode
+	// Seed the stores if config.seed is true
 	.then(() => {
-		if (isDevOrTest) {
-			return require(`${dataDir}/seed`)(bus); // eslint-disable-line
+		if (config.seed) {
+			return require(`${config.dataDir}/seed`)(bus); // eslint-disable-line
 		}
 
 		return true;
@@ -91,38 +47,7 @@ module.exports = Promise
 		// Standard express middleware
 		app.use(middleware());
 
-		// Decode the JWT set on the X-Access-Token header and attach to req.identity
-		app.use(identityService.middleware.verifyAccess({header: 'x-access-token'}));
-
-		// Decode the JWT set on the Authorization header and attach to req.authorization
-		// app.use(authorizationService.middleware({header: 'Authorization'}));
-
-		// Attach auth endpoints
-		// POST /auth/platform/code
-		// POST /auth/user/authorize
-		// POST /auth/platform/token
-		// GET /auth/user/:clientUserID/platforms
-		// DELETE /auth/user/:clientUserID/platforms/:platformUserProfileID
-		// app.use('/auth', authorizationService.router());
-
-		// Attach events endpoint
-		// POST /events
-		// app.use('/events', eventsService.router());
-
-		// Attach config endpoint
-		// GET /config
-		app.use('/', identityService.router());
-
-		// Attach catalog endpoints with specific middleware, the authorization service is passed in as middleware to protect/decorate the entities as well
-		// GET /videos
-		// GET /videos/:id
-		// GET /collections
-		// GET /collections/:id
-		// GET /views
-		// GET /views/:id
-		app.use(catalogService.router({middleware: []}));
-
-		app.use(eventsService.router());
+		config.middleware(app);
 
 		app.get('/', (req, res, next) => {
 			res.body = {
@@ -130,9 +55,6 @@ module.exports = Promise
 			};
 			next();
 		});
-
-		// Serialize all data into the JSON API Spec
-		app.use(jsonAPIService.middleware());
 
 		app.use((req, res) => res.send(res.body));
 
@@ -156,18 +78,9 @@ module.exports = Promise
 		});
 
 		if (!module.parent) {
-			app.listen(process.env.PORT, () => {
-				if (isDevOrTest) {
-					console.log('');
-					console.log(chalk.green(`Sync Providers Running`));
-					console.log(chalk.green(`-------------------------`));
-					_.each(syncService.options.providers, provider => {
-						console.log(chalk.blue('SPID: ') + chalk.cyan(provider.spid));
-						console.log('');
-					});
-					console.log(chalk.green(`Server Running`));
-					console.log(chalk.green(`--------------`));
-					console.log(chalk.blue('URL: ') + chalk.cyan(`http://localhost:${process.env.PORT}`));
+			app.listen(config.port, () => {
+				if (config.env === 'development' || config.env === 'test') {
+					console.log(chalk.green.bold(`Server is running on port: ${config.port}`));
 				}
 			});
 		}
