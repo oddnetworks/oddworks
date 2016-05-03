@@ -1,5 +1,8 @@
 'use strict';
 
+const path = require('path');
+process.env.CONFIG = path.resolve(__dirname, './test-config.js');
+
 const oddcast = require('oddcast');
 const bus = oddcast.bus();
 

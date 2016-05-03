@@ -1,8 +1,5 @@
 'use strict';
 
-require('dotenv').config({silent: true});
-
-// const _ = require('lodash');
 const chalk = require('chalk');
 const path = require('path');
 const oddcast = require('oddcast');
@@ -18,21 +15,14 @@ const identityService = require('../services/identity');
 const catalogService = require('../services/catalog');
 const eventsService = require('../services/events');
 const jsonAPIService = require('../services/json-api');
-// As an example, if you wanted to run a sync service, you
-// would include the service module, then look below in the
-// service configuration to see how it is used
-// const syncService = require('../services/sync');
 
 // The following should be set in your environment
-// We use these values for demonstration purposes
-const port = 3000;
+const port = 3333;
 const jwtSecret = 'secret';
-const dataDir = path.resolve(__dirname, '../data/nasa');
-const environment = 'development';
-/* eslint-disable */
-const googleAnalyticsAnalyzer = new eventsService.analyzers.googleAnalytics({trackingId: 'your-google-tracking-id'});
-const mixpanelAnalyzer = new eventsService.analyzers.mixpanel({apiKey: 'your-mixpanel-api-key', timeMultiplier: 1000})
-/* eslint-enable */
+const dataDir = path.resolve(__dirname, '../test/data');
+const environment = 'test';
+
+console.log(chalk.yellow.bold('Loading ./test-config.js'));
 
 module.exports = {
 	env: environment,
@@ -89,21 +79,13 @@ module.exports = {
 			options: {
 				redis,
 				analyzers: [
-					googleAnalyticsAnalyzer,
-					mixpanelAnalyzer
+					/* eslint-disable */
+					new eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
+					new eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
+					/* eslint-enable */
 				]
 			}
 		}
-		// Adding a sync service with a single provider
-		// ,{
-		// 	service: syncService,
-		// 	options: {
-		// 		interval: (60 * 5 * 1000),
-		// 		providers: [
-		// 			syncService.providers.vimeo({token: process.env.VIMEO_APIKEY})
-		// 		]
-		// 	}
-		// }
 	],
 
 	middleware: function (app) {
@@ -144,13 +126,3 @@ module.exports = {
 		app.use(jsonAPIService.middleware());
 	}
 };
-
-// Warn the user that they should override the default configuration
-console.log(
-	chalk.black.bgYellow.bold('                                    WARNING!                                    ') +
-	chalk.yellow.bold('\nConfig Not Found') +
-	chalk.yellow.bold('\nLoading default server configuration.') +
-  chalk.yellow.bold('\nYou may override defaults by creating your own configuration file like so:') +
-  chalk.yellow.bold('\n\t$ cp ./config/default.js ./config/my-config.js') +
-  chalk.yellow.bold('\nand setting it in the environment variable CONFIG=./config/my-config.js') +
-  chalk.bgYellow('\n                                                                                '));

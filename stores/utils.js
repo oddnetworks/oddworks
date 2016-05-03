@@ -9,7 +9,9 @@ function StoresUtils() {
 }
 
 function initializer(bus, config) {
-	console.log(chalk.blue.bold(`Initializing store: ${config.store.name}`));
+	if (process.env.NODE_ENV !== 'test') {
+		console.log(chalk.blue.bold(`Initializing store: ${config.store.name}`));
+	}
 	return config.store.initialize(bus, config.options);
 }
 

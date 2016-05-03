@@ -38,5 +38,3 @@ data/**/*.DELETE
 
 #intellij
 api.iml
-
-config.js
