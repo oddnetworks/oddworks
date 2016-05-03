@@ -134,3 +134,5 @@ service.router = options => {
 
 	return router;
 };
+
+service.name = 'catalog';

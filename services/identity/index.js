@@ -11,6 +11,8 @@ const respond = require('../../lib/respond');
 
 const service = exports = module.exports = {};
 
+service.name = 'identity';
+
 service.initialize = (bus, options) => {
 	service.bus = bus;
 	service.options = options || {};
