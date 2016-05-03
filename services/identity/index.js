@@ -193,7 +193,7 @@ function patch(req, res, next) {
 		.then(() => {
 			return service.bus.query({role: 'store', cmd: 'get', type: payload.data.type}, payload.data);
 		})
-		.then((resource) => {
+		.then(resource => {
 			resource = _.assign(resource, payload.data.attributes);
 
 			service.bus.sendCommand({role: 'store', cmd: 'set', type: payload.data.type}, resource);
