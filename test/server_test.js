@@ -64,7 +64,7 @@ test('Route: /collections/:id', t => {
 			t.equal(res.body.data.id, 'daily-show', 'id is set');
 			t.equal(res.body.data.type, 'collection', 'type is set');
 			t.equal(res.body.data.attributes.title, 'Odd channels Daily Show', 'title is set');
-			t.equal(res.body.data.relationships.entries.data.length, 3, 'collection has 3 videos');
+			t.equal(res.body.data.relationships.entities.data.length, 3, 'collection has 3 videos');
 			t.end(err);
 		});
 });
