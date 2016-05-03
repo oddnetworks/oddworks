@@ -5,7 +5,6 @@ const chalk = require('chalk');
 const _ = require('lodash');
 const boom = require('boom');
 const express = require('express');
-const redis = (isDevOrTest) ? require('fakeredis').createClient() : require('redis').createClient(process.env.REDIS_URI);
 
 const StoresUtils = require('./stores/utils');
 const ServicesUtils = require('./services/utils');
