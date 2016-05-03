@@ -3,7 +3,7 @@
 	"type": "collection",
 	"channel": "odd-networks",
 	"relationships": {
-		"entries": {
+		"entities": {
 			"data": [{
 				"id": "daily-show-video-2",
 				"type": "video"

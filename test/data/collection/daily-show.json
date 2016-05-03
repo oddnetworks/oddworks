@@ -4,7 +4,7 @@
 	"channel": "odd-networks",
 	"title": "Odd channels Daily Show",
 	"relationships": {
-		"entries": {
+		"entities": {
 			"data": [{
 				"id": "daily-show-video-1",
 				"type": "video"
