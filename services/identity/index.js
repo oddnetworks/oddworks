@@ -7,6 +7,8 @@ const boom = require('boom');
 const jwt = require('jsonwebtoken');
 Promise.promisifyAll(jwt);
 
+const respond = require('../../lib/respond');
+
 const service = exports = module.exports = {};
 
 service.initialize = (bus, options) => {
@@ -131,11 +133,9 @@ service.router = options => { // eslint-disable-line
 			.catch(err => next(boom.wrap(err)));
 	});
 
-	router.post('/channel', setChannel);
-	router.put('/channel/:id', setChannel);
-
-	router.post('/platform', setChannel);
-	router.put('/platform/:id', setChannel);
+	router.post('/:type(channels|platforms)', post);
+	router.put('/:type(channels|platforms)/:id', put);
+	router.patch('/:type(channels|platforms)/:id', patch);
 
 	return router;
 };
@@ -161,9 +161,40 @@ function composeConfig(identity) {
 	return confg;
 }
 
-function setChannel(req, res, next) {
+function post(req, res, next) {
 	const payload = req.body;
-	service.bus.sendCommand({role: 'store', cmd: 'set'}, payload);
+	service.bus.query({role: 'json-api', cmd: 'validate'}, payload)
+		.then(() => {
+			service.bus.sendCommand({role: 'store', cmd: 'set', type: payload.data.type}, payload);
 
-	next();
+			respond.accepted(res);
+			next();
+		})
+		.catch(err => next(boom.badRequest(err.message)));
+}
+
+function put(req, res, next) {
+	const payload = req.body;
+	service.bus.query({role: 'json-api', cmd: 'validate'}, payload)
+		.then(() => {
+			service.bus.sendCommand({role: 'store', cmd: 'set', type: payload.data.type}, payload);
+
+			respond.accepted(res);
+			next();
+		})
+		.catch(err => next(boom.badRequest(err.message)));
+}
+
+function patch(req, res, next) {
+	const payload = req.body;
+	service.bus.query({role: 'json-api', cmd: 'validate'}, payload)
+		.then(() => {
+			return service.bus.query({role: 'store', cmd: 'get', type: payload.data.type}, payload.data);
+		})
+		.then((resource) => {
+			resource = _.assign(resource, payload.data.attributes);
+
+			service.bus.sendCommand({role: 'store', cmd: 'set', type: payload.data.type}, resource);
+		})
+		.catch(err => next(boom.badRequest(err.message)));
 }
