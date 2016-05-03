@@ -67,6 +67,7 @@ service.middleware = (bus, options) => { // eslint-disable-line
 		if (!_.isArray(data) && _.isString(req.query.include)) {
 			res.body.included = [];
 			config.bus.query({role: 'json-api', cmd: 'included'}, {object: res.body.data, include: req.query.include})
+				.map(element => serialize(element, baseUrl))
 				.then(included => {
 					res.body.included = included;
 					next();
