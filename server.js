@@ -2,9 +2,11 @@
 
 const chalk = require('chalk');
 const _ = require('lodash');
-const Promise = require('bluebird');
 const boom = require('boom');
 const express = require('express');
+
+const StoresUtils = require('./stores/utils');
+const ServicesUtils = require('./services/utils');
 
 const configFile = process.env.CONFIG || './config/default';
 const config = require(configFile);
@@ -20,19 +22,13 @@ bus.events.use(config.oddcast.events.options, config.oddcast.events.transport);
 bus.commands.use(config.oddcast.commands.options, config.oddcast.commands.transport);
 bus.requests.use(config.oddcast.requests.options, config.oddcast.requests.transport);
 
-function initializer(obj) {
-	console.log(chalk.blue.bold(`Initializing service: ${obj.service.name}`));
-	return obj.service.initialize(bus, obj.options);
-}
-
-module.exports = Promise
+module.exports = StoresUtils.load(bus, config.stores)
 	// Initialize stores
-	.all(_.map(config.stores, initializer))
-	// Initialize services
 	.then(() => {
-		return Promise.all(_.map(config.services, initializer));
+		// Initialize services
+		return ServicesUtils.load(bus, config.services);
 	})
-	// Seed the stores if in development mode
+	// Seed the stores if config.seed is true
 	.then(() => {
 		if (config.seed) {
 			return require(`${config.dataDir}/seed`)(bus); // eslint-disable-line

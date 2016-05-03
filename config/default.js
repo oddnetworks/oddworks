@@ -58,15 +58,15 @@ module.exports = {
 
 	stores: [
 		{
-			service: memoryStore,
+			store: memoryStore,
 			options: {types: ['platform', 'channel']}
 		},
 		{
-			service: redisStore,
+			store: redisStore,
 			options: {redis, types: ['collection', 'promotion', 'video', 'view']}
 		},
 		{
-			service: redisSearchStore,
+			store: redisSearchStore,
 			options: {redis, types: ['collection', 'video']}
 		}
 	],
