@@ -23,7 +23,9 @@ service.initialize = (bus, options) => {
 							service.bus.query({role: 'store', cmd: 'get', type: 'channel'}, {id: token.channel, type: 'channel'}),
 							service.bus.query({role: 'store', cmd: 'get', type: 'platform'}, {id: token.platform, type: 'platform'}),
 							(channel, platform) => {
-								if (!channel.length && !platform.length) {
+								if (!channel || !platform) {
+									reject(new Error('channel or platform not found'));
+								} else if (!channel.length && !platform.length) {
 									resolve({channel, platform});
 								} else {
 									reject(new Error('channel or platform not found'));
