@@ -97,3 +97,5 @@ function serialize(object, baseUrl) {
 
 	return object;
 }
+
+service.name = 'json-api';

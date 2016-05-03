@@ -151,3 +151,5 @@ function composeConfig(identity) {
 
 	return confg;
 }
+
+service.name = 'identity';

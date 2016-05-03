@@ -61,3 +61,5 @@ function set(payload) {
 			.catch(err => reject(err));
 	});
 }
+
+store.name = 'redis';
