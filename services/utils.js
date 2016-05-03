@@ -9,7 +9,9 @@ function ServicesUtils() {
 }
 
 function initializer(bus, config) {
-	console.log(chalk.blue.bold(`Initializing service: ${config.service.name}`));
+	if (process.env.NODE_ENV !== 'test') {
+		console.log(chalk.blue.bold(`Initializing service: ${config.service.name}`));
+	}
 	return config.service.initialize(bus, config.options);
 }
 
