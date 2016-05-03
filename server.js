@@ -1,25 +1,13 @@
 'use strict';
 
-const fs = require('fs');
 const chalk = require('chalk');
 const _ = require('lodash');
 const Promise = require('bluebird');
 const boom = require('boom');
 const express = require('express');
 
-const config = {};
-
-if (fs.existsSync('./config.js')) {
-	const userConfig = require('./config');
-	_.defaultsDeep(config, userConfig);
-} else {
-	console.log(chalk.black.bgRed('./config.js NOT FOUND'));
-	console.log(chalk.red('Loading default server configuration.'));
-	console.log(chalk.red('You may override defaults by creating your own ./config.js file like so:'));
-	console.log(chalk.red('$ cp ./default-config.js ./config.js'));
-	const defaultConfig = require('./config-default');
-	_.defaultsDeep(config, defaultConfig);
-}
+const configFile = process.env.CONFIG || './config/default';
+const config = require(configFile);
 
 const middleware = require('./middleware');
 
@@ -33,7 +21,7 @@ bus.commands.use(config.oddcast.commands.options, config.oddcast.commands.transp
 bus.requests.use(config.oddcast.requests.options, config.oddcast.requests.transport);
 
 function initializer(obj) {
-	console.log(chalk.black.bgBlue(`Initializing service: ${obj.service.name}`));
+	console.log(chalk.blue.bold(`Initializing service: ${obj.service.name}`));
 	return obj.service.initialize(bus, obj.options);
 }
 
@@ -94,7 +82,7 @@ module.exports = Promise
 		if (!module.parent) {
 			app.listen(config.port, () => {
 				if (config.env === 'development' || config.env === 'test') {
-					console.log(chalk.black.bgGreen(`\nServer is running on port: ${config.port}\n`));
+					console.log(chalk.green.bold(`Server is running on port: ${config.port}`));
 				}
 			});
 		}

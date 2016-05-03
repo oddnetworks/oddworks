@@ -1,31 +1,38 @@
 'use strict';
 
-// require('dotenv').config({silent: true});
+require('dotenv').config({silent: true});
 
 const chalk = require('chalk');
+const path = require('path');
 const oddcast = require('oddcast');
 
-// In your config, this would be real redis
+// In your config, this would be real redis client
 const redis = require('fakeredis').createClient();
 
 // Require the stores and/or services you want to use
-const memoryStore = require('./stores/memory');
-const redisStore = require('./stores/redis');
-const redisSearchStore = require('./stores/redis-search');
-const identityService = require('./services/identity');
-const catalogService = require('./services/catalog');
-const eventsService = require('./services/events');
-const jsonAPIService = require('./services/json-api');
+const memoryStore = require('../stores/memory');
+const redisStore = require('../stores/redis');
+const redisSearchStore = require('../stores/redis-search');
+const identityService = require('../services/identity');
+const catalogService = require('../services/catalog');
+const eventsService = require('../services/events');
+const jsonAPIService = require('../services/json-api');
 
 // The following should be set in your environment
 const port = process.env.PORT || 3000;
 const jwtSecret = process.env.JWT_SECRET || 'secret';
-const dataDir = process.env.DATA_DIR || './test/data';
+const dataDir = process.env.DATA_DIR || path.resolve(__dirname, '../test/data');
 const environment = process.env.NODE_ENV || 'development';
 
 const isDevOrTest = (environment === 'development' || environment === 'test');
-
-console.log(chalk.black.bgYellow.bold('\nWARNING: Use a real data store for production\n'));
+console.log(
+	chalk.black.bgYellow.bold('                                    WARNING!                                    ') +
+	chalk.yellow.bold('\nConfig Not Found') +
+	chalk.yellow.bold('\nLoading default server configuration.') +
+  chalk.yellow.bold('\nYou may override defaults by creating your own configuration file like so:') +
+  chalk.yellow.bold('\n\t$ cp ./config/default.js ./config.js') +
+  chalk.yellow.bold('\nand setting it in the environment variable CONFIG=./config.js') +
+  chalk.bgYellow('\n                                                                                '));
 
 module.exports = {
 	env: environment,
