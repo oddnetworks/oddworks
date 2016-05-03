@@ -5,6 +5,8 @@ const Promise = require('bluebird');
 
 const providers = require('./providers');
 
+const TEN_MINUTES = 60 * 10 * 1000;
+
 const service = exports = module.exports = {};
 
 service.initialize = (bus, options) => {
@@ -26,7 +28,7 @@ service.initialize = (bus, options) => {
 			// Set interval for sync provider
 			setInterval(() => {
 				service.bus.broadcast({role: 'sync'}, {spid: provider.spid});
-			}, service.options.interval || (60 * 60 * 10 * 1000));
+			}, service.options.interval || TEN_MINUTES);
 		}
 	});
 
