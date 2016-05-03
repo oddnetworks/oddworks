@@ -3,14 +3,13 @@
 const test = require('tape');
 const request = require('supertest');
 
-// process.env.CONFIG = './test-config.js';
+const testHelper = require('./test-helper');
 
 let server;
 const oddworks = require('../server');
 const accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaGFubmVsIjoib2RkLW5ldHdvcmtzIiwicGxhdGZvcm0iOiJhcHBsZS1pb3MiLCJzY29wZSI6WyJwbGF0Zm9ybSJdLCJpYXQiOjE0NjA5ODg5NzB9.-k0wFuWD3FFaRZ7btIad9hiJJyEIBqiR4cS8cGeGMoM';
 
 const eventsService = require('../services/events');
-const testHelper = require('./test-helper');
 
 test('SERVER', t => {
 	eventsService.initialize(testHelper.bus, {analyzers: []});
