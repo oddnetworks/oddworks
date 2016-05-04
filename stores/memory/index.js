@@ -46,3 +46,5 @@ function set(payload) {
 		return resolve(payload);
 	});
 }
+
+store.name = 'catalog';

@@ -1,0 +1,523 @@
+{
+    "uri": "/videos/106415933",
+    "name": "3RM Paused Hang Clean at 205#",
+    "description": "Focused on not hopping forward. ",
+    "link": "https://vimeo.com/106415933",
+    "duration": 69,
+    "width": 1280,
+    "language": null,
+    "height": 720,
+    "embed": {
+        "uri": null,
+        "html": "<iframe src=\"https://player.vimeo.com/video/106415933?badge=0&autopause=0&player_id=0\" width=\"1280\" height=\"720\" frameborder=\"0\" title=\"3RM Paused Hang Clean at 205#\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>",
+        "buttons": {
+            "like": true,
+            "watchlater": true,
+            "share": true,
+            "embed": true,
+            "hd": false,
+            "fullscreen": true,
+            "scaling": true
+        },
+        "logos": {
+            "vimeo": true,
+            "custom": {
+                "active": false,
+                "link": null,
+                "sticky": false
+            }
+        },
+        "title": {
+            "name": "user",
+            "owner": "user",
+            "portrait": "user"
+        },
+        "playbar": true,
+        "volume": true,
+        "color": "00adef"
+    },
+    "created_time": "2014-09-17T18:05:57+00:00",
+    "modified_time": "2016-01-25T02:12:10+00:00",
+    "content_rating": [
+        "unrated"
+    ],
+    "license": null,
+    "privacy": {
+        "view": "anybody",
+        "embed": "public",
+        "download": true,
+        "add": true,
+        "comments": "anybody"
+    },
+    "pictures": {
+        "uri": "/videos/106415933/pictures/489523138",
+        "active": true,
+        "type": "custom",
+        "sizes": [
+            {
+                "width": 100,
+                "height": 75,
+                "link": "https://i.vimeocdn.com/video/489523138_100x75.jpg?r=pad",
+                "link_with_play_button": "https://i.vimeocdn.com/filter/overlay?src=https://i.vimeocdn.com/video/489523138_100x75.jpg&src=http://f.vimeocdn.com/p/images/crawler_play.png"
+            },
+            {
+                "width": 200,
+                "height": 150,
+                "link": "https://i.vimeocdn.com/video/489523138_200x150.jpg?r=pad",
+                "link_with_play_button": "https://i.vimeocdn.com/filter/overlay?src=https://i.vimeocdn.com/video/489523138_200x150.jpg&src=http://f.vimeocdn.com/p/images/crawler_play.png"
+            },
+            {
+                "width": 295,
+                "height": 166,
+                "link": "https://i.vimeocdn.com/video/489523138_295x166.jpg?r=pad",
+                "link_with_play_button": "https://i.vimeocdn.com/filter/overlay?src=https://i.vimeocdn.com/video/489523138_295x166.jpg&src=http://f.vimeocdn.com/p/images/crawler_play.png"
+            },
+            {
+                "width": 640,
+                "height": 360,
+                "link": "https://i.vimeocdn.com/video/489523138_640x360.jpg?r=pad",
+                "link_with_play_button": "https://i.vimeocdn.com/filter/overlay?src=https://i.vimeocdn.com/video/489523138_640x360.jpg&src=http://f.vimeocdn.com/p/images/crawler_play.png"
+            },
+            {
+                "width": 960,
+                "height": 540,
+                "link": "https://i.vimeocdn.com/video/489523138_960x540.jpg?r=pad",
+                "link_with_play_button": "https://i.vimeocdn.com/filter/overlay?src=https://i.vimeocdn.com/video/489523138_960x540.jpg&src=http://f.vimeocdn.com/p/images/crawler_play.png"
+            },
+            {
+                "width": 1280,
+                "height": 720,
+                "link": "https://i.vimeocdn.com/video/489523138_1280x720.jpg?r=pad",
+                "link_with_play_button": "https://i.vimeocdn.com/filter/overlay?src=https://i.vimeocdn.com/video/489523138_1280x720.jpg&src=http://f.vimeocdn.com/p/images/crawler_play.png"
+            }
+        ]
+    },
+    "tags": [],
+    "stats": {
+        "plays": 5
+    },
+    "metadata": {
+        "connections": {
+            "comments": {
+                "uri": "/videos/106415933/comments",
+                "options": [
+                    "GET",
+                    "POST"
+                ],
+                "total": 0
+            },
+            "credits": {
+                "uri": "/videos/106415933/credits",
+                "options": [
+                    "GET",
+                    "POST"
+                ],
+                "total": 1
+            },
+            "likes": {
+                "uri": "/videos/106415933/likes",
+                "options": [
+                    "GET"
+                ],
+                "total": 0
+            },
+            "pictures": {
+                "uri": "/videos/106415933/pictures",
+                "options": [
+                    "GET",
+                    "POST"
+                ],
+                "total": 1
+            },
+            "texttracks": {
+                "uri": "/videos/106415933/texttracks",
+                "options": [
+                    "GET",
+                    "POST"
+                ],
+                "total": 0
+            },
+            "related": {
+                "uri": "/me/videos?offset=1",
+                "options": [
+                    "GET"
+                ]
+            }
+        },
+        "interactions": {
+            "watchlater": {
+                "added": false,
+                "added_time": null,
+                "uri": "/users/9683501/watchlater/106415933"
+            }
+        }
+    },
+    "user": {
+        "uri": "/users/9683501",
+        "name": "Blain Smith",
+        "link": "https://vimeo.com/blainsmith",
+        "location": "Ballston Spa, NY",
+        "bio": "Rebel Geek. Partner at @madgloryint and @adjacentconcept",
+        "created_time": "2011-12-17T18:19:33+00:00",
+        "account": "basic",
+        "pictures": {
+            "uri": "/users/9683501/pictures/6314925",
+            "active": true,
+            "type": "custom",
+            "sizes": [
+                {
+                    "width": 30,
+                    "height": 30,
+                    "link": "https://i.vimeocdn.com/portrait/6314925_30x30.jpg?r=pad"
+                },
+                {
+                    "width": 75,
+                    "height": 75,
+                    "link": "https://i.vimeocdn.com/portrait/6314925_75x75.jpg?r=pad"
+                },
+                {
+                    "width": 100,
+                    "height": 100,
+                    "link": "https://i.vimeocdn.com/portrait/6314925_100x100.jpg?r=pad"
+                },
+                {
+                    "width": 300,
+                    "height": 300,
+                    "link": "https://i.vimeocdn.com/portrait/6314925_300x300.jpg?r=pad"
+                }
+            ]
+        },
+        "websites": [
+            {
+                "name": "Personal Website",
+                "link": "http://blainsmith.com",
+                "description": null
+            },
+            {
+                "name": "MadGlory",
+                "link": "http://madglory.com",
+                "description": null
+            }
+        ],
+        "metadata": {
+            "connections": {
+                "activities": {
+                    "uri": "/users/9683501/activities",
+                    "options": [
+                        "GET"
+                    ]
+                },
+                "albums": {
+                    "uri": "/users/9683501/albums",
+                    "options": [
+                        "GET"
+                    ],
+                    "total": 0
+                },
+                "channels": {
+                    "uri": "/users/9683501/channels",
+                    "options": [
+                        "GET"
+                    ],
+                    "total": 0
+                },
+                "feed": {
+                    "uri": "/users/9683501/feed",
+                    "options": [
+                        "GET"
+                    ]
+                },
+                "followers": {
+                    "uri": "/users/9683501/followers",
+                    "options": [
+                        "GET"
+                    ],
+                    "total": 0
+                },
+                "following": {
+                    "uri": "/users/9683501/following",
+                    "options": [
+                        "GET"
+                    ],
+                    "total": 2
+                },
+                "groups": {
+                    "uri": "/users/9683501/groups",
+                    "options": [
+                        "GET"
+                    ],
+                    "total": 0
+                },
+                "likes": {
+                    "uri": "/users/9683501/likes",
+                    "options": [
+                        "GET"
+                    ],
+                    "total": 2
+                },
+                "portfolios": {
+                    "uri": "/users/9683501/portfolios",
+                    "options": [
+                        "GET"
+                    ],
+                    "total": 0
+                },
+                "videos": {
+                    "uri": "/users/9683501/videos",
+                    "options": [
+                        "GET"
+                    ],
+                    "total": 8
+                },
+                "watchlater": {
+                    "uri": "/users/9683501/watchlater",
+                    "options": [
+                        "GET"
+                    ],
+                    "total": 5
+                },
+                "shared": {
+                    "uri": "/users/9683501/shared/videos",
+                    "options": [
+                        "GET"
+                    ],
+                    "total": 0
+                },
+                "pictures": {
+                    "uri": "/users/9683501/pictures",
+                    "options": [
+                        "GET",
+                        "POST"
+                    ],
+                    "total": 2
+                }
+            }
+        },
+        "preferences": {
+            "videos": {
+                "privacy": "anybody"
+            }
+        },
+        "content_filter": [
+            "language",
+            "drugs",
+            "violence",
+            "nudity",
+            "safe",
+            "unrated"
+        ]
+    },
+    "app": {
+        "name": "Vimeo iOS App",
+        "uri": "/apps/29391"
+    },
+    "status": "available",
+    "resource_key": "fc42fb9be9e7df2b6469884f0f4b83269a88b51a",
+    "embed_presets": null,
+    "player": {
+      "cdn_url": "https://f.vimeocdn.com",
+      "view": 1,
+      "request": {
+        "files": {
+          "dash": {
+            "origin": "gcs",
+            "url": "https://skyfiregce-a.akamaihd.net/exp=1461685669~acl=%2F%2A%2F106415933%2F%2A~hmac=eb7ace0d23bc0f44b089396122720572bdb01f5ab17e719d5fd3420777feaea4/2tierchgci/106415933/video/288685220,288685224/master.json?base64_init=1",
+            "cdn": "akfire_interconnect",
+            "cdns": {
+              "akfire_interconnect": {
+                "url": "https://skyfiregce-a.akamaihd.net/exp=1461685669~acl=%2F%2A%2F106415933%2F%2A~hmac=eb7ace0d23bc0f44b089396122720572bdb01f5ab17e719d5fd3420777feaea4/2tierchgci/106415933/video/288685220,288685224/master.json?base64_init=1",
+                "origin": "gcs"
+              },
+              "fastly_skyfire": {
+                "url": "https://skyfire.vimeocdn.com/1461685669-0xac49836317170caf6f86f2de8db2e8b327ddcb65/106415933/video/288685220,288685224/master.json?base64_init=1",
+                "origin": "gcs"
+              }
+            },
+            "streams": [
+              {
+                "profile": 112,
+                "quality": "360p",
+                "id": 288685220,
+                "fps": 30
+              },
+              {
+                "profile": 113,
+                "quality": "720p",
+                "id": 288685224,
+                "fps": 30
+              }
+            ],
+            "default_cdn": "akfire_interconnect"
+          },
+          "hls": {
+            "origin": "gcs",
+            "default_cdn": "akfire_interconnect",
+            "cdn": "akfire_interconnect",
+            "cdns": {
+              "akfire_interconnect": {
+                "url": "https://skyfiregce-a.akamaihd.net/exp=1461685669~acl=%2F%2A%2F106415933%2F%2A~hmac=eb7ace0d23bc0f44b089396122720572bdb01f5ab17e719d5fd3420777feaea4/2tierchgci/106415933/video/288685220,288685224/master.m3u8",
+                "origin": "gcs"
+              },
+              "fastly_skyfire": {
+                "url": "https://skyfire.vimeocdn.com/1461685669-0xac49836317170caf6f86f2de8db2e8b327ddcb65/106415933/video/288685220,288685224/master.m3u8",
+                "origin": "gcs"
+              }
+            },
+            "url": "https://skyfiregce-a.akamaihd.net/exp=1461685669~acl=%2F%2A%2F106415933%2F%2A~hmac=eb7ace0d23bc0f44b089396122720572bdb01f5ab17e719d5fd3420777feaea4/2tierchgci/106415933/video/288685220,288685224/master.m3u8"
+          },
+          "progressive": [
+            {
+              "profile": 113,
+              "width": 1280,
+              "mime": "video/mp4",
+              "fps": 30,
+              "url": "https://fpdl.vimeocdn.com/vimeo-prod-skyfire-std-us/01/1283/4/106415933/288685224.mp4?token=571f8da5_0x1d4e3885853f2466e0057e77194df8d0a9c9957a",
+              "cdn": "fastly",
+              "quality": "720p",
+              "id": 288685224,
+              "origin": "gcs",
+              "height": 720
+            },
+            {
+              "profile": 112,
+              "width": 640,
+              "mime": "video/mp4",
+              "fps": 30,
+              "url": "https://fpdl.vimeocdn.com/vimeo-prod-skyfire-std-us/01/1283/4/106415933/288685220.mp4?token=571f8da5_0x0cc41025fb2b31ae178c4ac07bc26c59695cfbe7",
+              "cdn": "fastly",
+              "quality": "360p",
+              "id": 288685220,
+              "origin": "gcs",
+              "height": 360
+            }
+          ]
+        },
+        "ga_account": "UA-76641-35",
+        "expires": 3600,
+        "timestamp": 1461681769,
+        "signature": "14cebb4527a0f7f693582ce51358d9dc",
+        "currency": "USD",
+        "session": "de8c7a0579fd2610a6c1a3b63bdf3b2b5179133f1461681769",
+        "cookie": {
+          "scaling": 1,
+          "volume": 1,
+          "quality": null,
+          "hd": 0,
+          "captions": null
+        },
+        "cookie_domain": ".vimeo.com",
+        "referrer": null,
+        "comscore_id": "14640914",
+        "flags": {
+          "cedexis": 0,
+          "dnt": 0,
+          "preload_video": "metadata_on_hover",
+          "plays": 1,
+          "webp": 1,
+          "flash_hls": 1,
+          "login": 1,
+          "partials": 1,
+          "blurr": 0
+        },
+        "build": {
+          "player": "faef8c7a",
+          "js": "2.24.3"
+        },
+        "urls": {
+          "zeroclip_swf": "https://f.vimeocdn.com/p/external/zeroclipboard/ZeroClipboard.swf",
+          "js": "https://f.vimeocdn.com/p/2.24.3/js/player.js",
+          "proxy": "https://f.vimeocdn.com/p/2.24.3/proxy.html",
+          "flideo": "https://f.vimeocdn.com/p/flash/flideo/1.0.3b10/flideo.swf",
+          "moog": "https://f.vimeocdn.com/p/flash/moogaloop/6.3.5/moogaloop.swf?clip_id=106415933",
+          "comscore_js": "https://f.vimeocdn.com/p/external/streamsense.4.1408.29.min.js",
+          "blurr": "https://fresnel.vimeocdn.com/add/player-stats",
+          "chromeless_css": "https://f.vimeocdn.com/p/2.24.3/css/chromeless.css",
+          "cedexis": "https://cdx.vimeocdn.com/zones/1/customers/13526/apps/2/decision",
+          "vuid_js": "https://f.vimeocdn.com/js_opt/modules/utils/vuid.min.js",
+          "chromeless_js": "https://f.vimeocdn.com/p/2.24.3/js/chromeless.js",
+          "moog_js": "https://f.vimeocdn.com/p/2.24.3/js/moogaloop.js",
+          "zeroclip_js": "https://f.vimeocdn.com/p/external/zeroclipboard/ZeroClipboard-patch.js",
+          "css": "https://f.vimeocdn.com/p/2.24.3/css/player.css"
+        },
+        "country": "US"
+      },
+      "player_url": "player.vimeo.com",
+      "video": {
+        "allow_hd": 1,
+        "height": 720,
+        "owner": {
+          "account_type": "basic",
+          "name": "Blain Smith",
+          "img": "https://i.vimeocdn.com/portrait/6314925_60x60.jpg",
+          "url": "https://vimeo.com/blainsmith",
+          "img_2x": "https://i.vimeocdn.com/portrait/6314925_120x120.jpg",
+          "id": 9683501
+        },
+        "thumbs": {
+          "640": "https://i.vimeocdn.com/video/489523138_640.jpg",
+          "960": "https://i.vimeocdn.com/video/489523138_960.jpg",
+          "1280": "https://i.vimeocdn.com/video/489523138_1280.jpg",
+          "base": "https://i.vimeocdn.com/video/489523138"
+        },
+        "duration": 69,
+        "id": 106415933,
+        "hd": 1,
+        "embed_code": "<iframe src=\"https://player.vimeo.com/video/106415933\" width=\"640\" height=\"360\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>",
+        "default_to_hd": 0,
+        "title": "3RM Paused Hang Clean at 205#",
+        "url": "https://vimeo.com/106415933",
+        "privacy": "anybody",
+        "share_url": "https://vimeo.com/106415933",
+        "width": 1280,
+        "embed_permission": "public",
+        "fps": 30
+      },
+      "build": {
+        "player": "faef8c7a",
+        "rpc": "dev"
+      },
+      "embed": {
+        "autopause": 1,
+        "color": "00adef",
+        "on_site": 0,
+        "outro": "promoted",
+        "api": 3,
+        "player_id": "",
+        "quality": null,
+        "settings": {
+          "fullscreen": 1,
+          "byline": 1,
+          "like": 0,
+          "playbar": 1,
+          "title": 1,
+          "color": 0,
+          "branding": 1,
+          "share": 1,
+          "scaling": 1,
+          "logo": 1,
+          "collections": 0,
+          "info_on_pause": 0,
+          "watch_later": 1,
+          "portrait": 1,
+          "embed": 1,
+          "badge": 0,
+          "volume": 1
+        },
+        "context": "embed.main",
+        "time": 0,
+        "loop": 0,
+        "autoplay": 0
+      },
+      "vimeo_url": "vimeo.com",
+      "user": {
+        "liked": 0,
+        "account_type": "basic",
+        "progress": 0,
+        "owner": 1,
+        "watch_later": 0,
+        "logged_in": 1,
+        "id": 9683501,
+        "mod": false
+      }
+    }
+}
