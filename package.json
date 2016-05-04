@@ -40,6 +40,7 @@
     "express-real-ip": "^1.0.0",
     "express-slash": "^2.0.1",
     "fakeredis": "^1.0.3",
+    "glob": "^5.0.15",
     "header-parser": "^1.0.0",
     "hiredis": "^0.4.1",
     "jsonwebtoken": "^5.7.0",
@@ -55,7 +56,6 @@
     "uuid": "^2.0.2"
   },
   "devDependencies": {
-    "glob": "^5.0.15",
     "mock-express-request": "^0.1.1",
     "mock-express-response": "^0.1.1",
     "nodemon": "^1.9.1",
