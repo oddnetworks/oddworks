@@ -101,9 +101,9 @@ service.middleware = {
 	deformatter(options) { // eslint-disable-line
 		return (req, res, next) => {
 			if (_.includes(['POST', 'PUT', 'PATCH'], req.method)) {
-				config.bus.query({role: 'json-api', cmd: 'validate'}, req.body)
+				config.bus.query({role: 'json-api', cmd: 'validate'}, {resource: req.body.data})
 					.then(() => {
-						req.body = utils.deformat(req.body);
+						req.body = utils.deformat(req.body.data);
 
 						next();
 					})

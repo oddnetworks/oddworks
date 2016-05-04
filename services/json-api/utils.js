@@ -3,7 +3,7 @@
 const _ = require('lodash');
 
 const jsonAPIKeys = ['id', 'type', 'relationships', 'meta', 'links'];
-const keyPaths = ['data', 'data.id', 'data.type', 'data.attributes'];
+const keyPaths = ['id', 'type', 'attributes'];
 
 module.exports = {
 	validate(resource) {
@@ -36,13 +36,14 @@ module.exports = {
 	},
 
 	deformat(resource) {
-		if (_.has(resource, 'data.attributes')) {
-			_.keys(resource.data.attributes).forEach(key => {
-				resource.data[key] = resource.data.attributes[key];
+		if (_.has(resource, 'attributes')) {
+			_.keys(resource.attributes).forEach(key => {
+				resource[key] = resource.attributes[key];
 			});
-			delete resource.data.attributes;
+			delete resource.attributes;
+			delete resource.links;
 
-			return resource.data;
+			return resource;
 		}
 	}
 };

@@ -160,3 +160,19 @@ test('Route: /views', t => {
 			t.end(err);
 		});
 });
+
+test('?include={relationship}', t => {
+	t.plan(2);
+
+	request(server.app)
+		.get('/collections/daily-show?include=entities')
+		.set('Accept', 'application/json')
+		.set('x-access-token', accessToken)
+		.expect(200)
+		.expect('Content-Type', /json/)
+		.end(function (err, res) {
+			t.ok(res.body.included, 'has included');
+			t.equal(res.body.included.length, 3, 'has 3 included entities');
+			t.end(err);
+		});
+});
