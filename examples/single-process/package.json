@@ -1,0 +1,19 @@
+{
+  "name": "oddworks-example-single-process",
+  "version": "1.0.0",
+  "description": "An example implementation of an Oddworks server in a single process.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js -e js,json",
+    "start": "node server.js -e js,json"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+  	"oddworks": "../../"
+  },
+  "devDependencies" :{
+    "nodemon": "^1.9.1"
+  }
+}

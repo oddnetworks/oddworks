@@ -1,23 +1,22 @@
 'use strict';
 
-require('dotenv').config({silent: true});
-
 // const _ = require('lodash');
 const chalk = require('chalk');
 const path = require('path');
 const oddcast = require('oddcast');
+const oddworks = require('oddworks');
 
 // In your config, this would be real redis client
 const redis = require('fakeredis').createClient();
 
 // Require the stores and/or services you want to use
-const memoryStore = require('../stores/memory');
-const redisStore = require('../stores/redis');
-const redisSearchStore = require('../stores/redis-search');
-const identityService = require('../services/identity');
-const catalogService = require('../services/catalog');
-const eventsService = require('../services/events');
-const jsonAPIService = require('../services/json-api');
+const memoryStore = oddworks.stores.memory;
+const redisStore = oddworks.stores.redis;
+const redisSearchStore = oddworks.stores.redisSearch;
+const identityService = oddworks.services.identity;
+const catalogService = oddworks.services.catalog;
+const eventsService = oddworks.services.events;
+const jsonAPIService = oddworks.services.jsonApi;
 // As an example, if you wanted to run a sync service, you
 // would include the service module, then look below in the
 // service configuration to see how it is used

@@ -1,18 +1,18 @@
 'use strict';
 
-
 const chalk = require('chalk');
 const _ = require('lodash');
 const boom = require('boom');
 const express = require('express');
 
-const StoresUtils = require('./stores/utils');
-const ServicesUtils = require('./services/utils');
+const oddworks = require('oddworks');
 
-const configFile = process.env.CONFIG || './config/default';
-const config = require(configFile);
+const StoresUtils = oddworks.storesUtils;
+const ServicesUtils = oddworks.servicesUtils;
+const middleware = oddworks.middleware;
 
-const middleware = require('./middleware');
+const config = require('./config');
+
 
 const oddcast = require('oddcast');
 const bus = oddcast.bus();
