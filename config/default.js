@@ -25,10 +25,10 @@ const jsonAPIService = require('../services/json-api');
 
 // The following should be set in your environment
 // We use these values for demonstration purposes
-const port = 3000;
-const jwtSecret = 'secret';
-const dataDir = path.resolve(__dirname, '../data/nasa');
-const environment = 'development';
+const port = process.env.PORT || 3000;
+const jwtSecret = process.env.JWT_SECRET || 'secret';
+const dataDir = process.env.DATA_DIR || path.resolve(__dirname, '../data/nasa');
+const environment = process.env.NODE_ENV || 'development';
 /* eslint-disable */
 const googleAnalyticsAnalyzer = new eventsService.analyzers.googleAnalytics({trackingId: 'your-google-tracking-id'});
 const mixpanelAnalyzer = new eventsService.analyzers.mixpanel({apiKey: 'your-mixpanel-api-key', timeMultiplier: 1000})
