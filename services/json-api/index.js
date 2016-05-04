@@ -30,8 +30,12 @@ service.initialize = (bus, options) => {
 				.value();
 
 			Promise
-				.map(include, object => config.bus.query({role: 'catalog', cmd: 'fetch'}, object))
-				.then(objects => resolve(objects))
+				.map(include, resource => {
+					return config.bus
+						.query({role: 'catalog', cmd: 'fetch'}, resource)
+						.then(resource => config.bus.query({role: 'json-api', cmd: 'format'}, {resource}));
+				})
+				.then(resources => resolve(resources))
 				.catch(err => reject(err));
 		});
 	});
@@ -91,8 +95,7 @@ service.middleware = (bus, options) => { // eslint-disable-line
 
 		if (!_.isArray(data) && _.isString(req.query.include)) {
 			res.body.included = [];
-			config.bus.query({role: 'json-api', cmd: 'included'}, {object: res.body.data, include: req.query.include})
-				.map(element => serialize(element, baseUrl))
+			config.bus.query({role: 'json-api', cmd: 'included'}, {object: res.body.data, include: req.query.include, baseUrl})
 				.then(included => {
 					res.body.included = included;
 					next();
