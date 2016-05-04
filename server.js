@@ -81,6 +81,9 @@ module.exports = StoresUtils.load(bus, config.stores)
 				if (config.env === 'development' || config.env === 'test') {
 					console.log(chalk.green.bold(`Server is running on port: ${config.port}`));
 				}
+			})
+			.on('error', error => {
+				console.error(`${error}`);
 			});
 		}
 
