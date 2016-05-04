@@ -42,6 +42,16 @@ test('Route: /events', t => {
 		.post('/events')
 		.set('Accept', 'application/json')
 		.set('x-access-token', accessToken)
+		.send({
+			data: {
+				id: `event-${new Date().getTime()}`,
+				type: 'event',
+				attributes: {
+					key1: 'value1',
+					key2: 'value2'
+				}
+			}
+		})
 		.expect(201)
 		.expect('Content-Type', /json/)
 		.end(function (err, res) {
