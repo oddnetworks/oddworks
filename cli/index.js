@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 'use strict';
 
-require('dotenv').config({silent: true});
-
 const commander = require('commander');
 
 commander
