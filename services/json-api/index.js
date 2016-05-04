@@ -65,8 +65,8 @@ service.initialize = (bus, options) => {
 	return Promise.resolve(true);
 };
 
-service.middleware = { // eslint-disable-line
-	formatter(options) {
+service.middleware = {
+	formatter(options) { // eslint-disable-line
 		return (req, res, next) => {
 			if (_.isEmpty(res.body)) {
 				return next(boom.notFound());
@@ -108,7 +108,7 @@ service.middleware = { // eslint-disable-line
 		};
 	},
 
-	deformatter(options) {
+	deformatter(options) { // eslint-disable-line
 		return (req, res, next) => {
 			if (_.includes(['POST', 'PUT', 'PATCH'], req.method)) {
 				config.bus.query({role: 'json-api', cmd: 'validate'}, req.body)
