@@ -107,6 +107,9 @@ module.exports = {
 	],
 
 	middleware: function (app) {
+		// Deformat the req.body into non-JSON API format for use within the system
+		app.use(jsonAPIService.middleware.deformatter());
+
 		// Decode the JWT set on the X-Access-Token header and attach to req.identity
 		app.use(identityService.middleware.verifyAccess({header: 'x-access-token'}));
 
@@ -140,8 +143,8 @@ module.exports = {
 
 		app.use(eventsService.router());
 
-		// Serialize all data into the JSON API Spec
-		app.use(jsonAPIService.middleware());
+		// Format all data into the JSON API Spec
+		app.use(jsonAPIService.middleware.formatter());
 	}
 };
 

@@ -65,44 +65,62 @@ service.initialize = (bus, options) => {
 	return Promise.resolve(true);
 };
 
-service.middleware = (bus, options) => { // eslint-disable-line
-	return (req, res, next) => {
-		if (_.isEmpty(res.body)) {
-			return next(boom.notFound());
-		}
+service.middleware = { // eslint-disable-line
+	formatter(options) {
+		return (req, res, next) => {
+			if (_.isEmpty(res.body)) {
+				return next(boom.notFound());
+			}
 
-		const baseUrl = `${req.protocol}://${req.get('host')}`;
+			const baseUrl = `${req.protocol}://${req.get('host')}`;
 
-		let data = _.cloneDeep(res.body);
-		res.body = {};
+			let data = _.cloneDeep(res.body);
+			res.body = {};
 
-		if (_.isArray(data)) {
-			data = _.map(data, object => {
-				return utils.format(object, baseUrl);
-			});
-		} else {
-			data = utils.format(data, baseUrl);
-		}
+			if (_.isArray(data)) {
+				data = _.map(data, object => {
+					return utils.format(object, baseUrl);
+				});
+			} else {
+				data = utils.format(data, baseUrl);
+			}
 
-		res.body.data = data;
-		res.body.links = {
-			self: `${baseUrl}${req.originalUrl}`
+			res.body.data = data;
+			res.body.links = {
+				self: `${baseUrl}${req.originalUrl}`
+			};
+			res.body.meta = {
+				channel: req.identity.channel.id,
+				platform: req.identity.platform.platformType
+			};
+
+			if (!_.isArray(data) && _.isString(req.query.include)) {
+				res.body.included = [];
+				config.bus.query({role: 'json-api', cmd: 'included'}, {object: res.body.data, include: req.query.include, baseUrl})
+					.then(included => {
+						res.body.included = included;
+						next();
+					})
+					.catch(err => next(boom.badRequest(err.message)));
+			} else {
+				next();
+			}
 		};
-		res.body.meta = {
-			channel: req.identity.channel.id,
-			platform: req.identity.platform.platformType
-		};
+	},
 
-		if (!_.isArray(data) && _.isString(req.query.include)) {
-			res.body.included = [];
-			config.bus.query({role: 'json-api', cmd: 'included'}, {object: res.body.data, include: req.query.include, baseUrl})
-				.then(included => {
-					res.body.included = included;
-					next();
-				})
-				.catch(err => next(boom.badRequest(err.message)));
-		} else {
-			next();
-		}
-	};
+	deformatter(options) {
+		return (req, res, next) => {
+			if (_.includes(['POST', 'PUT', 'PATCH'], req.method)) {
+				config.bus.query({role: 'json-api', cmd: 'validate'}, req.body)
+					.then(() => {
+						req.body = utils.deformat(req.body);
+
+						next();
+					})
+					.catch(err => next(boom.badRequest(err.message)));
+			} else {
+				next();
+			}
+		};
+	}
 };
