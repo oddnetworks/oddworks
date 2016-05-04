@@ -41,17 +41,7 @@ service.initialize = (bus, options) => {
 	});
 
 	config.bus.queryHandler({role: 'json-api', cmd: 'validate'}, payload => {
-		const keyPaths = ['data', 'data.id', 'data.type', 'data.attributes'];
-
-		return new Promise((resolve, reject) => {
-			keyPaths.forEach(path => {
-				if (!_.has(payload, path)) {
-					return reject(new Error(`payload missing ${path}`));
-				}
-			});
-
-			resolve(true);
-		});
+		return new Promise(resolve => resolve(utils.validate(payload.resource)));
 	});
 
 	config.bus.queryHandler({role: 'json-api', cmd: 'format'}, payload => {

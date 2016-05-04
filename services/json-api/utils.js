@@ -3,8 +3,19 @@
 const _ = require('lodash');
 
 const jsonAPIKeys = ['id', 'type', 'relationships', 'meta', 'links'];
+const keyPaths = ['data', 'data.id', 'data.type', 'data.attributes'];
 
 module.exports = {
+	validate(resource) {
+		keyPaths.forEach(path => {
+			if (!_.has(resource, path)) {
+				throw new Error(`missing ${path}`);
+			}
+		});
+
+		return true;
+	},
+
 	format(resource, baseUrl) {
 		const attributes = _.omit(resource, jsonAPIKeys);
 
