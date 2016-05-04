@@ -135,6 +135,7 @@ service.router = options => { // eslint-disable-line
 			.catch(err => next(boom.wrap(err)));
 	});
 
+	router.get('/:type(channels|platforms)/:id?', get);
 	router.post('/:type(channels|platforms)', post);
 	router.put('/:type(channels|platforms)/:id', put);
 	router.patch('/:type(channels|platforms)/:id', patch);
@@ -163,40 +164,43 @@ function composeConfig(identity) {
 	return confg;
 }
 
+function get(req, res, next) {
+	const type = req.params.type.substring(0, req.params.type.length - 1);
+
+	service.bus
+		.query({role: 'store', cmd: 'get', type}, {id: req.params.id, type})
+		.then(resources => {
+			respond.ok(res, resources);
+			next();
+		});
+}
+
 function post(req, res, next) {
 	const payload = req.body;
-	service.bus.query({role: 'json-api', cmd: 'validate'}, payload)
-		.then(() => {
-			service.bus.sendCommand({role: 'store', cmd: 'set', type: payload.data.type}, payload);
+	service.bus.sendCommand({role: 'store', cmd: 'set', type: payload.type}, payload);
 
-			respond.accepted(res);
-			next();
-		})
-		.catch(err => next(boom.badRequest(err.message)));
+	respond.accepted(res);
+	next();
 }
 
 function put(req, res, next) {
 	const payload = req.body;
-	service.bus.query({role: 'json-api', cmd: 'validate'}, payload)
-		.then(() => {
-			service.bus.sendCommand({role: 'store', cmd: 'set', type: payload.data.type}, payload);
+	service.bus.sendCommand({role: 'store', cmd: 'set', type: payload.type}, payload);
 
-			respond.accepted(res);
-			next();
-		})
-		.catch(err => next(boom.badRequest(err.message)));
+	respond.accepted(res);
+	next();
 }
 
 function patch(req, res, next) {
 	const payload = req.body;
-	service.bus.query({role: 'json-api', cmd: 'validate'}, payload)
-		.then(() => {
-			return service.bus.query({role: 'store', cmd: 'get', type: payload.data.type}, payload.data);
-		})
-		.then(resource => {
-			resource = _.assign(resource, payload.data.attributes);
 
-			service.bus.sendCommand({role: 'store', cmd: 'set', type: payload.data.type}, resource);
-		})
-		.catch(err => next(boom.badRequest(err.message)));
+	service.bus
+		.query({role: 'store', cmd: 'get', type: payload.type}, payload)
+		.then(resource => {
+			resource = _.assign(resource, payload);
+			service.bus.sendCommand({role: 'store', cmd: 'set', type: resource.type}, resource);
+
+			respond.accepted(res);
+			next();
+		});
 }
