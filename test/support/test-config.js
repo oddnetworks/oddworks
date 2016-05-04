@@ -19,7 +19,7 @@ const jsonAPIService = require('../services/json-api');
 // The following should be set in your environment
 const port = 3333;
 const jwtSecret = 'secret';
-const dataDir = path.resolve(__dirname, '../test/data');
+const dataDir = path.resolve(__dirname, './data');
 const environment = 'test';
 
 console.log(chalk.yellow.bold('Loading ./test-config.js'));
