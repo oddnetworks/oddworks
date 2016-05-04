@@ -35,6 +35,78 @@ test('Route: /config', t => {
 		});
 });
 
+test('Route: /:type(channels|platforms)/:id?', t => {
+	t.plan(2);
+
+	// POST a new channel
+	request(server.app)
+		.post('/channels')
+		.set('Accept', 'application/json')
+		.set('x-access-token', accessToken)
+		.send({
+			data: {
+				id: 'my-new-channel',
+				type: 'channel',
+				attributes: {
+					title: 'My New Channel'
+				}
+			}
+		})
+		.expect(202)
+		.expect('Content-Type', /json/)
+		.end(() => {
+			// PUT channel updates
+			request(server.app)
+				.put('/channels/my-new-channel')
+				.set('Accept', 'application/json')
+				.set('x-access-token', accessToken)
+				.send({
+					data: {
+						id: `my-new-channel`,
+						type: 'channel',
+						attributes: {
+							title: 'My New Channel Name',
+							description: 'Channel Desc'
+						}
+					}
+				})
+				.expect(202)
+				.expect('Content-Type', /json/)
+				.end(() => {
+					// PATCH channel updates
+					request(server.app)
+						.patch('/channels/my-new-channel')
+						.set('Accept', 'application/json')
+						.set('x-access-token', accessToken)
+						.send({
+							data: {
+								id: `my-new-channel`,
+								type: 'channel',
+								attributes: {
+									description: 'Channel Description'
+								}
+							}
+						})
+						.expect(202)
+						.expect('Content-Type', /json/)
+						.end(() => {
+							// GET channel
+							request(server.app)
+								.get('/channels/my-new-channel')
+								.set('Accept', 'application/json')
+								.set('x-access-token', accessToken)
+								.expect(200)
+								.expect('Content-Type', /json/)
+								.end((err, res) => {
+									t.equal(res.body.data.attributes.title, 'My New Channel Name');
+									t.equal(res.body.data.attributes.description, 'Channel Description');
+									t.end(err);
+								});
+						});
+				});
+		});
+});
+
 test('Route: /events', t => {
 	t.plan(1);
 
