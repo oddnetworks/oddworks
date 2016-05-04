@@ -4,10 +4,12 @@ const _ = require('lodash');
 const boom = require('boom');
 const Promise = require('bluebird');
 
+const utils = require('./utils');
+
 const service = exports = module.exports = {};
 let config = {};
 
-const jsonAPIKeys = ['id', 'type', 'relationships', 'meta', 'links'];
+service.name = 'json-api';
 
 service.initialize = (bus, options) => {
 	config.bus = bus;
@@ -48,6 +50,14 @@ service.initialize = (bus, options) => {
 		});
 	});
 
+	config.bus.queryHandler({role: 'json-api', cmd: 'format'}, payload => {
+		return new Promise(resolve => resolve(utils.format(payload.resource, payload.baseUrl)));
+	});
+
+	config.bus.queryHandler({role: 'json-api', cmd: 'deformat'}, payload => {
+		return new Promise(resolve => resolve(utils.deformat(payload.resource)));
+	});
+
 	return Promise.resolve(true);
 };
 
@@ -64,11 +74,12 @@ service.middleware = (bus, options) => { // eslint-disable-line
 
 		if (_.isArray(data)) {
 			data = _.map(data, object => {
-				return serialize(object, baseUrl);
+				return utils.format(object, baseUrl);
 			});
 		} else {
-			data = serialize(data, baseUrl);
+			data = utils.format(data, baseUrl);
 		}
+
 		res.body.data = data;
 		res.body.links = {
 			self: `${baseUrl}${req.originalUrl}`
@@ -92,24 +103,3 @@ service.middleware = (bus, options) => { // eslint-disable-line
 		}
 	};
 };
-
-function serialize(object, baseUrl) {
-	const attributes = _.omit(object, jsonAPIKeys);
-
-	_.forOwn(attributes, (value, key) => {
-		delete object[key];
-	});
-
-	object.attributes = _.cloneDeep(attributes);
-	if (object.id && object.type) {
-		object.relationships = object.relationships || {};
-		object.links = {
-			self: `${baseUrl}/${object.type}s/${object.id}`
-		};
-		object.meta = object.meta || {};
-	}
-
-	return object;
-}
-
-service.name = 'json-api';
