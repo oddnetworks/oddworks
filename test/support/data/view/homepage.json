@@ -2,7 +2,7 @@
 	"id": "homepage",
 	"type": "view",
 	"channel": "odd-networks",
-	"title": "Odd channels Homepage",
+	"title": "Odd Networks Homepage",
 	"relationships": {
 		"promotion": {
 			"data": {
