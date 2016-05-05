@@ -44,12 +44,12 @@ In your server script:
 const oddworks = require('oddworks');
 ```
 
-#### CLI
+### CLI
 
-Oddworks also comes with a CLI to aid in some common tasks you will need to do like generating platform tokens to distribute. More documentation is coming, but you can see the available commands by running the following:
+The [Oddworks CLI](https://github.com/oddnetworks/oddworks-cli) is also available
 
 ```
-> oddworks --help
+> npm install -g @oddnetworks/oddworks-cli
 ```
 
 ### Running Example Applications
