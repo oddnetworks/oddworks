@@ -9,8 +9,6 @@ const glob = Promise.promisifyAll(require('glob')).GlobAsync;
 const searchableTypes = ['collection', 'video'];
 const jwt = require('jsonwebtoken');
 
-const isDev = (process.env.NODE_ENV === 'development');
-
 function loadFiles(files) {
 	return _.map(files, file => {
 		return require(path.join(__dirname, file)); // eslint-disable-line
@@ -24,26 +22,26 @@ function seedData(bus, objects) {
 		if (searchable) {
 			pattern = {role: 'catalog', cmd: 'create', searchable: true};
 		}
-		if (isDev) {
-			const payload = {
-				version: 1,
-				channel: object.channel,
-				platform: object.id,
-				scope: ['platform']
-			};
 
-			const token = jwt.sign(payload, process.env.JWT_SECRET);
-			if (object.type === 'platform') {
-				console.log(chalk.blue(`${_.capitalize(object.type)}: `) + chalk.cyan(object.id));
-				console.log(chalk.blue('     JWT: ') + chalk.cyan(token));
-				console.log('');
-			} else {
-				console.log(chalk.blue(`${_.capitalize(object.type)}: `) + chalk.cyan(object.id));
-			}
-			if (object.type === 'channel') {
-				console.log('');
-			}
+		const payload = {
+			version: 1,
+			channel: object.channel,
+			platform: object.id,
+			scope: ['platform']
+		};
+
+		const token = jwt.sign(payload, process.env.JWT_SECRET);
+		if (object.type === 'platform') {
+			console.log(chalk.blue(`${_.capitalize(object.type)}: `) + chalk.cyan(object.id));
+			console.log(chalk.blue('     JWT: ') + chalk.cyan(token));
+			console.log('');
+		} else {
+			console.log(chalk.blue(`${_.capitalize(object.type)}: `) + chalk.cyan(object.id));
 		}
+		if (object.type === 'channel') {
+			console.log('');
+		}
+
 		return bus.sendCommand(pattern, object);
 	});
 }
@@ -52,11 +50,10 @@ module.exports = bus => {
 	return glob('./+(channel|platform)/*.json', {cwd: __dirname})
 		.then(loadFiles)
 		.then(objects => {
-			if (isDev) {
-				console.log('');
-				console.log(chalk.green(`Loading test Channel and Platforms...`));
-				console.log(chalk.green(`-------------------------------------`));
-			}
+			console.log('');
+			console.log(chalk.green(`Loading sample Channel and Platforms...`));
+			console.log(chalk.green(`-------------------------------------`));
+
 			return Promise.all(seedData(bus, objects));
 		})
 		.then(() => {
@@ -64,11 +61,10 @@ module.exports = bus => {
 		})
 		.then(loadFiles)
 		.then(objects => {
-			if (isDev) {
-				console.log('');
-				console.log(chalk.green(`Loading test Resources...`));
-				console.log(chalk.green(`-------------------------`));
-			}
+			console.log('');
+			console.log(chalk.green(`Loading sample Resources...`));
+			console.log(chalk.green(`-------------------------`));
+
 			return Promise.all(seedData(bus, objects));
 		});
 };
