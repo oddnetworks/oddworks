@@ -1,6 +1,5 @@
 'use strict';
 
-const chalk = require('chalk');
 const path = require('path');
 const oddcast = require('oddcast');
 const oddworks = require('../../lib/oddworks');
@@ -23,7 +22,7 @@ const jwtSecret = 'secret';
 const dataDir = path.resolve(__dirname, './data');
 const environment = 'test';
 
-console.log(chalk.yellow.bold('Loading ./test-config.js'));
+console.log('Loading ./test-config.js');
 
 module.exports = {
 	env: environment,
