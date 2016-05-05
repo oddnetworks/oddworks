@@ -5,10 +5,10 @@
   "main": "./lib/oddworks.js",
   "scripts": {
     "setup": "npm link",
-    "test": "NODE_ENV=test DATA_DIR=./test/data npm run lint && npm run tape",
-    "tape": "NODE_ENV=test DATA_DIR=./test/data tape 'test/**/*-test.js' | tap-spec",
+    "test": "NODE_ENV=test npm run lint && npm run sec && npm run tape",
+    "tape": "NODE_ENV=test tape 'test/**/*-test.js' | tap-spec",
     "lint": "xo",
-    "sec": "./node_modules/.bin/nsp check -o json --warn-only"
+    "sec": "./node_modules/.bin/nsp check -o summary --warn-only"
   },
   "engines": {
     "node": "4.4.2",
