@@ -30,15 +30,38 @@ The Oddworks Platform consists of two main concepts:
 
 ## Content Server
 
-### Running
+### Using oddworks
+
+#### Installing
+
+```
+> npm install @oddnetworks/oddworks
+```
+
+In your server script:
+
+```
+const oddworks = require('oddworks');
+```
+
+#### CLI
+
+Oddworks also comes with a CLI to aid in some common tasks you will need to do like generating platform tokens to distribute. More documentation is coming, but you can see the available commands by running the following:
+
+```
+> oddworks --help
+```
+
+### Running Example Applications
 
 #### First Time Setup
 
-Clone the repo to your machine and run the following commands.
+Clone the repo to your machine and choose one of the example applications in the `./examples` directory.
+
+Then
 
 ```
 > npm install // Install all the dependancies
-> npm run setup // Sets up environment variables and the CLI
 ```
 
 #### Starting the Development Server
@@ -51,14 +74,6 @@ The server should be running at http://localhost:3000 with all the required data
 
 ```
 > curl -X GET -H "x-access-token: YOUR_TOKEN_HERE" -H "Accept: application/json" "http://localhost:3000/videos"
-```
-
-### CLI
-
-The server also comes with a built-in CLI to aid in some common tasks you will need to do like generating platform token to distribute. More documentation is coming, but you can see the available commands by running the following:
-
-```
-> oddworks --help
 ```
 
 ### About
