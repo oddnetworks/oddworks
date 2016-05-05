@@ -2,10 +2,7 @@
   "name": "@oddnetworks/oddworks",
   "version": "2.0.1",
   "description": "An extensible media platform for OTT devices.",
-  "main": "./lib/oddworks.js",
-  "bin": {
-    "oddworks": "./cli/index.js"
-  },
+  "main": "./lib/oddworks.js",,
   "scripts": {
     "setup": "npm link",
     "test": "NODE_ENV=test DATA_DIR=./test/data npm run lint && npm run tape",
