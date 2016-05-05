@@ -1,7 +1,7 @@
 {
   "name": "oddworks",
   "version": "2.0.0",
-  "description": "An example Oddworks API written in Express.js",
+  "description": "An extensible media platform for OTT devices.",
   "main": "./lib/oddworks.js",
   "bin": {
     "oddworks": "./cli/index.js"
