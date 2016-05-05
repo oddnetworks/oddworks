@@ -3,18 +3,19 @@
 const chalk = require('chalk');
 const path = require('path');
 const oddcast = require('oddcast');
+const oddworks = require('../../lib/oddworks');
 
 // In your config, this would be real redis client
 const redis = require('fakeredis').createClient();
 
 // Require the stores and/or services you want to use
-const memoryStore = require('../stores/memory');
-const redisStore = require('../stores/redis');
-const redisSearchStore = require('../stores/redis-search');
-const identityService = require('../services/identity');
-const catalogService = require('../services/catalog');
-const eventsService = require('../services/events');
-const jsonAPIService = require('../services/json-api');
+const memoryStore = oddworks.stores.memory;
+const redisStore = oddworks.stores.redis;
+const redisSearchStore = oddworks.stores.redisSearch;
+const identityService = oddworks.services.identity;
+const catalogService = oddworks.services.catalog;
+const eventsService = oddworks.services.events;
+const jsonAPIService = oddworks.services.jsonApi;
 
 // The following should be set in your environment
 const port = 3333;
@@ -73,19 +74,20 @@ module.exports = {
 		{
 			service: jsonAPIService,
 			options: {}
-		},
-		{
-			service: eventsService,
-			options: {
-				redis,
-				analyzers: [
-					/* eslint-disable */
-					new eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
-					new eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
-					/* eslint-enable */
-				]
-			}
 		}
+		// ,
+		// {
+		// 	service: eventsService,
+		// 	options: {
+		// 		redis,
+		// 		analyzers: [
+		// 			/* eslint-disable */
+		// 			// new eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
+		// 			// new eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
+		// 			/* eslint-enable */
+		// 		]
+		// 	}
+		// }
 	],
 
 	middleware: function (app) {
