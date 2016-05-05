@@ -11,7 +11,10 @@ function Analyzer(options) {
 
 	return this;
 }
-module.exports = Analyzer;
+
+module.exports = options => {
+	return new Analyzer(options);
+};
 
 Analyzer.prototype = {
 	prepare(payload) {

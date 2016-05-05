@@ -30,8 +30,8 @@ const jwtSecret = 'secret';
 const dataDir = path.resolve(__dirname, '../data/nasa');
 const environment = 'development';
 /* eslint-disable */
-const googleAnalyticsAnalyzer = new eventsService.analyzers.googleAnalytics({trackingId: 'your-google-tracking-id'});
-const mixpanelAnalyzer = new eventsService.analyzers.mixpanel({apiKey: 'your-mixpanel-api-key', timeMultiplier: 1000})
+const googleAnalyticsAnalyzer = eventsService.analyzers.googleAnalytics({trackingId: 'your-google-tracking-id'});
+const mixpanelAnalyzer = eventsService.analyzers.mixpanel({apiKey: 'your-mixpanel-api-key', timeMultiplier: 1000})
 /* eslint-enable */
 
 module.exports = {
