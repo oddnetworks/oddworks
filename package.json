@@ -64,6 +64,9 @@
     "envs": [
       "node",
       "es6"
+    ],
+    "ignores": [
+    	"examples/**"
     ]
   },
   "license": "Apache-2.0"
