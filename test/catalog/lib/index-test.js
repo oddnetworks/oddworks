@@ -2,7 +2,7 @@
 
 const test = require('tape');
 
-const lib = require('../../../services/catalog/lib');
+const lib = require('../../../lib/services/catalog/lib');
 
 test('composeMetaFeatures', t => {
 	t.plan(5);

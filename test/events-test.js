@@ -3,10 +3,10 @@
 const test = require('tape');
 const sinon = require('sinon');
 
-const eventsService = require('../services/events');
+const eventsService = require('../lib/services/events');
 
-const analyzers = require('../services/events/analyzers');
-const testHelper = require('./test-helper');
+const analyzers = require('../lib/services/events/analyzers');
+const testHelper = require('./support/test-helper');
 
 const customAnalyzers = [{
 	send(payload) {

@@ -1,28 +1,37 @@
 'use strict';
 
+// const _ = require('lodash');
 const chalk = require('chalk');
 const path = require('path');
 const oddcast = require('oddcast');
+const oddworks = require('oddworks');
 
 // In your config, this would be real redis client
 const redis = require('fakeredis').createClient();
 
 // Require the stores and/or services you want to use
-const memoryStore = require('../stores/memory');
-const redisStore = require('../stores/redis');
-const redisSearchStore = require('../stores/redis-search');
-const identityService = require('../services/identity');
-const catalogService = require('../services/catalog');
-const eventsService = require('../services/events');
-const jsonAPIService = require('../services/json-api');
+const memoryStore = oddworks.stores.memory;
+const redisStore = oddworks.stores.redis;
+const redisSearchStore = oddworks.stores.redisSearch;
+const identityService = oddworks.services.identity;
+const catalogService = oddworks.services.catalog;
+const eventsService = oddworks.services.events;
+const jsonAPIService = oddworks.services.jsonApi;
+// As an example, if you wanted to run a sync service, you
+// would include the service module, then look below in the
+// service configuration to see how it is used
+// const syncService = require('../services/sync');
 
 // The following should be set in your environment
-const port = 3333;
-const jwtSecret = 'secret';
-const dataDir = path.resolve(__dirname, '../test/data');
-const environment = 'test';
-
-console.log(chalk.yellow.bold('Loading ./test-config.js'));
+// We use these values for demonstration purposes
+const port = process.env.PORT || 3000;
+const jwtSecret = process.env.JWT_SECRET || 'secret';
+const dataDir = process.env.DATA_DIR || path.resolve(__dirname, '../data/nasa');
+const environment = process.env.NODE_ENV || 'development';
+/* eslint-disable */
+const googleAnalyticsAnalyzer = eventsService.analyzers.googleAnalytics({trackingId: 'your-google-tracking-id'});
+const mixpanelAnalyzer = eventsService.analyzers.mixpanel({apiKey: 'your-mixpanel-api-key', timeMultiplier: 1000})
+/* eslint-enable */
 
 module.exports = {
 	env: environment,
@@ -79,13 +88,21 @@ module.exports = {
 			options: {
 				redis,
 				analyzers: [
-					/* eslint-disable */
-					eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
-					eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
-					/* eslint-enable */
+					googleAnalyticsAnalyzer,
+					mixpanelAnalyzer
 				]
 			}
 		}
+		// Adding a sync service with a single provider
+		// ,{
+		// 	service: syncService,
+		// 	options: {
+		// 		interval: (60 * 5 * 1000),
+		// 		providers: [
+		// 			syncService.providers.vimeo({token: process.env.VIMEO_APIKEY})
+		// 		]
+		// 	}
+		// }
 	],
 
 	middleware: function (app) {
@@ -126,3 +143,13 @@ module.exports = {
 		app.use(jsonAPIService.middleware());
 	}
 };
+
+// Warn the user that they should override the default configuration
+console.log(
+	chalk.black.bgYellow.bold('                                    WARNING!                                    ') +
+	chalk.yellow.bold('\nConfig Not Found') +
+	chalk.yellow.bold('\nLoading default server configuration.') +
+  chalk.yellow.bold('\nYou may override defaults by creating your own configuration file like so:') +
+  chalk.yellow.bold('\n\t$ cp ./config/default.js ./config/my-config.js') +
+  chalk.yellow.bold('\nand setting it in the environment variable CONFIG=./config/my-config.js') +
+  chalk.bgYellow('\n                                                                                '));

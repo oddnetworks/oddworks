@@ -2,7 +2,7 @@
 	"id": "menu",
 	"type": "view",
 	"channel": "odd-networks",
-	"title": "Odd channels Menu",
+	"title": "Odd Networks Menu",
 	"description": "",
 	"relationships": {
 		"items": {

@@ -2,7 +2,7 @@
 	"id": "daily-show",
 	"type": "collection",
 	"channel": "odd-networks",
-	"title": "Odd channels Daily Show",
+	"title": "Odd Networks Daily Show",
 	"relationships": {
 		"entities": {
 			"data": [{

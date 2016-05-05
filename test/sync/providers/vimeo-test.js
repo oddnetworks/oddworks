@@ -2,7 +2,7 @@
 
 const test = require('tape');
 
-const vimeo = require('../../../services/sync/providers').vimeo({token: '12345'});
+const vimeo = require('../../../lib/services/sync/providers').vimeo({token: '12345'});
 const videoFixture = require('../fixtures/vimeo-video.json');
 
 test('Vimeo Sync: init', t => {
