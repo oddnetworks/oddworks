@@ -1,6 +1,5 @@
 'use strict';
 
-const chalk = require('chalk');
 const _ = require('lodash');
 const boom = require('boom');
 const express = require('express');
@@ -77,7 +76,7 @@ module.exports = StoresUtils.load(bus, config.stores)
 
 		if (!module.parent) {
 			app.listen(config.port, () => {
-				console.log(chalk.green.bold('test-server is running'));
+				console.log('test-server is running');
 			});
 		}
 
