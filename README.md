@@ -54,27 +54,9 @@ The [Oddworks CLI](https://github.com/oddnetworks/oddworks-cli) is also availabl
 
 ### Running Example Applications
 
-#### First Time Setup
+We plan to have many, but our current example applications can be found (with their instructions) here:
 
-Clone the repo to your machine and choose one of the example applications in the `./examples` directory.
-
-Then
-
-```
-> npm install // Install all the dependancies
-```
-
-#### Starting the Development Server
-
-```
-> npm run dev // Run in development mode and watches for file changes
-```
-
-The server should be running at http://localhost:3000 with all the required data seeded into the databases. Next you can hit the API however you want. Here is an example curl command, check the logs for preset tokens we generate for you.
-
-```
-> curl -X GET -H "x-access-token: YOUR_TOKEN_HERE" -H "Accept: application/json" "http://localhost:3000/videos"
-```
+- [example-single-process](https://github.com/oddnetworks/example-single-process)
 
 ### About
 
