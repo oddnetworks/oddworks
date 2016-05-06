@@ -13,6 +13,7 @@ _Become your own video distribution channel!_
 
 ## Table of contents
 
+* [Documentation](#documentation)
 * [Platform](#platform)
 * [Content Server](#content-server)
 * [platform SDKs](#platform-sdks)
@@ -21,6 +22,22 @@ _Become your own video distribution channel!_
 * [Motivation](#motivation)
 * [Community](#community)
 * [License](#license)
+
+## Documentation
+
+Read up on the platform.
+
+- __[stores](https://github.com/oddnetworks/oddworks/tree/master/lib/stores)__
+    - memory
+    - redis-search
+    - redis
+- __[services](https://github.com/oddnetworks/oddworks/tree/master/lib/services)__
+    - [catalog](https://github.com/oddnetworks/oddworks/blob/master/lib/services/catalog)
+    - [events](https://github.com/oddnetworks/oddworks/blob/master/lib/services/events)
+    - [identity](https://github.com/oddnetworks/oddworks/blob/master/lib/services/identity)
+    - [json-api](https://github.com/oddnetworks/oddworks/blob/master/lib/services/json-api)
+    - [sync](https://github.com/oddnetworks/oddworks/blob/master/lib/services/sync)
+- __middleware__
 
 ## Platform
 The Oddworks Platform consists of two main concepts:
