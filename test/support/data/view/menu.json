@@ -1,0 +1,21 @@
+{
+	"id": "menu",
+	"type": "view",
+	"channel": "odd-networks",
+	"title": "Odd Networks Menu",
+	"description": "",
+	"relationships": {
+		"items": {
+			"data": [
+				{
+					"id": "continuous-live-stream",
+					"type": "video"
+				},
+				{
+					"id": "daily-show",
+					"type": "collection"
+				}
+			]
+		}
+	}
+}

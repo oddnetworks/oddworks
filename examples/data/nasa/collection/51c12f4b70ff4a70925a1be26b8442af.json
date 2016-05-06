@@ -1,0 +1,43 @@
+{
+  "id": "51c12f4b70ff4a70925a1be26b8442af",
+  "type": "collection",
+  "title": "NASA: Featured Collections",
+  "images": {
+    "aspect16x9": "https://spaceholder.cc/1920x1080"
+  },
+  "relationships": {
+    "entities": {
+      "data": [
+        {
+          "id": "116ff89c7246e0fe456cb7c025233ea8",
+          "type": "collection"
+        },
+        {
+          "id": "ab2d92ee98b6309299e92024a487d4c0",
+          "type": "collection"
+        },
+        {
+          "id": "e12d91547a9e021aefbcc154807e87db",
+          "type": "collection"
+        },
+        {
+          "id": "ab2d92ee98b6309299e92024a487d4c0",
+          "type": "collection"
+        },
+        {
+          "id": "b33a04848951a46b4c700114e4bcfdd7",
+          "type": "collection"
+        },
+        {
+          "id": "e12d91547a9e021aefbcc154807e87db",
+          "type": "collection"
+        }
+      ]
+    }
+  },
+  "meta": {
+    "source": "itunes"
+  },
+  "channel": "nasa"
+
+}

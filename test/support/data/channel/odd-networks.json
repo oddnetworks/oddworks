@@ -1,0 +1,42 @@
+{
+	"id": "odd-networks",
+	"type": "channel",
+	"title": "Odd Networks",
+	"features": {
+		"authentication": {
+			"enabled": true
+		},
+		"sharing": {
+			"enabled": true,
+			"text": "Now watching '{{= title}}' on @oddnetworks!"
+		},
+		"metrics": {
+			"enabled": true,
+			"appInit": {
+				"action": "app:init",
+				"enabled": true
+			},
+			"viewLoad": {
+				"action": "view:load",
+				"enabled": true
+			},
+			"videoPlay": {
+				"action": "video:play",
+				"enabled": true
+			},
+			"videoPlaying": {
+				"action": "video:playing",
+				"enabled": false,
+				"interval": 30000
+			},
+			"videoStop": {
+				"action": "video:stop",
+				"enabled": true
+			},
+			"videoError": {
+				"action": "video:error",
+				"enabled": true
+			}
+	}
+	}
+}

@@ -1,0 +1,26 @@
+{
+	"id": "splash",
+	"type": "view",
+	"channel": "nasa",
+	"title": "NASA Sample Splash",
+	"relationships": {
+		"promotion": {
+			"data": {
+				"id": "daily-show",
+				"type": "promotion"
+			}
+		},
+		"featuredMedia": {
+			"data": {
+				"id": "0db5528d4c3c7ae4d5f24cce1c9fae51",
+				"type": "video"
+			}
+		},
+		"featuredCollections": {
+			"data": {
+				"id": "51c12f4b70ff4a70925a1be26b8442af",
+				"type": "collection"
+			}
+		}
+	}
+}

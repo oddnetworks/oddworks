@@ -3,10 +3,10 @@
 const test = require('tape');
 const sinon = require('sinon');
 
-const eventsService = require('../services/events');
+const eventsService = require('../lib/services/events');
 
-const analyzers = require('../services/events/analyzers');
-const testHelper = require('./test-helper');
+const analyzers = require('../lib/services/events/analyzers');
+const testHelper = require('./support/test-helper');
 
 const customAnalyzers = [{
 	send(payload) {
@@ -67,10 +67,10 @@ test(`{role: 'events'}`, t => {
 test('Google Analytics', t => {
 	t.plan(12);
 
-	let googleAnalytics = new analyzers.googleAnalytics(); // eslint-disable-line
+	let googleAnalytics = analyzers.googleAnalytics(); // eslint-disable-line
 	t.notOk(googleAnalytics.options.trackingId, 'cannot initialize with a trackingId');
 
-	googleAnalytics = new analyzers.googleAnalytics({trackingId: '12345'}); // eslint-disable-line
+	googleAnalytics = analyzers.googleAnalytics({trackingId: '12345'}); // eslint-disable-line
 	const payload = {
 		sessionId: 99999,
 		contentId: 'daily-show-video-1',
@@ -96,10 +96,10 @@ test('Google Analytics', t => {
 test('Mixpanel', t => {
 	t.plan(15);
 
-	let mixpanel = new analyzers.mixpanel(); // eslint-disable-line
+	let mixpanel = analyzers.mixpanel(); // eslint-disable-line
 	t.notOk(mixpanel.options.instance, 'cannot initialize with a trackingId');
 
-	mixpanel = new analyzers.mixpanel({apiKey: '12345', timeMultiplier: 1000}); // eslint-disable-line
+	mixpanel = analyzers.mixpanel({apiKey: '12345', timeMultiplier: 1000}); // eslint-disable-line
 	const payload = {
 		distinctId: 131313,
 		sessionId: 99999,

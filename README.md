@@ -30,15 +30,38 @@ The Oddworks Platform consists of two main concepts:
 
 ## Content Server
 
-### Running
+### Using oddworks
+
+#### Installing
+
+```
+> npm install @oddnetworks/oddworks
+```
+
+In your server script:
+
+```
+const oddworks = require('oddworks');
+```
+
+### CLI
+
+The [Oddworks CLI](https://github.com/oddnetworks/oddworks-cli) is also available
+
+```
+> npm install -g @oddnetworks/oddworks-cli
+```
+
+### Running Example Applications
 
 #### First Time Setup
 
-Clone the repo to your machine and run the following commands.
+Clone the repo to your machine and choose one of the example applications in the `./examples` directory.
+
+Then
 
 ```
 > npm install // Install all the dependancies
-> npm run setup // Sets up environment variables and the CLI
 ```
 
 #### Starting the Development Server
@@ -51,14 +74,6 @@ The server should be running at http://localhost:3000 with all the required data
 
 ```
 > curl -X GET -H "x-access-token: YOUR_TOKEN_HERE" -H "Accept: application/json" "http://localhost:3000/videos"
-```
-
-### CLI
-
-The server also comes with a built-in CLI to aid in some common tasks you will need to do like generating platform token to distribute. More documentation is coming, but you can see the available commands by running the following:
-
-```
-> oddworks --help
 ```
 
 ### About
@@ -115,9 +130,9 @@ For transparency into our release cycle and in striving to maintain backward com
 
 ## Motivation
 
-The Oddworks Platform was designed and developed by [Odd channels](https://www.oddnetworks.com/) to lower the barrier for developers and content owners to create your own streaming content channel. Based on our experience in video gaming we thought that TV could use a big improvement. We believe in the future of television and, with the Oddworks open source platform, we hope you'll make that future a reality.
+The Oddworks Platform was designed and developed by [Odd Networks](https://www.oddnetworks.com/) to lower the barrier for developers and content owners to create your own streaming content channel. Based on our experience in video gaming we thought that TV could use a big improvement. We believe in the future of television and, with the Oddworks open source platform, we hope you'll make that future a reality.
 
-We proudly stand behind our open source work and, in addition to maintaining the Oddworks project, Odd channels also provides hosted services, a Pro Dashboard, a Live Stream Generator, and a Recommendation Service.
+We proudly stand behind our open source work and, in addition to maintaining the Oddworks project, Odd Networks also provides hosted services, a Pro Dashboard, a Live Stream Generator, and a Recommendation Service.
 
 Check out [www.oddnetworks.com](https://www.oddnetworks.com/)
 
@@ -129,7 +144,7 @@ Get updates on Odd Networks's development and chat with the project maintainers 
 * Join [the official Slack room](http://slack.oddnetworks.com/).
 * Submit an [issue](https://github.com/oddnetworks/oddworks/issues).
 * Check out the [API sample responses](https://www.oddnetworks.com/documentation/oddworks/).
-* Read and subscribe to [The Official Odd channels Blog](http://blog.oddnetworks.com/).
+* Read and subscribe to [The Official Odd Networks Blog](http://blog.oddnetworks.com/).
 
 ## More Information
 
@@ -137,4 +152,4 @@ For additional help getting [up and running with Oddworks have a look at this bl
 
 ## License
 
-Apache 2.0 © [Odd channels](http://oddnetworks.com)
+Apache 2.0 © [Odd Networks](http://oddnetworks.com)
