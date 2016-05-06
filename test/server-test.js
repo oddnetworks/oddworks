@@ -35,6 +35,78 @@ test('Route: /config', t => {
 		});
 });
 
+test('Route: /:type(channels|platforms)/:id?', t => {
+	t.plan(2);
+
+	// POST a new channel
+	request(server.app)
+		.post('/channels')
+		.set('Accept', 'application/json')
+		.set('x-access-token', accessToken)
+		.send({
+			data: {
+				id: 'my-new-channel',
+				type: 'channel',
+				attributes: {
+					title: 'My New Channel'
+				}
+			}
+		})
+		.expect(202)
+		.expect('Content-Type', /json/)
+		.end(() => {
+			// PUT channel updates
+			request(server.app)
+				.put('/channels/my-new-channel')
+				.set('Accept', 'application/json')
+				.set('x-access-token', accessToken)
+				.send({
+					data: {
+						id: `my-new-channel`,
+						type: 'channel',
+						attributes: {
+							title: 'My New Channel Name',
+							description: 'Channel Desc'
+						}
+					}
+				})
+				.expect(202)
+				.expect('Content-Type', /json/)
+				.end(() => {
+					// PATCH channel updates
+					request(server.app)
+						.patch('/channels/my-new-channel')
+						.set('Accept', 'application/json')
+						.set('x-access-token', accessToken)
+						.send({
+							data: {
+								id: `my-new-channel`,
+								type: 'channel',
+								attributes: {
+									description: 'Channel Description'
+								}
+							}
+						})
+						.expect(202)
+						.expect('Content-Type', /json/)
+						.end(() => {
+							// GET channel
+							request(server.app)
+								.get('/channels/my-new-channel')
+								.set('Accept', 'application/json')
+								.set('x-access-token', accessToken)
+								.expect(200)
+								.expect('Content-Type', /json/)
+								.end((err, res) => {
+									t.equal(res.body.data.attributes.title, 'My New Channel Name');
+									t.equal(res.body.data.attributes.description, 'Channel Description');
+									t.end(err);
+								});
+						});
+				});
+		});
+});
+
 test('Route: /events', t => {
 	t.plan(1);
 
@@ -42,6 +114,16 @@ test('Route: /events', t => {
 		.post('/events')
 		.set('Accept', 'application/json')
 		.set('x-access-token', accessToken)
+		.send({
+			data: {
+				id: `event-${new Date().getTime()}`,
+				type: 'event',
+				attributes: {
+					key1: 'value1',
+					key2: 'value2'
+				}
+			}
+		})
 		.expect(201)
 		.expect('Content-Type', /json/)
 		.end(function (err, res) {
@@ -147,6 +229,22 @@ test('Route: /views', t => {
 		.expect('Content-Type', /json/)
 		.end(function (err, res) {
 			t.equal(res.body.data.length, 3, 'responds with an array of 4 views');
+			t.end(err);
+		});
+});
+
+test('?include={relationship}', t => {
+	t.plan(2);
+
+	request(server.app)
+		.get('/collections/daily-show?include=entities')
+		.set('Accept', 'application/json')
+		.set('x-access-token', accessToken)
+		.expect(200)
+		.expect('Content-Type', /json/)
+		.end(function (err, res) {
+			t.ok(res.body.included, 'has included');
+			t.equal(res.body.included.length, 3, 'has 3 included entities');
 			t.end(err);
 		});
 });
