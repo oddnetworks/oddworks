@@ -85,7 +85,7 @@ The Oddworks Content Server is made up of several loosely coupled services.
 
 The implementation of these can be found in the `/services` folder.
 
-The content server is also database agnostic in which you can store your entitles in whatever database engine you like or a combination of any.
+The content server is also database agnostic in which you can store your entities in whatever database engine you like or a combination of any.
 
 Currently we have official support for the following:
 
