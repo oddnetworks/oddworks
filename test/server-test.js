@@ -35,6 +35,80 @@ test('Route: /config', t => {
 		});
 });
 
+test('Route: /content', t => {
+	t.plan(3);
+
+	// POST a new channel
+	request(server.app)
+		.post('/content')
+		.set('Accept', 'application/json')
+		.set('x-access-token', accessToken)
+		.send({
+			data: {
+				id: 'terms-of-service',
+				type: 'content',
+				attributes: {
+					title: 'Terms of Service',
+					body: 'You can use this because I said so.'
+				}
+			}
+		})
+		.expect(202)
+		.expect('Content-Type', /json/)
+		.end(() => {
+			// PUT channel updates
+			request(server.app)
+				.put('/content/terms-of-service')
+				.set('Accept', 'application/json')
+				.set('x-access-token', accessToken)
+				.send({
+					data: {
+						id: 'terms-of-service',
+						type: 'content',
+						attributes: {
+							title: 'Terms of Service',
+							body: 'Use of this outside of the US is prohibited.'
+						}
+					}
+				})
+				.expect(202)
+				.expect('Content-Type', /json/)
+				.end(() => {
+					// PATCH channel updates
+					request(server.app)
+						.patch('/content/terms-of-service')
+						.set('Accept', 'application/json')
+						.set('x-access-token', accessToken)
+						.send({
+							data: {
+								id: 'terms-of-service',
+								type: 'content',
+								attributes: {
+									effectiveDate: 'January 2016'
+								}
+							}
+						})
+						.expect(202)
+						.expect('Content-Type', /json/)
+						.end(() => {
+							// GET channel
+							request(server.app)
+								.get('/content/terms-of-service')
+								.set('Accept', 'application/json')
+								.set('x-access-token', accessToken)
+								.expect(200)
+								.expect('Content-Type', /json/)
+								.end((err, res) => {
+									t.equal(res.body.data.attributes.title, 'Terms of Service');
+									t.equal(res.body.data.attributes.body, 'Use of this outside of the US is prohibited.');
+									t.equal(res.body.data.attributes.effectiveDate, 'January 2016');
+									t.end(err);
+								});
+						});
+				});
+		});
+});
+
 test('Route: /:type(channels|platforms)/:id?', t => {
 	t.plan(2);
 
