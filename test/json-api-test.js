@@ -4,12 +4,12 @@ const test = require('tape');
 
 const utils = require('../lib/services/json-api/utils');
 
-test('JSON', t => {
+test('JSON Api Service - Setup', t => {
 	t.skip('Unit test json api service, not server');
 	t.end();
 });
 
-test('utils.validate()', t => {
+test('JSON Api Service - utils.validate()', t => {
 	const goodPayload = {
 		id: 12345,
 		type: 'some-type',
@@ -30,7 +30,7 @@ test('utils.validate()', t => {
 	t.end();
 });
 
-test('utils.format()', t => {
+test('JSON Api Service - utils.format()', t => {
 	const resource = {
 		id: 12345,
 		type: 'something',
@@ -54,7 +54,7 @@ test('utils.format()', t => {
 	t.end();
 });
 
-test('utils.deformat()', t => {
+test('JSON Api Service - utils.deformat()', t => {
 	const resource = {
 		id: 12345,
 		type: 'something',

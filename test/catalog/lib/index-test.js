@@ -4,7 +4,7 @@ const test = require('tape');
 
 const lib = require('../../../lib/services/catalog/lib');
 
-test('composeMetaFeatures', t => {
+test('Catalog Service - composeMetaFeatures', t => {
 	t.plan(5);
 
 	const config = {

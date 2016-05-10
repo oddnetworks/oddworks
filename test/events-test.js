@@ -22,13 +22,13 @@ const customAnalyzers = [{
 	}
 }];
 
-test('EVENTS', t => {
+test('Events Service - Setup', t => {
 	t.skip('Unit test events service, not server');
 	eventsService.initialize(testHelper.bus, {analyzers: customAnalyzers})
 		.then(() => t.end());
 });
 
-test(`{role: 'events'}`, t => {
+test(`Events Service - {role: 'events'}`, t => {
 	t.plan(3);
 
 	const spy1 = sinon.spy(customAnalyzers[0], 'send');
@@ -64,7 +64,7 @@ test(`{role: 'events'}`, t => {
 	testHelper.bus.broadcast({role: 'events-change-this-when-channel.remove-is-fixed'}, payload);
 });
 
-test('Google Analytics', t => {
+test('Events Service - Google Analytics', t => {
 	t.plan(12);
 
 	let googleAnalytics = analyzers.googleAnalytics(); // eslint-disable-line
@@ -93,7 +93,7 @@ test('Google Analytics', t => {
 	t.end();
 });
 
-test('Mixpanel', t => {
+test('Events Service - Mixpanel', t => {
 	t.plan(15);
 
 	let mixpanel = analyzers.mixpanel(); // eslint-disable-line

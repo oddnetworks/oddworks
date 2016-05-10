@@ -2,7 +2,7 @@
 
 const test = require('tape');
 
-test('CATALOG', t => {
+test('Catalog Service - Setup', t => {
 	t.skip('Unit test catalog service, not server');
 	t.end();
 });

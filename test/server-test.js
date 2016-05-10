@@ -11,7 +11,7 @@ const accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaG
 
 const eventsService = require('../lib/services/events');
 
-test('SERVER', t => {
+test('Server - Setup', t => {
 	eventsService.initialize(testHelper.bus, {analyzers: []});
 
 	oddworks
@@ -21,7 +21,7 @@ test('SERVER', t => {
 		});
 });
 
-test('Route: /config', t => {
+test('Server - Route: /config', t => {
 	t.plan(2);
 
 	request(server.app)
@@ -35,7 +35,7 @@ test('Route: /config', t => {
 		});
 });
 
-test('Route: /:type(channels|platforms)/:id?', t => {
+test('Server - Route: /:type(channels|platforms)/:id?', t => {
 	t.plan(2);
 
 	// POST a new channel
@@ -107,7 +107,7 @@ test('Route: /:type(channels|platforms)/:id?', t => {
 		});
 });
 
-test('Route: /events', t => {
+test('Server - Route: /events', t => {
 	t.plan(1);
 
 	request(server.app)
@@ -132,7 +132,7 @@ test('Route: /events', t => {
 		});
 });
 
-test('Route: /collections/:id', t => {
+test('Server - Route: /collections/:id', t => {
 	t.plan(4);
 
 	request(server.app)
@@ -150,7 +150,7 @@ test('Route: /collections/:id', t => {
 		});
 });
 
-test('Route: /collections', t => {
+test('Server - Route: /collections', t => {
 	t.plan(1);
 
 	request(server.app)
@@ -165,7 +165,7 @@ test('Route: /collections', t => {
 		});
 });
 
-test('Route: /videos/:id', t => {
+test('Server - Route: /videos/:id', t => {
 	t.plan(4);
 
 	request(server.app)
@@ -183,7 +183,7 @@ test('Route: /videos/:id', t => {
 		});
 });
 
-test('Route: /videos', t => {
+test('Server - Route: /videos', t => {
 	t.plan(1);
 
 	request(server.app)
@@ -198,7 +198,7 @@ test('Route: /videos', t => {
 		});
 });
 
-test('Route: /views/:id', t => {
+test('Server - Route: /views/:id', t => {
 	t.plan(6);
 
 	request(server.app)
@@ -218,7 +218,7 @@ test('Route: /views/:id', t => {
 		});
 });
 
-test('Route: /views', t => {
+test('Server - Route: /views', t => {
 	t.plan(1);
 
 	request(server.app)
@@ -233,7 +233,7 @@ test('Route: /views', t => {
 		});
 });
 
-test('?include={relationship}', t => {
+test('Server - Query Params: ?include={relationship}', t => {
 	t.plan(2);
 
 	request(server.app)
