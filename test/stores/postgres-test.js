@@ -2,7 +2,6 @@
 
 const path = require('path');
 const exec = require('child_process').exec;
-const _ = require('lodash');
 const Promise = require('bluebird');
 const test = require('tape');
 
