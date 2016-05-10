@@ -1,6 +1,8 @@
 ![Oddworks](http://s3-us-west-2.amazonaws.com/odd-networks-assets/odd-networks.png)
 
-[![Build Status](https://travis-ci.org/oddnetworks/oddworks.svg?branch=master)](https://travis-ci.org/oddnetworks/oddworks)
+[![slack.oddnetworks.com](http://slack.oddnetworks.com/badge.svg)](http://slack.oddnetworks.com)
+
+[![Build Status](https://travis-ci.org/oddnetworks/oddworks.svg?branch=master)](https://travis-ci.org/oddnetworks/oddworks) 
 
 __Oddworks__ is an open source video distribution platform built to destroy the barriers to streaming television. Use it to:
 
