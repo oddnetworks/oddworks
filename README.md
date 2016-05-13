@@ -141,6 +141,7 @@ Check out [www.oddnetworks.com](https://www.oddnetworks.com/)
 
 Get updates on Odd Networks's development and chat with the project maintainers and community members.
 
+* [Contribute] (http://github.com.oddnetworks/oddworks/CONTRIBUTING.md)
 * Follow [@oddnetworks on Twitter](https://twitter.com/Oddnetworks).
 * Join [the official Slack room](http://slack.oddnetworks.com/).
 * Submit an [issue](https://github.com/oddnetworks/oddworks/issues).
