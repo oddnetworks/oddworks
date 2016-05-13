@@ -1,4 +1,4 @@
-# Events Service
+# Sync Service
 
 Acts as a proxy to fetch and sync collections and videos from 3rd party provider APIs.
 
@@ -14,7 +14,7 @@ Acts as a proxy to fetch and sync collections and videos from 3rd party provider
 Pass an array of provider instances for the Sync Service to run. Multiple instances are allowed.
 
 ```js
-eventsService.initialize(bus, {
+syncService.initialize(bus, {
 	interval: 5000,
 	providers: [
 		syncService.providers.vimeo({token: process.env.VIMEO_APIKEY_ONE}),
