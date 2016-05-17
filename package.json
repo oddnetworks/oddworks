@@ -28,6 +28,7 @@
     "body-parser": "^1.14.1",
     "boom": "^2.9.0",
     "compression": "^1.5.2",
+    "date-format-lite": "^0.7.4",
     "express": "^4.13.3",
     "express-real-ip": "^1.0.0",
     "express-slash": "^2.0.1",
@@ -40,7 +41,8 @@
     "redis-search": "0.0.1",
     "request-promise": "^3.0.0",
     "traverse": "^0.6.6",
-    "universal-analytics": "^0.3.11"
+    "universal-analytics": "^0.3.11",
+    "winston": "^2.2.0"
   },
   "devDependencies": {
     "fakeredis": "^1.0.3",
@@ -60,7 +62,7 @@
       "es6"
     ],
     "ignores": [
-    	"examples/**"
+      "examples/**"
     ]
   },
   "license": "Apache-2.0"

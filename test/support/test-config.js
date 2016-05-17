@@ -3,6 +3,7 @@
 const path = require('path');
 const oddcast = require('oddcast');
 const oddworks = require('../../lib/oddworks');
+const logger = require('../../lib/logger');
 
 // In your config, this would be real redis client
 const redis = require('fakeredis').createClient();
@@ -22,7 +23,12 @@ const jwtSecret = 'secret';
 const dataDir = path.resolve(__dirname, './data');
 const environment = 'test';
 
-console.log('Loading ./test-config.js');
+// Quiet the logger to warnings and higher for tests
+const consoleTransport = logger.transports.console;
+consoleTransport.level = 'warn';
+logger.configure({
+	transports: [consoleTransport]
+});
 
 module.exports = {
 	env: environment,
