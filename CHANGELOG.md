@@ -1,6 +1,6 @@
 # Changelog
 
-# 2.2.0
+## 2.2.0
 
 - Documentation improvements
 - Added `oddworks.logger`, an extensible [winston](https://www.npmjs.com/package/winston) instance
