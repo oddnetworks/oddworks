@@ -2,7 +2,7 @@
 
 [![slack.oddnetworks.com](http://slack.oddnetworks.com/badge.svg)](http://slack.oddnetworks.com)
 
-[![Build Status](https://travis-ci.org/oddnetworks/oddworks.svg?branch=master)](https://travis-ci.org/oddnetworks/oddworks) 
+[![Build Status](https://travis-ci.org/oddnetworks/oddworks.svg?branch=master)](https://travis-ci.org/oddnetworks/oddworks)
 
 __Oddworks__ is an open source video distribution platform built to destroy the barriers to streaming television. Use it to:
 
@@ -40,6 +40,7 @@ Read up on the platform.
     - [json-api](https://github.com/oddnetworks/oddworks/blob/master/lib/services/json-api)
     - [sync](https://github.com/oddnetworks/oddworks/blob/master/lib/services/sync)
 - __middleware__
+- __[logger](https://github.com/oddnetworks/oddworks/tree/master/lib/logger)__
 
 ## Platform
 The Oddworks Platform consists of two main concepts:
