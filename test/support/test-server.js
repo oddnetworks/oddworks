@@ -5,6 +5,7 @@ const boom = require('boom');
 const express = require('express');
 
 const oddworks = require('../../lib/oddworks');
+const logger = require('../../lib/logger');
 
 const StoresUtils = oddworks.storesUtils;
 const ServicesUtils = oddworks.servicesUtils;
@@ -82,4 +83,4 @@ module.exports = StoresUtils.load(bus, config.stores)
 
 		return {bus, app};
 	})
-	.catch(err => console.log(err.stack));
+	.catch(err => logger.error(err.stack));
