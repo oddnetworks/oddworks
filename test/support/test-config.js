@@ -13,6 +13,7 @@ const redisStore = oddworks.stores.redis;
 const redisSearchStore = oddworks.stores.redisSearch;
 const identityService = oddworks.services.identity;
 const catalogService = oddworks.services.catalog;
+const storageService = oddworks.services.storage;
 const eventsService = oddworks.services.events;
 const jsonAPIService = oddworks.services.jsonApi;
 
@@ -49,7 +50,7 @@ module.exports = {
 	stores: [
 		{
 			store: memoryStore,
-			options: {types: ['platform', 'channel']}
+			options: {types: ['content', 'platform', 'channel']}
 		},
 		{
 			store: redisStore,
@@ -65,6 +66,10 @@ module.exports = {
 		{
 			service: identityService,
 			options: {jwtSecret: jwtSecret}
+		},
+		{
+			service: storageService,
+			options: {}
 		},
 		{
 			service: catalogService,
@@ -121,6 +126,8 @@ module.exports = {
 		// GET /views
 		// GET /views/:id
 		app.use(catalogService.router({middleware: []}));
+
+		app.use(storageService.router());
 
 		app.use(eventsService.router());
 
