@@ -83,12 +83,9 @@ module.exports = {
 		{
 			service: eventsService,
 			options: {
-				redis,
 				analyzers: [
-					/* eslint-disable */
 					eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID}),
 					eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
-					/* eslint-enable */
 				]
 			}
 		}

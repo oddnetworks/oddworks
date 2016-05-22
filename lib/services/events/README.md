@@ -6,7 +6,6 @@ Acts as a proxy to send event data off to 3rd party analytics services.
 
 **Options**
 
-* `redis` - the instance of Redis used to store events for later aggregation
 * `analyzers` - array of [analyzers](/analyzers) that will be sent event payloads
 
 ## Patterns
@@ -27,7 +26,6 @@ Right now there is official support for 2 analyzers. However, you can implement 
 
 ```js
 eventsService.initialize(bus, {
-	redis,
 	analyzers: [
 		eventsService.analyzers.googleAnalytics({trackingId: process.env.GA_TRACKING_ID})
 	]
@@ -52,7 +50,6 @@ eventsService.initialize(bus, {
 
 ```js
 eventsService.initialize(bus, {
-	redis,
 	analyzers: [
 		eventsService.analyzers.mixpanel({apiKey: process.env.MIXPANEL_API_KEY, timeMultiplier: 1000})
 	]
