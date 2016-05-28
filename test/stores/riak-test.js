@@ -12,6 +12,18 @@ const riakStore = oddworks.stores.riak;
 
 let riakClient;
 
+const video = {
+	id: 'riak-tutorial',
+	type: 'video',
+	title: 'Riak Tutorial'
+};
+
+const collection = {
+	id: 'riak-series',
+	type: 'collection',
+	title: 'Riak Series'
+};
+
 before('setup riak client and store', t => {
 	riakClient = new Riak.Client(['127.0.0.1:8087']);
 	riakStore.initialize(bus, {riak: riakClient, types: ['collection', 'video']});
@@ -19,18 +31,6 @@ before('setup riak client and store', t => {
 });
 
 test('set then get then list', t => {
-	const video = {
-		id: 'riak-tutorial',
-		type: 'video',
-		title: 'Riak Tutorial'
-	};
-
-	const collection = {
-		id: 'riak-series',
-		type: 'collection',
-		title: 'Riak Series'
-	};
-
 	bus.sendCommand({role: 'store', cmd: 'set', type: 'collection'}, collection);
 
 	bus.query({role: 'store', cmd: 'set', type: 'video'}, video)
@@ -53,6 +53,17 @@ test('set then get then list', t => {
 		})
 		.catch(err => {
 			t.end(err);
+		});
+});
+
+test('searching fails when searchIndex not set', t => {
+	bus.query({role: 'store', cmd: 'set', type: 'video'}, video)
+		.then(() => {
+			return bus.query({role: 'store', cmd: 'query'}, {query: 'tut'});
+		})
+		.catch(err => {
+			t.ok(err);
+			t.end();
 		});
 });
 
