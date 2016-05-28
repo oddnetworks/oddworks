@@ -4,6 +4,8 @@ env:
 node_js:
   - 'stable'
   - '4'
+services:
+  - riak
 before_install:
   - sudo apt-get update
 addons:
