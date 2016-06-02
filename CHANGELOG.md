@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.1
+
+- Fixed issue with links for included resource entitites #74
+- Fixed Google events analyzer (will actually `send()` events now)
+- Documentation improvements
+
 ## 2.2.0
 
 - Documentation improvements
