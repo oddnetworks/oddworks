@@ -45,6 +45,7 @@
     "winston": "^2.2.0"
   },
   "devDependencies": {
+    "basho-riak-client": "^2.1.2",
     "fakeredis": "^1.0.3",
     "glob": "^5.0.15",
     "mock-express-request": "^0.1.1",
