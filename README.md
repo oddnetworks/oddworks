@@ -2,7 +2,8 @@
 
 [![slack.oddnetworks.com](http://slack.oddnetworks.com/badge.svg)](http://slack.oddnetworks.com)
 
-[![Build Status](https://travis-ci.org/oddnetworks/oddworks.svg?branch=master)](https://travis-ci.org/oddnetworks/oddworks)
+[![Build Status](https://travis-ci.org/oddnetworks/oddworks.svg?branch=master)](https://travis-ci.org/oddnetworks/oddworks)  
+[![Dependency Status](https://david-dm.org/oddnetworks/oddworks.svg)](https://david-dm.org/oddnetworks/oddworks)
 
 __Oddworks__ is an open source video distribution platform built to destroy the barriers to streaming television. Use it to:
 
@@ -17,8 +18,7 @@ _Become your own video distribution channel!_
 
 * [Documentation](#documentation)
 * [Platform](#platform)
-* [Content Server](#content-server)
-* [platform SDKs](#platform-sdks)
+* [Platform SDKs](#platform-sdks)
 * [Technology](#technology)
 * [Versioning](#versioning)
 * [Motivation](#motivation)
@@ -27,28 +27,46 @@ _Become your own video distribution channel!_
 
 ## Documentation
 
-Read up on the platform.
+Oddworks is made up of several loosely coupled services. All of these services are automatically installed as dependencies when you install Oddworks. Oddworks uses [NPM](https://www.npmjs.com/) for dependency and package management (see [Technology](#technology) below).
 
-- __[stores](https://github.com/oddnetworks/oddworks/tree/master/lib/stores)__
-    - memory
-    - redis-search
-    - redis
-- __[services](https://github.com/oddnetworks/oddworks/tree/master/lib/services)__
-    - [catalog](https://github.com/oddnetworks/oddworks/blob/master/lib/services/catalog)
-    - [events](https://github.com/oddnetworks/oddworks/blob/master/lib/services/events)
-    - [identity](https://github.com/oddnetworks/oddworks/blob/master/lib/services/identity)
-    - [json-api](https://github.com/oddnetworks/oddworks/blob/master/lib/services/json-api)
-    - [sync](https://github.com/oddnetworks/oddworks/blob/master/lib/services/sync)
-- __middleware__
-- __[logger](https://github.com/oddnetworks/oddworks/tree/master/lib/logger)__
+### [stores](https://github.com/oddnetworks/oddworks/tree/master/lib/stores)
+
+The content server is also database agnostic in which you can store your entities in whatever database engine you like or a combination of any.
+
+Currently we have official support for the following:
+
+- memory (best used for development and testing)
+- redis-search (a full text search implementation based on the N-gram algorithm)
+- redis
+
+With the stores above you can pick your poison for your specific needs.
+
+The implementation of these can be found in the `./lib/stores` directory.
+
+### [services](https://github.com/oddnetworks/oddworks/tree/master/lib/services)
+
+The implementation of these can be found in the `./lib/services` directory.
+
+- [catalog](https://github.com/oddnetworks/oddworks/blob/master/lib/services/catalog) (responsible for views, collections, and videos)
+- [events](https://github.com/oddnetworks/oddworks/blob/master/lib/services/events)
+- [identity](https://github.com/oddnetworks/oddworks/blob/master/lib/services/identity) (responsible for channels, platforms, users, authentication, and entitlements)
+- [json-api](https://github.com/oddnetworks/oddworks/blob/master/lib/services/json-api) (responsible for decorating responses into the JSON API Spec format)
+- [sync](https://github.com/oddnetworks/oddworks/blob/master/lib/services/sync)
+
+### middleware
+
+The available middleware is used when setting up an express-based server.
+
+### [logger](https://github.com/oddnetworks/oddworks/tree/master/lib/logger)
+
+The Oddworks logger is a configurable and extensible.
 
 ## Platform
+
 The Oddworks Platform consists of two main concepts:
 
 1. The __Oddworks Content Server__ which maintains a database of your content and provides it to your apps via a strictly specified [JSON API](http://jsonapi.org/).
 2. The __Oddworks platform SDKs__ which are designed to consume the content from the Oddworks Content Server as well as report usage data back to it.
-
-## Content Server
 
 ### Using oddworks
 
@@ -72,47 +90,19 @@ The [Oddworks CLI](https://github.com/oddnetworks/oddworks-cli) is also availabl
 > npm install -g @oddnetworks/oddworks-cli
 ```
 
-### Running Example Applications
+### Example Content Server Implementations
 
-We plan to have many, but our current example applications can be found (with their instructions) here:
+Current example content server implementations can be found (with their instructions) here:
 
 - [example-single-process](https://github.com/oddnetworks/example-single-process)
-
-### About
-
-The Oddworks Content Server is made up of several loosely coupled services.
-
-- Identity (responsible for channels, platforms, users, authentication, and entitlements)
-- Catalog (responsible for views, collections, and videos)
-- JSON API (responsible for decorating responses into the JSON API Spec format)
-
-The implementation of these can be found in the `/services` folder.
-
-The content server is also database agnostic in which you can store your entities in whatever database engine you like or a combination of any.
-
-Currently we have official support for the following:
-
-- In-memory (best used for development and testing)
-- Redis
-- Redis Search (a full text search implementation based on the N-gram algorithm)
-- MongoDB (coming soon)
-- Elasticsearch (coming soon)
-
-With the stores above you can pick your poison for your specific needs.
-
-The implementation of these can be found in the `/stores` folder.
-
-All of these components are automatically installed as dependencies when you setup the Oddworks Content Server. Oddworks uses [NPM](https://www.npmjs.com/) for dependency and package management (see [Technology](#technology) below).
+- [example-multi-process](https://github.com/oddnetworks/example-multi-process)
 
 ## platform SDKs
 
 * [Apple iOS & tvOS SDK](https://github.com/oddnetworks/oddworks-ios-tvos-sdk) Used for iPhone, iPad, and Apple TV.
 * [Android SDK](https://github.com/oddnetworks/oddworks-android-sdk) Used for mobile, tablet, Android TV, and Fire TV.
-
-Coming soon:
-
-* Roku SDK
-* JavaScript SDK for use in [Windows Universal](https://msdn.microsoft.com/en-us/windows/uwp/get-started/universal-application-platform-guide) and web applications.
+* [Roku SDK](https://github.com/oddnetworks/odd-roku-sdk)
+* [JavaScript SDK](https://github.com/oddnetworks/odd-javascript-sdk) for use in [Windows Universal](https://msdn.microsoft.com/en-us/windows/uwp/get-started/universal-application-platform-guide) and web applications.
 
 In addition to the SDKs there are plans to have open source sample apps which leverage the SDKs available to you as well. You could use these as reference implementations, a hobby project, or make some tweaks and ship your own streaming channel!
 
@@ -122,7 +112,7 @@ Although the source repositories are not open source yet there are some [downloa
 
 The Oddworks Platform is written for the [Node.js](https://nodejs.org/) runtime, and uses the well known [Express.js](http://expressjs.com/) framework for HTTP communication.
 
-Oddworks is designed to be database agnostic so long as the underlying database can support JSON document storage, including some RDMSs like PostgreSQL. Currently the only supported and tested database is MongoDB.
+Oddworks is designed to be database agnostic so long as the underlying database can support JSON document storage, including some RDMSs like PostgreSQL. Currently the only supported and tested database is Redis.
 
 Although communication between the platforms and the REST API is typically done in a synchronous way, the inner guts of the system is designed to communicate via asynchronous message passing. This makes it easier to extend the platform with plugins and other loosely coupled modules without worrying about upstream changes like you would in tightly coupled platforms.
 
