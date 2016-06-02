@@ -4,6 +4,7 @@ process.env.JWT_SECRET = 'secret';
 
 const test = require('tape');
 const request = require('supertest');
+const utils = require('../lib/services/json-api/utils');
 
 let server;
 const testServer = require('./support/test-server');
@@ -31,4 +32,75 @@ test('?include={relationship}', t => {
 			t.equal(res.body.included.length, 3, 'has 3 included entities');
 			t.end(err);
 		});
+});
+
+test('utils.validate()', t => {
+	const goodPayload = {
+		id: 12345,
+		type: 'some-type',
+		attributes: {}
+	};
+
+	const badPayload = {
+		id: 12345,
+		attributes: {}
+	};
+
+	t.ok(utils.validate(goodPayload), 'goodPayload valid');
+	try {
+		utils.validate(badPayload);
+	} catch (err) {
+		t.ok(err, 'badPayload invalid');
+	}
+	t.end();
+});
+
+test('utils.format()', t => {
+	const resource = {
+		id: 12345,
+		type: 'something',
+		name: 'Oddworks'
+	};
+
+	const formattedResource = utils.format(resource, 'http://localhost');
+
+	t.deepEqual(formattedResource, {
+		id: 12345,
+		type: 'something',
+		attributes: {
+			name: 'Oddworks'
+		},
+		relationships: {},
+		links: {
+			self: 'http://localhost/somethings/12345'
+		},
+		meta: {}
+	}, 'formatted correctly');
+	t.end();
+});
+
+test('utils.deformat()', t => {
+	const resource = {
+		id: 12345,
+		type: 'something',
+		attributes: {
+			name: 'Oddworks'
+		},
+		relationships: {},
+		links: {
+			self: 'http://localhost/somethings/12345'
+		},
+		meta: {}
+	};
+
+	const deformattedResource = utils.deformat(resource);
+
+	t.deepEqual(deformattedResource, {
+		id: 12345,
+		type: 'something',
+		name: 'Oddworks',
+		relationships: {},
+		meta: {}
+	}, 'deformatted correctly');
+	t.end();
 });
