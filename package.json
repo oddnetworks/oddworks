@@ -1,18 +1,13 @@
 {
   "name": "@oddnetworks/oddworks",
-  "version": "2.2.1",
+  "version": "3.0.0",
   "description": "An extensible media platform for OTT devices.",
   "main": "./lib/oddworks.js",
   "scripts": {
     "setup": "npm link",
-    "test": "NODE_ENV=test npm run lint && npm run sec && npm run tape",
-    "tape": "NODE_ENV=test tape 'test/**/*-test.js' | tap-spec",
+    "test": "NODE_ENV=test npm run lint && npm run sec",
     "lint": "xo",
     "sec": "./node_modules/.bin/nsp check -o summary --warn-only"
-  },
-  "engines": {
-    "node": "4.4.2",
-    "npm": "3.8.6"
   },
   "repository": {
     "type": "git",
@@ -24,37 +19,12 @@
   },
   "homepage": "https://github.com/oddnetworks/oddworks",
   "dependencies": {
-    "bluebird": "^3.3.4",
-    "body-parser": "^1.14.1",
-    "boom": "^2.9.0",
-    "compression": "^1.5.2",
-    "date-format-lite": "^0.7.4",
-    "express": "^4.13.3",
-    "express-real-ip": "^1.0.0",
-    "express-slash": "^2.0.1",
-    "header-parser": "^1.0.0",
-    "jsonwebtoken": "^5.7.0",
-    "lodash": "^3.10.0",
-    "mixpanel": "^0.3.2",
-    "node-uuid": "^1.4.7",
-    "oddcast": "^2.0.0",
-    "redis-search": "0.0.1",
-    "request-promise": "^3.0.0",
-    "traverse": "^0.6.6",
-    "universal-analytics": "^0.3.11",
-    "winston": "^2.2.0"
+    "lodash": "~4.13.0",
+    "oddcast": "~2.0.0"
   },
   "devDependencies": {
-    "fakeredis": "^1.0.3",
-    "glob": "^5.0.15",
-    "mock-express-request": "^0.1.1",
-    "mock-express-response": "^0.1.1",
-    "nsp": "^2.2.0",
-    "sinon": "^1.17.3",
-    "supertest": "^1.0.1",
-    "tap-spec": "^4.1.1",
-    "tape": "^4.0.1",
-    "xo": "^0.9.0"
+    "nsp": "~2.4.0",
+    "xo": "~0.15.0"
   },
   "xo": {
     "envs": [
