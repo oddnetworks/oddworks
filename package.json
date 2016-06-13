@@ -30,9 +30,9 @@
     "xo": "~0.15.0"
   },
   "xo": {
+    "esnext": true,
     "envs": [
-      "node",
-      "es6"
+      "node"
     ],
     "ignores": [
       "examples/**"

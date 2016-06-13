@@ -1,15 +1,16 @@
+/* eslint prefer-arrow-callback: 0 */
+/* eslint-disable max-nested-callbacks */
 'use strict';
 
 const test = require('tape');
 const request = require('supertest');
 
+const eventsService = require('../lib/services/events');
 const testHelper = require('./support/test-helper');
 
 let server;
 const oddworks = require('./support/test-server');
 const accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaGFubmVsIjoib2RkLW5ldHdvcmtzIiwicGxhdGZvcm0iOiJhcHBsZS1pb3MiLCJzY29wZSI6WyJwbGF0Zm9ybSJdLCJpYXQiOjE0NjA5ODg5NzB9.-k0wFuWD3FFaRZ7btIad9hiJJyEIBqiR4cS8cGeGMoM';
-
-const eventsService = require('../lib/services/events');
 
 test('SERVER', t => {
 	eventsService.initialize(testHelper.bus, {analyzers: []});
