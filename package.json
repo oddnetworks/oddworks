@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "fakeredis": "~1.0.0",
+    "jasmine": "~2.4.0",
     "nsp": "~2.4.0",
     "xo": "~0.15.0"
   },
