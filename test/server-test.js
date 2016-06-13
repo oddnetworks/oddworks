@@ -160,7 +160,7 @@ test('Route: /collections', t => {
 		.expect(200)
 		.expect('Content-Type', /json/)
 		.end(function (err, res) {
-			t.equal(res.body.data.length, 8, 'responds with an array of 4 collections');
+			t.equal(res.body.data.length, 8, 'responds with an array of 8 collections');
 			t.end(err);
 		});
 });
