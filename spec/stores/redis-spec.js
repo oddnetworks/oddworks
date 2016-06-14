@@ -31,6 +31,9 @@ describe('Redis Store', function () {
 	beforeAll(function (done) {
 		bus = this.createBus();
 
+		Promise.promisifyAll(fakeredis.RedisClient.prototype);
+		Promise.promisifyAll(fakeredis.Multi.prototype);
+
 		redisStore
 			.initialize(bus, {
 				types: ['video', 'collection'],
