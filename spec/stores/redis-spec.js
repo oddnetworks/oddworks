@@ -478,4 +478,65 @@ describe('Redis Store', function () {
 			});
 		});
 	});
+
+	describe('cmd:batchGet', function () {
+		const videos = _.range(7).map(n => {
+			return {type: 'video', title: `video-${n}`};
+		});
+
+		const collections = _.range(3).map(n => {
+			return {type: 'collection', title: `collection-${n}`};
+		});
+
+		let RESULTS;
+		let IDS;
+
+		beforeAll(function (done) {
+			const role = 'store';
+			const entities = videos.concat(collections);
+
+			Promise.resolve(entities)
+				.then(entities => {
+					const cmd = 'set';
+
+					return Promise.all(entities.map(entity => {
+						return bus.sendCommand({role, cmd, type: entity.type}, entity);
+					}));
+				})
+				.then(entities => {
+					entities = entities.filter((entity, i) => {
+						return i % 2 === 0;
+					});
+
+					IDS = entities.map(entity => {
+						return entity.id;
+					});
+
+					return bus.query({role, cmd: 'batchGet'}, entities);
+				})
+				.then(res => {
+					RESULTS = res;
+				})
+				.then(done)
+				.catch(done.fail);
+		});
+
+		it('returns expected number of results', function () {
+			expect(RESULTS.length).toBe(5);
+			expect(RESULTS.length).toBe(IDS.length);
+		});
+
+		it('returns actual records', function () {
+			RESULTS.forEach((entity, i) => {
+				if (i < 4) {
+					expect(entity.type).toBe('video');
+				} else {
+					expect(entity.type).toBe('collection');
+				}
+
+				expect(entity.id).toBe(IDS[i]);
+				expect(_.isString(entity.title)).toBeTruthy();
+			});
+		});
+	});
 });
