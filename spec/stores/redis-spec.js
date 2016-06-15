@@ -496,13 +496,14 @@ describe('Redis Store', function () {
 			const entities = videos.concat(collections);
 
 			Promise.resolve(entities)
+				// Create all the entities to fetch.
 				.then(entities => {
 					const cmd = 'set';
-
 					return Promise.all(entities.map(entity => {
 						return bus.sendCommand({role, cmd, type: entity.type}, entity);
 					}));
 				})
+				// Record the results and batchGet half of them.
 				.then(entities => {
 					entities = entities.filter((entity, i) => {
 						return i % 2 === 0;
@@ -511,6 +512,9 @@ describe('Redis Store', function () {
 					IDS = entities.map(entity => {
 						return entity.id;
 					});
+
+					// Add a rando one to make sure it's not found.
+					entities.push({type: 'foo', id: 'bbarbaz-209348'});
 
 					return bus.query({role, cmd: 'batchGet'}, entities);
 				})
