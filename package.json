@@ -22,7 +22,8 @@
     "bluebird": "~3.4.0",
     "lodash": "~3.10.0",
     "node-uuid": "~1.4.0",
-    "oddcast": "~2.0.0"
+    "oddcast": "~2.0.0",
+    "redis-search": "~0.0.1"
   },
   "devDependencies": {
     "fakeredis": "~1.0.0",
