@@ -37,15 +37,13 @@ Verify the JWT to ensure it was signed correctly and the channel and platform ex
 * `features` - the merged result of all resource → platform → channel feature keys
 * `views` - the view ids for the platform
 
-## Middlware
+## Middleware
 
-### verifyAccess(options)
+### authorize()
 
 This will verify that the JWT used to make the request is valid. If it is then it will attach the found `channel` and `platform` objects onto `req.identity` for future reference, otherwise, it will throw a `HTTP 401`.
 
-**Options**
-
-* `header` - (default: 'x-access-token') the header key where the JWT is stored
+The `Authorization: Bearer TOKEN` header pattern is used to send the JWT.
 
 ## Router
 
