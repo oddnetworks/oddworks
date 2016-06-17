@@ -7,7 +7,7 @@ const testHelper = require('./support/test-helper');
 
 let server;
 const oddworks = require('./support/test-server');
-const accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaGFubmVsIjoib2RkLW5ldHdvcmtzIiwicGxhdGZvcm0iOiJhcHBsZS1pb3MiLCJzY29wZSI6WyJwbGF0Zm9ybSJdLCJpYXQiOjE0NjA5ODg5NzB9.-k0wFuWD3FFaRZ7btIad9hiJJyEIBqiR4cS8cGeGMoM';
+const accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaGFubmVsIjoib2RkLW5ldHdvcmtzIiwicGxhdGZvcm0iOiJhcHBsZS1pb3MiLCJpc3MiOiJvZGR3b3JrcyIsImF1ZCI6WyJvZGR3b3JrcyJdfQ.vS38n7hlw2l3qpaEegWlyXlds0POKewrvu0XiEhvTQ8';
 
 const eventsService = require('../lib/services/events');
 
@@ -27,7 +27,7 @@ test('Route: /config', t => {
 	request(server.app)
 		.get('/config')
 		.set('Accept', 'application/json')
-		.set('x-access-token', accessToken)
+		.set('Authorization', `Bearer ${accessToken}`)
 		.end(function (err, res) {
 			t.equal(res.header['content-type'], 'application/json; charset=utf-8', 'has proper content-type');
 			t.equal(res.status, 200, 'successful');
@@ -42,7 +42,7 @@ test('Route: /:type(channels|platforms)/:id?', t => {
 	request(server.app)
 		.post('/channels')
 		.set('Accept', 'application/json')
-		.set('x-access-token', accessToken)
+		.set('Authorization', `Bearer ${accessToken}`)
 		.send({
 			data: {
 				id: 'my-new-channel',
@@ -59,7 +59,7 @@ test('Route: /:type(channels|platforms)/:id?', t => {
 			request(server.app)
 				.put('/channels/my-new-channel')
 				.set('Accept', 'application/json')
-				.set('x-access-token', accessToken)
+				.set('Authorization', `Bearer ${accessToken}`)
 				.send({
 					data: {
 						id: `my-new-channel`,
@@ -77,7 +77,7 @@ test('Route: /:type(channels|platforms)/:id?', t => {
 					request(server.app)
 						.patch('/channels/my-new-channel')
 						.set('Accept', 'application/json')
-						.set('x-access-token', accessToken)
+						.set('Authorization', `Bearer ${accessToken}`)
 						.send({
 							data: {
 								id: `my-new-channel`,
@@ -94,7 +94,7 @@ test('Route: /:type(channels|platforms)/:id?', t => {
 							request(server.app)
 								.get('/channels/my-new-channel')
 								.set('Accept', 'application/json')
-								.set('x-access-token', accessToken)
+								.set('Authorization', `Bearer ${accessToken}`)
 								.expect(200)
 								.expect('Content-Type', /json/)
 								.end((err, res) => {
@@ -113,7 +113,7 @@ test('Route: /events', t => {
 	request(server.app)
 		.post('/events')
 		.set('Accept', 'application/json')
-		.set('x-access-token', accessToken)
+		.set('Authorization', `Bearer ${accessToken}`)
 		.send({
 			data: {
 				id: `event-${new Date().getTime()}`,
@@ -138,7 +138,7 @@ test('Route: /collections/:id', t => {
 	request(server.app)
 		.get('/collections/daily-show')
 		.set('Accept', 'application/json')
-		.set('x-access-token', accessToken)
+		.set('Authorization', `Bearer ${accessToken}`)
 		.expect(200)
 		.expect('Content-Type', /json/)
 		.end(function (err, res) {
@@ -156,7 +156,7 @@ test('Route: /collections', t => {
 	request(server.app)
 		.get('/collections')
 		.set('Accept', 'application/json')
-		.set('x-access-token', accessToken)
+		.set('Authorization', `Bearer ${accessToken}`)
 		.expect(200)
 		.expect('Content-Type', /json/)
 		.end(function (err, res) {
@@ -171,7 +171,7 @@ test('Route: /videos/:id', t => {
 	request(server.app)
 		.get('/videos/daily-show-video-1')
 		.set('Accept', 'application/json')
-		.set('x-access-token', accessToken)
+		.set('Authorization', `Bearer ${accessToken}`)
 		.expect(200)
 		.expect('Content-Type', /json/)
 		.end(function (err, res) {
@@ -189,7 +189,7 @@ test('Route: /videos', t => {
 	request(server.app)
 		.get('/videos')
 		.set('Accept', 'application/json')
-		.set('x-access-token', accessToken)
+		.set('Authorization', `Bearer ${accessToken}`)
 		.expect(200)
 		.expect('Content-Type', /json/)
 		.end(function (err, res) {
@@ -204,7 +204,7 @@ test('Route: /views/:id', t => {
 	request(server.app)
 		.get('/views/homepage')
 		.set('Accept', 'application/json')
-		.set('x-access-token', accessToken)
+		.set('Authorization', `Bearer ${accessToken}`)
 		.expect(200)
 		.expect('Content-Type', /json/)
 		.end(function (err, res) {
@@ -224,7 +224,7 @@ test('Route: /views', t => {
 	request(server.app)
 		.get('/views')
 		.set('Accept', 'application/json')
-		.set('x-access-token', accessToken)
+		.set('Authorization', `Bearer ${accessToken}`)
 		.expect(200)
 		.expect('Content-Type', /json/)
 		.end(function (err, res) {
@@ -239,7 +239,7 @@ test('?include={relationship}', t => {
 	request(server.app)
 		.get('/collections/daily-show?include=entities')
 		.set('Accept', 'application/json')
-		.set('x-access-token', accessToken)
+		.set('Authorization', `Bearer ${accessToken}`)
 		.expect(200)
 		.expect('Content-Type', /json/)
 		.end(function (err, res) {

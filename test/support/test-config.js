@@ -94,8 +94,8 @@ module.exports = {
 	middleware: function (app) {
 		app.use(jsonAPIService.middleware.deformatter());
 
-		// Decode the JWT set on the X-Access-Token header and attach to req.identity
-		app.use(identityService.middleware.verifyAccess({header: 'x-access-token'}));
+		// Decode the JWT set on the Authorization header and attach to req.identity
+		app.use(identityService.middleware.authorize());
 
 		// Decode the JWT set on the Authorization header and attach to req.authorization
 		// app.use(authorizationService.middleware({header: 'Authorization'}));

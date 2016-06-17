@@ -63,7 +63,10 @@
     ],
     "ignores": [
       "examples/**"
-    ]
+    ],
+    "rules": {
+      "object-property-newline": 0
+    }
   },
   "license": "Apache-2.0"
 }

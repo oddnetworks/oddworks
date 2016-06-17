@@ -8,7 +8,7 @@ const utils = require('../lib/services/json-api/utils');
 
 let server;
 const testServer = require('./support/test-server');
-const accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaGFubmVsIjoib2RkLW5ldHdvcmtzIiwicGxhdGZvcm0iOiJhcHBsZS1pb3MiLCJzY29wZSI6WyJwbGF0Zm9ybSJdLCJpYXQiOjE0NjA5ODg5NzB9.-k0wFuWD3FFaRZ7btIad9hiJJyEIBqiR4cS8cGeGMoM';
+const accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJjaGFubmVsIjoib2RkLW5ldHdvcmtzIiwicGxhdGZvcm0iOiJhcHBsZS1pb3MiLCJpc3MiOiJvZGR3b3JrcyIsImF1ZCI6WyJvZGR3b3JrcyJdfQ.vS38n7hlw2l3qpaEegWlyXlds0POKewrvu0XiEhvTQ8';
 
 test('JOSN-API', t => {
 	testServer
@@ -24,7 +24,7 @@ test('?include={relationship}', t => {
 	request(server.app)
 		.get('/collections/daily-show?include=entities')
 		.set('Accept', 'application/json')
-		.set('x-access-token', accessToken)
+		.set('Authorization', `Bearer ${accessToken}`)
 		.expect(200)
 		.expect('Content-Type', /json/)
 		.end(function (err, res) {
