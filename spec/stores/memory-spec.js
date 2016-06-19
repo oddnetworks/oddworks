@@ -8,7 +8,7 @@ const _ = require('lodash');
 
 const memoryStore = require('../../lib/stores/memory/');
 
-describe('Redis Store', function () {
+describe('Memory Store', function () {
 	let bus;
 
 	const role = 'store';
@@ -34,7 +34,7 @@ describe('Redis Store', function () {
 
 		memoryStore
 			.initialize(bus, {
-				types: ['video', 'collection']
+				types: ['channel', 'video', 'collection']
 			})
 			.then(done)
 			.catch(done.fail);
@@ -246,6 +246,55 @@ describe('Redis Store', function () {
 				expect(result.message).toBe('No handler for pattern role:store,cmd:get,type:ardvark');
 			});
 		});
+
+		describe('with a "channel" type', function () {
+			const channel = {
+				name: 'HBO Go'
+			};
+
+			const type = 'channel';
+
+			const RESULTS = {
+				set: null,
+				get: null
+			};
+
+			beforeAll(function (done) {
+				Promise.resolve(null)
+					// Create new records
+					.then(() => {
+						const cmd = 'set';
+						return bus.sendCommand({role, cmd, type}, channel);
+					})
+					// Record results
+					.then(res => {
+						RESULTS.set = res;
+						return res;
+					})
+					// Get the records by type and id
+					.then(results => {
+						const cmd = 'get';
+						return bus.query({role, cmd, type}, {
+							id: results.id,
+							type
+						});
+					})
+					// Record results
+					.then(res => {
+						RESULTS.get = res;
+					})
+					// End test setup
+					.then(done)
+					.catch(done.fail);
+			});
+
+			it('returns saved channel', function () {
+				const doc = RESULTS.get;
+				expect(doc.type).toBe('channel');
+				expect(doc.id.length).toBe(36);
+				expect(doc.name).toBe('HBO Go');
+			});
+		});
 	});
 
 	describe('cmd:set', function () {
@@ -411,6 +460,61 @@ describe('Redis Store', function () {
 				expect(rel).toEqual({id: video.id, type: 'video'});
 			});
 		});
+
+		describe('with a channel type', function () {
+			const type = 'channel';
+
+			const channel = {
+				name: 'HBO GO'
+			};
+
+			const RESULTS = {
+				set: null,
+				get: null
+			};
+
+			beforeAll(function (done) {
+				Promise.resolve(null)
+					// Create new records
+					.then(() => {
+						const cmd = 'set';
+						return bus.sendCommand({role, cmd, type}, channel);
+					})
+					// Record results
+					.then(res => {
+						RESULTS.set = res;
+						return res;
+					})
+					// Get the records by type and id
+					.then(res => {
+						const cmd = 'get';
+						return bus.query({role, cmd, type}, {
+							id: res.id,
+							type
+						});
+					})
+					// Record results
+					.then(res => {
+						RESULTS.get = res;
+					})
+					// End test setup
+					.then(done)
+					.catch(done.fail);
+			});
+
+			it('returns the new entity from cmd:set', function () {
+				expect(RESULTS.set.id.length).toBe(36);
+			});
+
+			it('new channel entity has an .id', function () {
+				expect(RESULTS.get.id.length).toBe(36);
+				expect(RESULTS.get.id).toBe(RESULTS.set.id);
+			});
+
+			it('new entity has a .type', function () {
+				expect(RESULTS.get.type).toBe('channel');
+			});
+		});
 	});
 
 	describe('cmd:scan', function () {
@@ -512,20 +616,97 @@ describe('Redis Store', function () {
 				expect(results.length).toBe(0);
 			});
 		});
+
+		describe('channels', function () {
+			// Create 20 unique entities
+			const entities = _.range(20).map(n => {
+				return {name: `Channel-${n}`};
+			});
+
+			const type = 'channel';
+
+			let results;
+
+			beforeAll(function (done) {
+				Promise.resolve(entities)
+					.then(entities => {
+						const cmd = 'set';
+						return Promise.all(entities.map(entity => {
+							return bus.sendCommand({role, cmd, type}, entity);
+						}));
+					})
+					.then(() => {
+						return bus.query({role, cmd: 'scan', type}, {});
+					})
+					.then(res => {
+						results = res;
+					})
+					.then(done)
+					.catch(done.fail);
+			});
+
+			it('returns a list of entities', function () {
+				expect(Array.isArray(results)).toBeTruthy();
+				results.forEach(entity => {
+					expect(entity.id.length).toBe(36);
+					expect(entity.type).toBe(type);
+					expect(_.isString(entity.name)).toBeTruthy();
+				});
+			});
+
+			it('has a default limit of 10', function () {
+				expect(results.length).toBe(10);
+			});
+
+			describe('with limit', function () {
+				const RESULTS = {
+					low: null,
+					high: null
+				};
+
+				beforeAll(function (done) {
+					Promise.resolve(null)
+						.then(() => {
+							return Promise.all([
+								bus.query({role, cmd: 'scan', type}, {
+									limit: 3
+								}),
+								bus.query({role, cmd: 'scan', type}, {
+									limit: 20
+								})
+							]);
+						})
+						.then(res => {
+							RESULTS.low = res[0];
+							RESULTS.high = res[1];
+						})
+						.then(done)
+						.catch(done.fail);
+				});
+
+				it('honors a low limit', function () {
+					expect(RESULTS.low.length).toBe(3);
+				});
+
+				it('honors a high limit', function () {
+					expect(RESULTS.high.length).toBe(20);
+				});
+			});
+		});
 	});
 
 	describe('cmd:batchGet', function () {
-		const videos = _.range(7).map(n => {
+		const videos = _.range(14).map(n => {
 			return {
-				channel: 'hbogo',
+				channel: (n % 2) ? 'hbogo' : 'foo-channel-1',
 				type: 'video',
 				title: `video-${n}`
 			};
 		});
 
-		const collections = _.range(3).map(n => {
+		const collections = _.range(6).map(n => {
 			return {
-				channel: 'hbogo',
+				channel: (n % 2) ? 'hbogo' : 'foo-channel-1',
 				type: 'collection',
 				title: `collection-${n}`
 			};
@@ -546,18 +727,20 @@ describe('Redis Store', function () {
 						return bus.sendCommand({role, cmd, type: entity.type}, entity);
 					}));
 				})
-				// Record the results and batchGet half of them.
+				// Record the results and batchGet them.
 				.then(entities => {
-					entities = entities.filter((entity, i) => {
-						return i % 2 === 0;
-					});
+					IDS = entities
+						.filter(entity => {
+							return entity.channel === 'hbogo';
+						})
+						.map(entity => {
+							return entity.id;
+						});
 
-					IDS = entities.map(entity => {
-						return entity.id;
-					});
-
-					// Add a rando one to make sure it's not found.
-					entities.push({type: 'foo', id: 'bbarbaz-209348'});
+					// Add a randos to make sure they're not found.
+					entities.push({type: 'foo', id: _.sample(IDS)});
+					entities.push({type: 'video', id: 'bbarbaz-209348'});
+					entities.push({type: 'collection', id: 'bbarbaz-209348'});
 
 					return bus.query({role, cmd: 'batchGet'}, {
 						channel: 'hbogo',
@@ -572,13 +755,13 @@ describe('Redis Store', function () {
 		});
 
 		it('returns expected number of results', function () {
-			expect(RESULTS.length).toBe(5);
+			expect(RESULTS.length).toBe(10);
 			expect(RESULTS.length).toBe(IDS.length);
 		});
 
 		it('returns actual records', function () {
 			RESULTS.forEach((entity, i) => {
-				if (i < 4) {
+				if (i < 7) {
 					expect(entity.type).toBe('video');
 				} else {
 					expect(entity.type).toBe('collection');
@@ -586,6 +769,63 @@ describe('Redis Store', function () {
 
 				expect(entity.id).toBe(IDS[i]);
 				expect(_.isString(entity.title)).toBeTruthy();
+			});
+		});
+
+		describe('channels', function () {
+			const type = 'channel';
+
+			const channels = _.range(6).map(n => {
+				return {
+					name: `Channel-${n}`
+				};
+			});
+
+			let RESULTS;
+			let IDS;
+
+			beforeAll(function (done) {
+				const role = 'store';
+
+				Promise.resolve(channels)
+					// Create all the entities to fetch.
+					.then(entities => {
+						const cmd = 'set';
+						return Promise.all(entities.map(entity => {
+							return bus.sendCommand({role, cmd, type}, entity);
+						}));
+					})
+					// Record the results and batchGet them.
+					.then(entities => {
+						IDS = entities.map(entity => {
+							return entity.id;
+						});
+
+						// Add a randos to make sure they're not found.
+						entities.push({id: 'bbarbaz-209348'});
+
+						return bus.query({role, cmd: 'batchGet', type}, {
+							keys: entities
+						});
+					})
+					.then(res => {
+						RESULTS = res;
+					})
+					.then(done)
+					.catch(done.fail);
+			});
+
+			it('returns expected number of results', function () {
+				expect(RESULTS.length).toBe(6);
+				expect(RESULTS.length).toBe(IDS.length);
+			});
+
+			it('returns actual records', function () {
+				RESULTS.forEach((entity, i) => {
+					expect(entity.type).toBe('channel');
+					expect(entity.id).toBe(IDS[i]);
+					expect(_.isString(entity.name)).toBeTruthy();
+				});
 			});
 		});
 	});
