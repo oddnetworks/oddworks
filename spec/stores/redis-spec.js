@@ -15,11 +15,13 @@ describe('Redis Store', function () {
 	const role = 'store';
 
 	const video = Object.freeze({
+		channel: 'hbogo',
 		title: 'Monty Python',
 		length: 300
 	});
 
 	const collection = Object.freeze({
+		channel: 'hbogo',
 		title: 'Recommended',
 		relationships: {
 			videos: {
@@ -71,10 +73,12 @@ describe('Redis Store', function () {
 					return Promise.all([
 						bus.query({role, cmd, type: 'video'}, {
 							id: results.video.id,
+							channel: 'hbogo',
 							type: results.video.type
 						}),
 						bus.query({role, cmd, type: 'collection'}, {
 							id: results.collection.id,
+							channel: 'hbogo',
 							type: results.collection.type
 						})
 					]);
@@ -158,11 +162,13 @@ describe('Redis Store', function () {
 						const cmd = 'get';
 						return Promise.all([
 							bus.query({role, cmd, type: 'video'}, {
+								channel: 'hbogo',
 								id: results.video.id,
 								type: results.video.type,
 								include: ['promotions']
 							}),
 							bus.query({role, cmd, type: 'collection'}, {
+								channel: 'hbogo',
 								id: results.collection.id,
 								type: results.collection.type,
 								include: ['videos']
@@ -200,6 +206,7 @@ describe('Redis Store', function () {
 				Promise.resolve(null)
 					.then(() => {
 						return bus.query({role, cmd: 'get', type: 'video'}, {
+							channel: 'hbogo',
 							id: 'yadda,yadda,yadda',
 							type: 'video'
 						});
@@ -225,6 +232,7 @@ describe('Redis Store', function () {
 				Promise.resolve(null)
 					.then(() => {
 						return bus.query({role, cmd: 'get', type: 'ardvark'}, {
+							channel: 'hbogo',
 							id: 'yadda,yadda,yadda',
 							type: 'ardvark'
 						});
@@ -273,10 +281,12 @@ describe('Redis Store', function () {
 						const cmd = 'get';
 						return Promise.all([
 							bus.query({role, cmd, type: 'video'}, {
+								channel: 'hbogo',
 								id: results.video.id,
 								type: results.video.type
 							}),
 							bus.query({role, cmd, type: 'collection'}, {
+								channel: 'hbogo',
 								id: results.collection.id,
 								type: results.collection.type
 							})
@@ -365,10 +375,12 @@ describe('Redis Store', function () {
 						const cmd = 'get';
 						return Promise.all([
 							bus.query({role, cmd, type: 'video'}, {
+								channel: 'hbogo',
 								id: results.video.id,
 								type: results.video.type
 							}),
 							bus.query({role, cmd, type: 'collection'}, {
+								channel: 'hbogo',
 								id: results.collection.id,
 								type: results.collection.type
 							})
@@ -409,7 +421,7 @@ describe('Redis Store', function () {
 	describe('cmd:scan', function () {
 		// Create 20 unique entities
 		const entities = _.range(20).map(n => {
-			return {title: `identity-${n}`};
+			return {title: `identity-${n}`, channel: 'hbogo'};
 		});
 
 		const type = 'video';
@@ -425,7 +437,7 @@ describe('Redis Store', function () {
 					}));
 				})
 				.then(() => {
-					return bus.query({role, cmd: 'scan', type}, {});
+					return bus.query({role, cmd: 'scan', type}, {channel: 'hbogo'});
 				})
 				.then(res => {
 					results = res;
@@ -457,8 +469,14 @@ describe('Redis Store', function () {
 				Promise.resolve(null)
 					.then(() => {
 						return Promise.all([
-							bus.query({role, cmd: 'scan', type}, {limit: 3}),
-							bus.query({role, cmd: 'scan', type}, {limit: 20})
+							bus.query({role, cmd: 'scan', type}, {
+								channel: 'hbogo',
+								limit: 3
+							}),
+							bus.query({role, cmd: 'scan', type}, {
+								channel: 'hbogo',
+								limit: 20
+							})
 						]);
 					})
 					.then(res => {
@@ -477,15 +495,45 @@ describe('Redis Store', function () {
 				expect(RESULTS.high.length).toBe(20);
 			});
 		});
+
+		describe('with wrong channel', function () {
+			let results;
+
+			beforeAll(function (done) {
+				Promise.resolve(null)
+					.then(() => {
+						return bus.query({role, cmd: 'scan', type}, {
+							channel: 'wrong-channel'
+						});
+					})
+					.then(res => {
+						results = res;
+					})
+					.then(done)
+					.catch(done.fail);
+			});
+
+			it('honors the channel filter', function () {
+				expect(results.length).toBe(0);
+			});
+		});
 	});
 
 	describe('cmd:batchGet', function () {
 		const videos = _.range(7).map(n => {
-			return {type: 'video', title: `video-${n}`};
+			return {
+				channel: 'hbogo',
+				type: 'video',
+				title: `video-${n}`
+			};
 		});
 
 		const collections = _.range(3).map(n => {
-			return {type: 'collection', title: `collection-${n}`};
+			return {
+				channel: 'hbogo',
+				type: 'collection',
+				title: `collection-${n}`
+			};
 		});
 
 		let RESULTS;
@@ -516,7 +564,10 @@ describe('Redis Store', function () {
 					// Add a rando one to make sure it's not found.
 					entities.push({type: 'foo', id: 'bbarbaz-209348'});
 
-					return bus.query({role, cmd: 'batchGet'}, entities);
+					return bus.query({role, cmd: 'batchGet'}, {
+						channel: 'hbogo',
+						keys: entities
+					});
 				})
 				.then(res => {
 					RESULTS = res;
