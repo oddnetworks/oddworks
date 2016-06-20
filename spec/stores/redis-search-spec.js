@@ -25,8 +25,8 @@ xdescribe('Redis Search Store', function () {
 			.catch(done.fail);
 	});
 
-	describe('smoke test', function () {
-		it('should not be smoking', function () {
+	describe('module', function () {
+		it('should be tested', function () {
 			expect(1).toBeTruthy();
 		});
 	});
