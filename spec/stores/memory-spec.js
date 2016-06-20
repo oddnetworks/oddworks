@@ -36,7 +36,10 @@ describe('Memory Store', function () {
 			.initialize(bus, {
 				types: ['channel', 'video', 'collection']
 			})
-			.then(done)
+			.then(store => {
+				this.store = store;
+				done();
+			})
 			.catch(done.fail);
 	});
 

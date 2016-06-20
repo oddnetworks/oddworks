@@ -41,7 +41,10 @@ describe('Redis Store', function () {
 				types: ['channel', 'video', 'collection'],
 				redis: fakeredis.createClient()
 			})
-			.then(done)
+			.then(store => {
+				this.store = store;
+				done();
+			})
 			.catch(done.fail);
 	});
 
