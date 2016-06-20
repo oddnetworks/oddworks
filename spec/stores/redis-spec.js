@@ -1,4 +1,4 @@
-/* global describe, beforeAll, it, expect */
+/* global xdescribe, describe, beforeAll, it, expect */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
@@ -523,6 +523,10 @@ describe('Redis Store', function () {
 				expect(RESULTS.get.type).toBe('channel');
 			});
 		});
+	});
+
+	xdescribe('cmd:remove', function () {
+		it('should be tested');
 	});
 
 	describe('cmd:scan', function () {
