@@ -32,15 +32,14 @@ describe('Memory Store', function () {
 	beforeAll(function (done) {
 		bus = this.createBus();
 
-		memoryStore
-			.initialize(bus, {
-				types: ['channel', 'video', 'collection']
-			})
-			.then(store => {
-				this.store = store;
-				done();
-			})
-			.catch(done.fail);
+		memoryStore(bus, {
+			types: ['channel', 'video', 'collection']
+		})
+		.then(store => {
+			this.store = store;
+			done();
+		})
+		.catch(done.fail);
 	});
 
 	describe('cmd:get', function () {

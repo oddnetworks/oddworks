@@ -36,16 +36,15 @@ describe('Redis Store', function () {
 		Promise.promisifyAll(fakeredis.RedisClient.prototype);
 		Promise.promisifyAll(fakeredis.Multi.prototype);
 
-		redisStore
-			.initialize(bus, {
-				types: ['channel', 'video', 'collection'],
-				redis: fakeredis.createClient()
-			})
-			.then(store => {
-				this.store = store;
-				done();
-			})
-			.catch(done.fail);
+		redisStore(bus, {
+			types: ['channel', 'video', 'collection'],
+			redis: fakeredis.createClient()
+		})
+		.then(store => {
+			this.store = store;
+			done();
+		})
+		.catch(done.fail);
 	});
 
 	describe('cmd:get', function () {
