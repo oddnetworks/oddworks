@@ -33,8 +33,8 @@
     "redis-search": "~0.0.1"
   },
   "devDependencies": {
-    "aws-sdk": "^2.4.1",
-    "dynalite": "^1.0.2",
+    "aws-sdk": "~2.4.0",
+    "dynalite": "~1.0.0",
     "fakeredis": "~1.0.0",
     "jasmine": "~2.4.0",
     "nsp": "~2.4.0",
