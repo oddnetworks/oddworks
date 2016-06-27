@@ -1,12 +1,13 @@
+/* eslint prefer-arrow-callback: 0 */
+/* eslint-disable max-nested-callbacks */
 'use strict';
 
 const path = require('path');
 const oddcast = require('oddcast');
+const redis = require('fakeredis').createClient();
+
 const oddworks = require('../../lib/oddworks');
 const logger = require('../../lib/logger');
-
-// In your config, this would be real redis client
-const redis = require('fakeredis').createClient();
 
 // Require the stores and/or services you want to use
 const memoryStore = oddworks.stores.memory;
@@ -31,9 +32,9 @@ logger.configure({
 });
 
 module.exports = {
-	env: environment,
-	port: port,
-	dataDir: dataDir,
+	environment,
+	port,
+	dataDir,
 	seed: true,
 
 	oddcast: {
@@ -70,7 +71,7 @@ module.exports = {
 	services: [
 		{
 			service: identityService,
-			options: {jwtSecret: jwtSecret}
+			options: {jwtSecret}
 		},
 		{
 			service: catalogService,
@@ -91,7 +92,7 @@ module.exports = {
 		}
 	],
 
-	middleware: function (app) {
+	middleware(app) {
 		app.use(jsonAPIService.middleware.deformatter());
 
 		// Decode the JWT set on the X-Access-Token header and attach to req.identity

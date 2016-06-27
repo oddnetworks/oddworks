@@ -1,8 +1,11 @@
+/* eslint prefer-arrow-callback: 0 */
+/* eslint-disable max-nested-callbacks */
 'use strict';
 
 const _ = require('lodash');
 const boom = require('boom');
 const express = require('express');
+const oddcast = require('oddcast');
 
 const oddworks = require('../../lib/oddworks');
 const logger = require('../../lib/logger');
@@ -13,7 +16,6 @@ const middleware = oddworks.middleware;
 
 const config = require('./test-config');
 
-const oddcast = require('oddcast');
 const bus = oddcast.bus();
 const app = express();
 
@@ -62,7 +64,7 @@ module.exports = StoresUtils.load(bus, config.stores)
 		// 5xx
 		app.use(function handleError(err, req, res, next) {
 			if (err) {
-				var statusCode = _.get(err, 'output.statusCode', (err.status || 500));
+				const statusCode = _.get(err, 'output.statusCode', (err.status || 500));
 				if (!_.has(err, 'output.payload')) {
 					err = boom.wrap(err, err.status);
 				}

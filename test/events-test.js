@@ -1,3 +1,5 @@
+/* eslint prefer-arrow-callback: 0 */
+/* eslint-disable max-nested-callbacks */
 'use strict';
 
 const test = require('tape');
@@ -49,7 +51,6 @@ test(`{role: 'events'}`, t => {
 		duration: 60000
 	};
 
-	// TODO - channel.remove doesn't seem to work on oddcast
 	testHelper.bus.observe({role: 'events-change-this-when-channel.remove-is-fixed'}, () => {
 		t.ok(spy1.calledOnce, 'analyzer 1 .send() called');
 		t.ok(spy2.calledOnce, 'analyzer 2 .send() called');

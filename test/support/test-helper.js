@@ -1,3 +1,5 @@
+/* eslint prefer-arrow-callback: 0 */
+/* eslint-disable max-nested-callbacks */
 'use strict';
 
 const path = require('path');
