@@ -1,72 +1,108 @@
 # Stores
 
-Stores are the generic implementation within Oddworks to persist data to a database. We aim to optimize for read speed so we base our stores on key/value patterns.
+Stores are the generic implementation within Oddworks to persist data to a database. A design goal of Oddworks is optimize for read speed, so stores are based on key/value patterns.
 
-## Initialization
+A store will implement get, set, scan, remove and batchGet methods. Instead of calling those methods directly, a store exposes its implementation through an [Oddcast Message Bus](https://github.com/oddnetworks/oddcast). The message bus allows the implementation of stores to be decoupled from the core of your application.
 
-Each store's implementation will require different initialization options. For example our [Redis](redis) and [Redis Search](redis-search) stores both require a Redis instance to work with. Our [Memory](memory) store does not need an instance of anything.
+## Specification
+There is a generic store specification that any store must implement to work within Oddworks.
+
+### Initialization
+Requiring a store must return a factory function. Calling that function will initialize the store and return a Promise for an Object with at least a `.name` String attribute, but may include other attributes as well.
+
+The factory function for a store accepts two arguments:
+
+* bus - An implementation of an [Oddcast Message Bus](https://github.com/oddnetworks/oddcast)
+* options - An Object hash of options
+
+Each store's implementation will require different initialization options. For example, a Redis or PostgreSQL connection. But, there is one required option.
 
 **Options**
 
-* `types` - array of resource types the store is responsible for working with
+* `options.types` - array of record types the store is responsible for working with
 
-Specifying different stores for different types means Oddworks is flexible enough to store identity resources in Redis and all catalog resources in MongoDB if you feel that suits your needs best.
+Specifying different stores for different types means Oddworks is flexible enough to store identity records in Redis and all catalog records in MongoDB if depending on requirements of the application.
 
-More stores to come...
+### Patterns
+[Oddcast Message Bus](https://github.com/oddnetworks/oddcast) patterns are used to call methods on a store. This design allows stores to be decoupled from the application logic, and allows you to use different stores for different types of objects.
 
-## Patterns
+#### get
+`bus.query({role: 'store', cmd: 'get', type: TYPE}, args)`
 
-### query({role: 'store', cmd: 'get', type: TYPE}, payload)
+Get a single record of a specific `TYPE`.
 
-Get a single or all resources of a specific `type`.
+**Args**
 
-**Payload**
+* `channel` - the channel ID String the record is scoped to
+* `type` - the type String of the record
+* `id` - the id String of the record
 
-* `type` - the type of the resource you want to get
-* `id` _optional_ - specify the id of the resource to get just that resource
-
-**Result**
-
-* `object|[objects]`
-
-### query({role: 'store', cmd: 'set', type: TYPE}, payload)
-
-Set a single resource to the database. You may also use `sendCommand` instead of `query`.
-
-**Payload**
-
-This is the bare minimum each resource requires. You may add as many other properties as you wish.
-
-* `id` - the id of the resource
-* `type` - the type of the resource
+The `args` Object must have an `.id`, `.type`, and `.channel` attribute. However, if the record being requested is a "channel" type, then the `args.channel` attribute is not required.
 
 **Result**
 
-* `object`
+* An Object with at least `{channel, type, id}`
 
-### sendCommand({role: 'store', cmd: 'index', type: TYPE}, payload)
-
-Index a resource to be searchable later.
-
-**Payload**
-
-* `id` - the id of the resource
-* `text` - the text that will be searchable for the resource
-
-**Result**
-
-* `[objects]`
-
-### query({role: 'store', cmd: 'query'}, payload)
-
-Search the index of all types based on the provided string.
+#### set
+`bus.sendCommand({role: 'store', cmd: 'set', type: TYPE}, payload)`
 
 **Payload**
 
-This is the bare minimum each resource requires. You may add as many other properties as you wish.
+* `channel` - the channel ID String the record is scoped to
+* `type` - the type String of the record
+* `id` - the id String of the record
 
-* `query` - the text to search for
+This is the bare minimum each record requires. You may add as many other properties as you wish.
 
 **Result**
 
-* `[objects]`
+* The Object that was set
+
+#### remove
+`bus.sendCommand({role: 'store', cmd: 'remove', type: TYPE}, args)`
+
+Remove a single record of a specific `TYPE`.
+
+**Args**
+
+* `channel` - the channel ID String the record is scoped to
+* `type` - the type String of the record
+* `id` - the id String of the record
+
+The `args` Object must have an `.id`, `.type`, and `.channel` attribute. However, if the record being removed is a "channel" type, then the `args.channel` attribute is not required.
+
+**Result**
+
+* A Boolean
+
+#### scan
+`bus.query({role: 'store', cmd: 'scan', type: TYPE}, args)`
+
+Scans for records of a specific `TYPE`.
+
+**Args**
+
+* `channel` - the channel ID String the record is scoped to
+* `type` - the type String of the record
+* `id` - the id String of the record
+* `limit` - the Number to limit results. Defaults to 10
+
+The `args` Object must have an `.id`, `.type`, and `.channel` attribute. However, if the record being requested is a "channel" type, then the `args.channel` attribute is not required.
+
+**Result**
+
+* An Array of Objects with at least `{channel, type, id}`
+
+#### batchGet
+`bus.query({role: 'store', cmd: 'batchGet', type: TYPE}, args)`
+
+Scans for records of a specific `TYPE`.
+
+**Args**
+
+* `channel` - the channel ID String the record is scoped to
+* `keys` - An Array of keys to get. Each key in the Array must be an Object in the form `{type: TYPE, id: ID}`.
+
+**Result**
+
+* An Array of Objects with at least `{channel, type, id}`
