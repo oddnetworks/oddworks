@@ -748,7 +748,7 @@ describe('Memory Store', function () {
 					entities.push({type: 'video', id: 'bbarbaz-209348'});
 					entities.push({type: 'collection', id: 'bbarbaz-209348'});
 
-					return bus.query({role, cmd: 'batchGet'}, {
+					return bus.query({role, cmd: 'batchGet', store: 'memory-store'}, {
 						channel: 'hbogo',
 						keys: entities
 					});
@@ -810,7 +810,7 @@ describe('Memory Store', function () {
 						// Add a randos to make sure they're not found.
 						entities.push({id: 'bbarbaz-209348'});
 
-						return bus.query({role, cmd: 'batchGet', type}, {
+						return bus.query({role, cmd: 'batchGet', store: 'memory-store', type}, {
 							keys: entities
 						});
 					})
