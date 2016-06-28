@@ -10,7 +10,7 @@ There is a generic store specification that any store must implement to work wit
 ### Initialization
 Requiring a store must return a factory function. Calling that function will initialize the store and return a Promise for an Object with at least a `.name` String attribute, but may include other attributes as well.
 
-The factory function for a store accepts two arguments:
+The factory function for a store requires two arguments:
 
 * bus - An implementation of an [Oddcast Message Bus](https://github.com/oddnetworks/oddcast)
 * options - An Object hash of options

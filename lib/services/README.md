@@ -1,11 +1,8 @@
 # Services
-
-Currently available services that attach logic and patterns to the Oddworks server.
+Services that attach logic and patterns to an Oddworks application.
 
 * [Catalog](catalog)
-* [Events](events)
 * [Identity](identity)
-* [JSON API](json-api)
+* [Server](server)
 
-More to come...
 
