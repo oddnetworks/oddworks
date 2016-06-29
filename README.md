@@ -2,7 +2,7 @@
 
 [![slack.oddnetworks.com](http://slack.oddnetworks.com/badge.svg)](http://slack.oddnetworks.com)
 
-[![Build Status](https://travis-ci.org/oddnetworks/oddworks.svg?branch=master)](https://travis-ci.org/oddnetworks/oddworks)  
+[![Build Status](https://travis-ci.org/oddnetworks/oddworks.svg?branch=master)](https://travis-ci.org/oddnetworks/oddworks)
 [![Dependency Status](https://david-dm.org/oddnetworks/oddworks.svg)](https://david-dm.org/oddnetworks/oddworks)
 
 __Oddworks__ is an open source video distribution platform built to destroy the barriers to streaming television. Use it to:
@@ -33,33 +33,28 @@ Oddworks is made up of several loosely coupled services. All of these services a
 
 The content server is also database agnostic in which you can store your entities in whatever database engine you like or a combination of any.
 
-Currently we have official support for the following:
+Currently Oddworks has support for the following:
 
 - memory (best used for development and testing)
-- redis-search (a full text search implementation based on the N-gram algorithm)
 - redis
-
-With the stores above you can pick your poison for your specific needs.
+- redis-search (a full text search implementation based on the N-gram algorithm)
+- DynamoDB
 
 The implementation of these can be found in the `./lib/stores` directory.
 
 ### [services](https://github.com/oddnetworks/oddworks/tree/master/lib/services)
 
-The implementation of these can be found in the `./lib/services` directory.
-
 - [catalog](https://github.com/oddnetworks/oddworks/blob/master/lib/services/catalog) (responsible for views, collections, and videos)
-- [events](https://github.com/oddnetworks/oddworks/blob/master/lib/services/events)
 - [identity](https://github.com/oddnetworks/oddworks/blob/master/lib/services/identity) (responsible for channels, platforms, users, authentication, and entitlements)
-- [json-api](https://github.com/oddnetworks/oddworks/blob/master/lib/services/json-api) (responsible for decorating responses into the JSON API Spec format)
-- [sync](https://github.com/oddnetworks/oddworks/blob/master/lib/services/sync)
+- [server](https://github.com/oddnetworks/oddworks/blob/master/lib/services/identity) (a Node.js HTTP server)
+
+The implementation of these can be found in the `./lib/services` directory.
 
 ### middleware
 
-The available middleware is used when setting up an express-based server.
+The available middleware is used when setting up an [Express.js](http://expressjs.com/) HTTP server.
 
-### [logger](https://github.com/oddnetworks/oddworks/tree/master/lib/logger)
-
-The Oddworks logger is a configurable and extensible.
+The implementation of these can be found in the `./lib/middleware` directory.
 
 ## Platform
 
@@ -79,7 +74,7 @@ The Oddworks Platform consists of two main concepts:
 In your server script:
 
 ```
-const oddworks = require('oddworks');
+const oddworks = require('@oddnetworks/oddworks');
 ```
 
 ### CLI
@@ -136,8 +131,7 @@ Get updates on Odd Networks's development and chat with the project maintainers 
 * Follow [@oddnetworks on Twitter](https://twitter.com/Oddnetworks).
 * Join [the official Slack room](http://slack.oddnetworks.com/).
 * Submit an [issue](https://github.com/oddnetworks/oddworks/issues).
-* Check out the [API sample responses](https://www.oddnetworks.com/documentation/oddworks/).
-* Read and subscribe to [The Official Odd Networks Blog](http://blog.oddnetworks.com/).
+* Read and subscribe to [The Odd Networks Tech Blog](http://oddcast.oddnetworks.com/).
 
 ## More Information
 
