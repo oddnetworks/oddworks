@@ -36,8 +36,11 @@ Get a single record of a specific `TYPE`.
 * `channel` - the channel ID String the record is scoped to
 * `type` - the type String of the record
 * `id` - the id String of the record
+* `include` - an Array of types to include
 
 The `args` Object must have an `.id`, `.type`, and `.channel` attribute. However, if the record being requested is a "channel" type, then the `args.channel` attribute is not required.
+
+If the `.include` array is defined, then it will be used to additionally fetch included resources referenced on the `.relationships` hash and assigned to the `.included` property on the returned resource Object.
 
 **Result**
 

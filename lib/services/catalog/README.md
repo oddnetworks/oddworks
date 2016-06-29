@@ -20,10 +20,29 @@ The factory function for a service requires two arguments:
 
 **Options**
 
-No options required for the catalog service.
+* options.updateFrequency - A Number from 0 to 1 indicating to the service how often to update content from an upstream source. See [Providers and Specs](#providers-and-specs) below for more info.
+
+**Result**
+A catalog service Object:
+
+```js
+{
+    name: 'catalog',
+    options: {},
+    bus,
+    CatalogItemController,
+    CatalogListController,
+    CatalogSpecController,
+    CatalogSpecListController,
+    CatalogSearchController,
+    router
+};
+```
 
 ### Patterns
 [Oddcast Message Bus](https://github.com/oddnetworks/oddcast) patterns are used to call methods on a service. This design allows services to be decoupled from the application logic, and allows you to use different services for different operations.
+
+During initialization the catalog service defines handlers for the following patterns.
 
 #### fetchItem
 `bus.query({role: 'catalog', cmd: 'fetchItem'}, args)`
@@ -158,8 +177,26 @@ Delete a single content item spec.
 
 * A Boolean
 
-### Router
-__TODO__: Documentation
+### Default Routes
+The catalog service object returned from the initialization factory function exposes a method named `.router()`. It takes some options, including a router you may have already defined, and adds some standard default routes for convenience.
+
+#### router
+`.router(OPTIONS)`
+
+**Options**
+
+* options.types - Array of Strings. Default = ['collection', 'promotion', 'video', 'view']
+* options.specTypes - Array of Strings. Default = []
+* options.router - An Express Router Object/Function. This could be a Router instance, or an Express App instance. Default = new Router.
+
+**Returns**
+
+Returns either the router you specified in the options, or a new Router instance.
+
+**Defined Routes**
+
+* GET, PUT, DELETE on the list route for each type and spec type.
+* GET, PATCH, DELETE on the item route for each type and spec type.
 
 ### Providers and Specs
 Resources managed by the catalog may optionally have "spec" (specification) Objects associated with them. Spec Objects indicate to the catalog service that there is an upstream source it can use to fetch fresh copies of a resource and cache in the store.
@@ -174,6 +211,8 @@ The `.meta.maxAge` attribute could be set by the provider or configured on the c
 When a resource is set in the catalog, setItem automatically sets the `.meta.updatedAt` attribute. When the resource is fetched from the catalog with fetchItem and the `.meta.maxAge` has expired when compared to `.meta.updatedAt`, then the resource will be requested fresh from the provider defined in its spec Object.
 
 If the resource object has a `meta.staleWhileRevalidate` attribute and the time is still within the configured window, it will return the stale resource Object while fetching the fresh one from the provider in the background and caching it for the next request.
+
+To avoid an angry mob rushing the upstream source server the `options.updateFrequency` option can be set to something less than 1. If updateFrequency is set to 0 then the provider will never be called, even if the maxAge has expired. If updateFrequency is set to 1, then the provider will always be called if the maxAge has expired. If the updateFrequency is set to 0.5 then this particular running instance will only request the resource from the provider 50% of the time when maxAge has expired.
 
 * .meta.updatedAt - Date ISO String
 * .meta.maxAge - Number of seconds to live.
