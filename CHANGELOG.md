@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.1 Unstable
+
+- Moves the identity service middleware into the middleware library. [Pull Request](https://github.com/oddnetworks/oddworks/pull/97)
+- Fixes [events service dependency](https://github.com/oddnetworks/oddworks/pull/98).
+- Fixes a [DynamoDB marshalling bug](https://github.com/oddnetworks/oddworks/pull/96/commits/45bd9d13c7e90acc8f770196412729f006a2c1e1).
+- Fixes a few [bugs in the catalog service](https://github.com/oddnetworks/oddworks/commit/05d414ccc64e6d5d10f8b94fc13070f941a3ae12).
+
 ## 3.0.0 Unstable
 
 - Stores and Services are now consistently initialized with a [single factory function](https://github.com/oddnetworks/oddworks/issues/89).
