@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.0 Unstable
+
+- Fixes a [promise chaining error](https://github.com/oddnetworks/oddworks/pull/100/commits/8e156a8497231aad74fea35ce2d92af01ae955c3)
+- Fixes a [promise returning warning](https://github.com/oddnetworks/oddworks/pull/100/commits/525e25bef8f3ea8451ec2926d57bb834c9bb1e6e)
+- Adds a [CloudSearch Store](https://github.com/oddnetworks/oddworks/pull/100/commits/5163b532668417d2d88491c37e0ac4cca9edadf8)
+
 ## 3.1.1 Unstable
 
 - Moves the identity service middleware into the middleware library. [Pull Request](https://github.com/oddnetworks/oddworks/pull/97)
@@ -26,7 +32,7 @@
 
 ## 2.2.1
 
-- Fixed issue with links for included resource entitites #74
+- Fixed issue with links for included resource entities #74
 - Fixed Google events analyzer (will actually `send()` events now)
 - Documentation improvements
 
