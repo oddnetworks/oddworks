@@ -1,6 +1,13 @@
 # Changelog
 
-## 3.2.2 Unstanb
+## 3.3.0
+
+- Handle special case of [JSON API links in config](https://github.com/oddnetworks/oddworks/commit/f67ae7f61010d740099d26909e1b78bd6449b218) response
+- Fixes JSON API response middleware bugs
+- Limit attributes [assigned to resource object meta](https://github.com/oddnetworks/oddworks/commit/12c113766e3e2433235e5c03d73dc94e9567ffe5)
+- Fixes the include=foo query parameter in CatalogListController and CatalogItemController
+
+## 3.2.2 Unstable
 
 - Adds a type and id property to config objects for JSON API readiness.
 
