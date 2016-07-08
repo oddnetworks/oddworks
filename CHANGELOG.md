@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.2 Unstanb
+
+- Adds a type and id property to config objects for JSON API readiness.
+
 ## 3.2.0 Unstable
 
 - Fixes a [promise chaining error](https://github.com/oddnetworks/oddworks/pull/100/commits/8e156a8497231aad74fea35ce2d92af01ae955c3)
