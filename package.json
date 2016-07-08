@@ -30,7 +30,8 @@
     "lodash": "~3.10.0",
     "node-uuid": "~1.4.0",
     "oddcast": "~2.0.0",
-    "redis-search": "~0.0.1"
+    "redis-search": "~0.0.1",
+    "uuid": "^2.0.2"
   },
   "devDependencies": {
     "aws-sdk": "~2.4.0",
