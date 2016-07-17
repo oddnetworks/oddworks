@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.4.1 Unstable
+
+- Correct JSON API error responses
+
 ## 3.4.0 Unstable
 
 - Resource specification objects must be [fetched with full channel object](https://github.com/oddnetworks/oddworks/pull/109) rather than the channel id string
