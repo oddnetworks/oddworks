@@ -1,6 +1,12 @@
 # Changelog
 
-## 3.3.0
+## 3.4.0 Unstable
+
+- Resource specification objects must be [fetched with full channel object](https://github.com/oddnetworks/oddworks/pull/109) rather than the channel id string
+- HTTP [DELETE handlers in catalog controllers](https://github.com/oddnetworks/oddworks/pull/111).
+_ More compliant [JSON API responses](https://github.com/oddnetworks/oddworks/pull/112).
+
+## 3.3.0 Unstable
 
 - Handle special case of [JSON API links in config](https://github.com/oddnetworks/oddworks/commit/f67ae7f61010d740099d26909e1b78bd6449b218) response
 - Fixes JSON API response middleware bugs
