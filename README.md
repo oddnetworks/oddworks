@@ -1,4 +1,4 @@
-![Oddworks](http://s3-us-west-2.amazonaws.com/odd-networks-assets/odd-networks.png)
+# Oddworks
 
 [![slack.oddnetworks.com](http://slack.oddnetworks.com/badge.svg)](http://slack.oddnetworks.com)
 
