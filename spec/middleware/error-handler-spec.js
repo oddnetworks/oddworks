@@ -3,6 +3,7 @@
 /* eslint-disable max-nested-callbacks */
 'use strict';
 
+const Boom = require('boom');
 const MockExpressResponse = require('mock-express-response');
 
 const errorHandler = require('../../lib/middleware/error-handler');
@@ -69,6 +70,83 @@ describe('Middleware: Error Handler', () => {
 			expect(errors[1].detail).toBe('TEST');
 			expect(errors[1].source).toBeUndefined();
 			expect(errors[1].meta).toBeUndefined();
+		});
+	});
+
+	describe('with native Error', function () {
+		let RES = null;
+		const ERR = new Error('NATIVE_ERROR_MESSAGE');
+
+		beforeAll(function () {
+			RES = new MockExpressResponse();
+			errorHandler()(ERR, REQ, RES);
+		});
+
+		it('sets statusCode === 500', function () {
+			expect(RES.statusCode).toBe(500);
+		});
+
+		it('adds Boom error properties', function () {
+			const body = RES._getJSON();
+			const error = body.errors[0];
+			expect(error.status).toBe('500');
+			expect(error.title).toBe('Error');
+			expect(error.detail).toBe('NATIVE_ERROR_MESSAGE');
+		});
+	});
+
+	describe('with Boom Error', function () {
+		let RES = null;
+		const ERR = Boom.badData('Channel ID is required');
+
+		beforeAll(function () {
+			RES = new MockExpressResponse();
+			errorHandler()(ERR, REQ, RES);
+		});
+
+		it('sets statusCode === 422', function () {
+			expect(RES.statusCode).toBe(422);
+		});
+
+		it('adds Boom error properties', function () {
+			const body = RES._getJSON();
+			const error = body.errors[0];
+			expect(error.status).toBe('422');
+			expect(error.title).toBe('Unprocessable Entity');
+			expect(error.detail).toBe('Channel ID is required');
+		});
+	});
+
+	describe('with "id" "links" "code" "source" "meta"', () => {
+		let RES = null;
+
+		const LINKS = {about: 'http://about'};
+		const SOURCE = {pointer: '/data/attributes/username'};
+		const META = {META: 'META'};
+
+		const ERR = Boom.unauthorized('Username not found');
+		ERR.id = 'really-long-uuid';
+		ERR.links = LINKS;
+		ERR.code = 'USERNAME_NOT_FOUND';
+		ERR.source = SOURCE;
+		ERR.meta = META;
+
+		beforeAll(function () {
+			RES = new MockExpressResponse();
+			errorHandler()(ERR, REQ, RES);
+		});
+
+		it('adds default error properties', function () {
+			const body = RES._getJSON();
+			const error = body.errors[0];
+			expect(error.id).toBe('really-long-uuid');
+			expect(error.links.about).toBe('http://about');
+			expect(error.status).toBe('401');
+			expect(error.code).toBe('USERNAME_NOT_FOUND');
+			expect(error.title).toBe('Unauthorized');
+			expect(error.detail).toBe('Username not found');
+			expect(error.source.pointer).toBe('/data/attributes/username');
+			expect(error.meta.META).toBe('META');
 		});
 	});
 });
