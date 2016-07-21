@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.5.0 Unstable
+- Return [401 if channel/platform not active](https://github.com/oddnetworks/oddworks/pull/115)
+- Properly return [405 instead of 403](https://github.com/oddnetworks/oddworks/pull/116) on bad method access.
+- [Remove appending port to JSON API links](https://github.com/oddnetworks/oddworks/pull/117) in production environments.
+- [JSON API compliant error objects](https://github.com/oddnetworks/oddworks/pull/120).
+
 ## 3.4.1 Unstable
 
 - Correct JSON API error responses
