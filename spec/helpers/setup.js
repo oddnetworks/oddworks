@@ -2,7 +2,17 @@
 /* eslint prefer-arrow-callback: 0 */
 'use strict';
 
-const MockServerResponse = require('mock-express-response/node_modules/mock-res');
+let MockServerResponse;
+try {
+	MockServerResponse = require('mock-express-response/node_modules/mock-res');
+} catch (err) {
+	if (/Cannot find module/.test(err.message)) {
+		MockServerResponse = require('mock-res');
+	} else {
+		throw err;
+	}
+}
+
 const support = require('../support/');
 
 const SETUP_TIMEOUT = 5000;
