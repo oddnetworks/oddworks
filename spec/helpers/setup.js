@@ -22,16 +22,18 @@ MockServerResponse.prototype._getString = function () {
 
 	if (Array.isArray(buffs)) {
 		return buffs.map(buff => {
+			console.log(typeof buff);
+			console.log(buff);
 			return buff.toString();
 		}).join('');
 	}
 
+	console.log(typeof buffs);
+	console.log('returning non Array toString()');
 	return buffs.toString();
 };
 
 MockServerResponse.prototype._getJSON = function () {
-	console.log(typeof this._getString());
-	console.log(this._getString());
 	return JSON.parse(this._getString());
 };
 
