@@ -22,7 +22,7 @@ MockServerResponse.prototype._getString = function () {
 
 	if (Array.isArray(buffs)) {
 		return buffs.map(buff => {
-			console.log(typeof buff);
+			console.log(`\n${typeof buff}`);
 			console.log(buff);
 			return buff.toString();
 		}).join('');
