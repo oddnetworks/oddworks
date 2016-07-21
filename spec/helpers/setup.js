@@ -22,14 +22,19 @@ MockServerResponse.prototype._getString = function () {
 
 	if (Array.isArray(buffs)) {
 		return buffs.map(buff => {
-			console.log(`\n${typeof buff}`);
-			console.log(buff);
+			if (Buffer.isBuffer(buff)) {
+				return buff.toString('utf8');
+			} else if (typeof buff === 'string') {
+				return buff;
+			}
 			return buff.toString();
 		}).join('');
+	} else if (typeof buffs === 'string') {
+		return buffs;
+	} else if (Buffer.isBuffer(buffs)) {
+		return buffs.toString('utf8');
 	}
 
-	console.log(typeof buffs);
-	console.log('returning non Array toString()');
 	return buffs.toString();
 };
 
