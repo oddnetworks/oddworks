@@ -1,5 +1,7 @@
 # Oddworks
 
+[![Join the chat at https://gitter.im/oddnetworks/oddworks](https://badges.gitter.im/oddnetworks/oddworks.svg)](https://gitter.im/oddnetworks/oddworks?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![slack.oddnetworks.com](http://slack.oddnetworks.com/badge.svg)](http://slack.oddnetworks.com)
 
 [![Build Status](https://travis-ci.org/oddnetworks/oddworks.svg?branch=master)](https://travis-ci.org/oddnetworks/oddworks)
