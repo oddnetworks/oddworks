@@ -3,6 +3,7 @@ env:
   - CXX=g++-4.8 DATA_DIR=./test/data
 node_js:
   - 'stable'
+  - '5'
   - '4'
 before_install:
   - sudo apt-get update

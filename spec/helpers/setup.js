@@ -20,19 +20,8 @@ const SETUP_TIMEOUT = 5000;
 MockServerResponse.prototype._getString = function () {
 	const buffs = this._readableState.buffer;
 
-	if (Array.isArray(buffs)) {
-		return buffs.map(buff => {
-			if (Buffer.isBuffer(buff)) {
-				return buff.toString('utf8');
-			} else if (typeof buff === 'string') {
-				return buff;
-			}
-			return buff.toString();
-		}).join('');
-	} else if (typeof buffs === 'string') {
-		return buffs;
-	} else if (Buffer.isBuffer(buffs)) {
-		return buffs.toString('utf8');
+	if (buffs.constructor.name === 'BufferList') {
+		return buffs.join();
 	}
 
 	return buffs.toString();
