@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.8.0 Unstable
+- Hide `channel.secrets` from /config response
+
 ## 3.7.0 Unstable
 - Fixes a bug in the CORS headers middleware
 - Report upstream source errors, but return cached content anyway
