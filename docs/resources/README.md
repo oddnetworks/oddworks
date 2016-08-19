@@ -19,9 +19,9 @@ Config object attributes determine which features and configuration details are 
 - __active__ [Boolean]
 - __images__ [Array] - contains [Image](#image) objects.
 - __features__ [Object]
-    - __authentication__ [Object]
-    - __sharing__ [Object]
-    - __metrics__ [Object]
+    - __authentication__ [Authentication](#authentication)
+    - __sharing__ [Sharing](#sharing)
+    - __metrics__ [Metrics](#metrics)
 - __platformType__ [String] - the server's identifier for the requesting Platform's type
 - __category__ [String] - the server's identifier for the requesting Platform's category (WEB|TV|MOBILE)
 - __views__ [Object] - a simple key/value object to determine the name (key) and id (value) of the Views available to the requesting Platform
@@ -106,3 +106,43 @@ An identifier object is used as a reference to full resource objects. These are 
 
 - __id__ [String] - can be a slug-ified string or a UUID
 - __type__ [String] - must be one of the Oddworks resource types
+
+### Authentication
+
+- __enabled__ [Boolean]
+
+What else goes here?
+
+### Sharing
+
+- __enabled__ [Boolean]
+- __text__ [String] - example: `Watch the @oddnetworks show live on mobile and TV connected devices!`
+
+### Metrics
+
+- __enabled__ [Boolean]
+- __appInit__ [Object]
+    - __action__ [String] - default: `app:init`
+    - __enabled__ [Boolean]
+- __viewLoad__ [Object]
+    - __action__ [String] - default: `view:load`
+    - __enabled__ [Boolean]
+- __videoLoad__ [Object]
+    - __action__ [String] - default: `video:load`
+    - __enabled__ [Boolean]
+- __videoPlay__ [Object]
+    - __action__ [String] - default: `video:play`
+    - __enabled__ [Boolean]
+- __videoPlaying__ [Object]
+    - __action__ [String] - default: `video:playing`
+    - __enabled__ [Boolean]
+    - __interval__ [Integer] - time in milliseconds
+- __videoStop__ [Object]
+    - __action__ [String] - default: `video:stop`
+    - __enabled__ [Boolean]
+- __videoError__ [Object]
+    - __action__ [String] - default: `video:error`
+    - __enabled__ [Boolean]
+- __userNew__ [Object]
+    - __action__ [String] - default: `user:new`
+    - __enabled__ [Boolean]
