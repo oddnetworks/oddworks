@@ -19,10 +19,10 @@ Config object attributes determine which features and configuration details are 
 - __active__ [Boolean]
 - __images__ [Array] - contains [Image](#image) objects.
 - __features__ [Object]
-    - __authentication__ [Authentication](#authentication)
+    - __authentication__ [[Authentication]](#authentication)
     - __sharing__ [[Sharing]](#sharing)
     - __metrics__ [[Metrics]](#metrics)
-- __platformType__ [[String]] - the server's identifier for the requesting Platform's type
+- __platformType__ [String] - the server's identifier for the requesting Platform's type
 - __category__ [String] - the server's identifier for the requesting Platform's category (WEB|TV|MOBILE)
 - __views__ [Object] - a simple key/value object to determine the name (key) and id (value) of the Views available to the requesting Platform
 - __user__ [Object]
