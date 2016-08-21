@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9.0 Breaking
+- response-send middleware will now need to be included when setting up Express.js routes. The response-json-api middleware no longer calls `res.send(res.body)`.
+- Fixes catalog [spec controller routing](https://github.com/oddnetworks/oddworks/commit/8cfb1bbd9ee7124fd0d60e3281e4674a8bd94ecc).
+
 ## 3.8.0 Unstable
 - Hide `channel.secrets` from /config response
 
