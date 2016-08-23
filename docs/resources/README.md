@@ -97,6 +97,7 @@ __Type:__ `promotion`
 - __title__ String
 - __description__ String
 - __images__ Array - contains [Image](#image) objects.
+- __url__ String
 
 ## Non-Resource Objects
 
