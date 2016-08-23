@@ -4,7 +4,7 @@
 - [__View__](#view)
 - [__Video__](#video)
 - [__Collection__](#collection)
-- [__Non-Resource Objects__](#non-resource objects)
+- [__Non-Resource Objects__](#non-resource-objects)
 
 ## Config
 
