@@ -65,6 +65,7 @@ __Type:__ `video`
 - __description__ String
 - __images__ Array - contains [Image](#image) objects.
 - __sources__ Array - contains one or more [Source](#source) objects.
+- __duration__ Integer - the duration of the video in milliseconds. Default: 0
 
 ### Relationships
 
