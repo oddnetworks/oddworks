@@ -111,7 +111,10 @@ Some resources contain an array of images.
 
 ### Color
 
-- __rgba__ String
+- __red__ Integer
+- __green__ Integer
+- __blue__ Integer
+- __alpha__ Integer
 - __label__ String
 
 ### Font
