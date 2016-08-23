@@ -4,6 +4,7 @@
 - [__View__](#view)
 - [__Video__](#video)
 - [__Collection__](#collection)
+- [__Promotion__](#promotion)
 - [__Non-Resource Objects__](#non-resource-objects)
 
 ## Config
@@ -84,6 +85,17 @@ __Type:__ `collection`
 
 - __entities__ - The `entities` relationship is used to define which resources are contained within the collection. These can be `video` or `collection` resource types.
 - __featured__ - The `featured` relationship is used to define which resources are a featured part of the collection. These can be `video` or `collection` resource types.
+
+## Promotion
+
+__Type:__ `promotion`
+
+### Attributes
+
+- __channel__ String
+- __title__ String
+- __description__ String
+- __images__ Array - contains [Image](#image) objects.
 
 ## Non-Resource Objects
 
