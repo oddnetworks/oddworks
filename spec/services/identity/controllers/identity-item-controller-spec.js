@@ -62,6 +62,7 @@ describe('Identity Service Controller', function () {
 	it('returns a channel object', function () {
 		const req = {
 			params: {id: 'odd-networks'},
+			query: {},
 			identity: {channel: {id: 'odd-networks'}}
 		};
 		const res = {};
@@ -76,6 +77,7 @@ describe('Identity Service Controller', function () {
 	it('returns a platform object', function () {
 		const req = {
 			params: {id: 'apple-ios'},
+			query: {},
 			identity: {channel: {id: 'odd-networks'}}
 		};
 		const res = {};
@@ -91,6 +93,7 @@ describe('Identity Service Controller', function () {
 	it('updates a channel object', function () {
 		const req = {
 			params: {id: 'odd-networks'},
+			query: {},
 			identity: {channel: 'odd-networks'},
 			body: {
 				title: 'Odd',
@@ -110,8 +113,9 @@ describe('Identity Service Controller', function () {
 	it('updates a platform object', function () {
 		const req = {
 			params: {id: 'apple-ios'},
+			query: {},
 			body: {
-				channel: 'odd-networks'
+				channel: 'odd-networks',
 				category: 'MOBILE'
 			}
 		};
