@@ -10,6 +10,7 @@ const identityService = require('../../../../lib/services/identity');
 
 describe('Identity Service Controller', function () {
 	let bus;
+	let res;
 
 	const CHANNEL = {
 		id: 'odd-networks',
@@ -25,6 +26,11 @@ describe('Identity Service Controller', function () {
 	beforeAll(function (done) {
 		bus = this.createBus();
 		this.service = null;
+
+		res = {
+			status() {
+			}
+		};
 
 		Promise.promisifyAll(fakeredis.RedisClient.prototype);
 		Promise.promisifyAll(fakeredis.Multi.prototype);
@@ -65,7 +71,6 @@ describe('Identity Service Controller', function () {
 			query: {},
 			identity: {channel: {id: 'odd-networks'}}
 		};
-		const res = {};
 
 		this.controller.channel.get(req, res, () => {
 			expect(res.body.id).toBe('odd-networks');
@@ -80,7 +85,6 @@ describe('Identity Service Controller', function () {
 			query: {},
 			identity: {channel: {id: 'odd-networks'}}
 		};
-		const res = {};
 
 		this.controller.platform.get(req, res, () => {
 			expect(res.body.id).toBe('apple-ios');
@@ -94,13 +98,12 @@ describe('Identity Service Controller', function () {
 		const req = {
 			params: {id: 'odd-networks'},
 			query: {},
-			identity: {channel: 'odd-networks'},
+			identity: {channel: {id: 'odd-networks'}},
 			body: {
 				title: 'Odd',
 				description: 'How odd are you?'
 			}
 		};
-		const res = {};
 
 		this.controller.channel.patch(req, res, () => {
 			expect(res.body.id).toBe('odd-networks');
@@ -114,12 +117,12 @@ describe('Identity Service Controller', function () {
 		const req = {
 			params: {id: 'apple-ios'},
 			query: {},
+			identity: {channel: {id: 'odd-networks'}},
 			body: {
 				channel: 'odd-networks',
 				category: 'MOBILE'
 			}
 		};
-		const res = {};
 
 		this.controller.platform.patch(req, res, () => {
 			expect(res.body.id).toBe('apple-ios');
@@ -127,6 +130,39 @@ describe('Identity Service Controller', function () {
 			expect(res.body.channel).toBe('odd-networks');
 			expect(res.body.title).toBe('Apple iOS');
 			expect(res.body.category).toBe('MOBILE');
+		});
+	});
+
+	it('deletes a channel object', function () {
+		const req = {
+			params: {id: 'odd-networks'},
+			query: {},
+			identity: {channel: {id: 'odd-networks'}},
+			body: {}
+		};
+
+		this.controller.channel.delete(req, res, () => {
+			expect(res.body.id).toBeUndefined();
+			expect(res.body.type).toBeUndefined();
+			expect(res.body.title).toBeUndefined();
+			expect(res.body.description).toBeUndefined();
+		});
+	});
+
+	it('deletes a platform object', function () {
+		const req = {
+			params: {id: 'apple-ios'},
+			query: {},
+			identity: {channel: {id: 'odd-networks'}},
+			body: {}
+		};
+
+		this.controller.platform.delete(req, res, () => {
+			expect(res.body.id).toBeUndefined();
+			expect(res.body.type).toBeUndefined();
+			expect(res.body.channel).toBeUndefined();
+			expect(res.body.title).toBeUndefined();
+			expect(res.body.category).toBeUndefined();
 		});
 	});
 });
