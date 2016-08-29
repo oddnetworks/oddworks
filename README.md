@@ -45,7 +45,7 @@ The implementation of these can be found in the `./lib/stores` directory.
 ### [services](https://github.com/oddnetworks/oddworks/tree/master/lib/services)
 
 - [catalog](https://github.com/oddnetworks/oddworks/blob/master/lib/services/catalog) (responsible for views, collections, and videos)
-- [identity](https://github.com/oddnetworks/oddworks/blob/master/lib/services/identity) (responsible for channels, platforms, users, authentication, and entitlements)
+- [identity](https://github.com/oddnetworks/oddworks/blob/master/lib/services/identity) (responsible for channels, platforms, viewers, authentication, and entitlements)
 - [server](https://github.com/oddnetworks/oddworks/blob/master/lib/services/identity) (a Node.js HTTP server)
 
 The implementation of these can be found in the `./lib/services` directory.

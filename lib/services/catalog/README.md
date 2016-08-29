@@ -55,7 +55,7 @@ Fetch a single content item.
 * args.type - String *required*
 * args.id - String *required*
 * args.platform - Object *required*
-* args.user - Object
+* args.viewer - Object
 * args.include - Array of String types to include
 
 **Result**
@@ -64,7 +64,7 @@ Fetch a single content item.
 
 **Feature Flags**
 
-When fetching a catalog resource it will be decorated with `meta` Object requested from **{role: 'identity', cmd: 'config'}**. The provided channel, platform and user objects will be used to compose the `meta` Object using a merge algorithm.
+When fetching a catalog resource it will be decorated with `meta` Object requested from **{role: 'identity', cmd: 'config'}**. The provided channel, platform and viewer objects will be used to compose the `meta` Object using a merge algorithm.
 
 #### fetchItemList
 `bus.query({role: 'catalog', cmd: 'fetchItemList'}, args)`
@@ -76,7 +76,7 @@ Fetch a list of content items.
 * args.channel - Object *required*
 * args.type - String *required*
 * args.platform - Object *required*
-* args.user - Object
+* args.viewer - Object
 * args.include - Array of String types to include on each returned resource
 * args.limit - A Number to limit the result set by
 
