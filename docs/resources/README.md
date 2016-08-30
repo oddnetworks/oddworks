@@ -50,7 +50,7 @@ __Type:__ `platform`
 
 ## Viewer
 
-__Type:__ `platform`
+__Type:__ `viewer`
 
 ### Attributes
 
