@@ -58,6 +58,19 @@ __Type:__ `platform`
 - __channel__ String
 - __active__ Boolean
 - __entitlements__ Array - list of string entitlement properties the viewer has
+
+## Config
+
+__Type:__ `config`
+
+Config object attributes determine which features and configuration details are available to a given Platform.
+
+### Attributes
+
+- __active__ Boolean
+- __display__ Array - computed from [Channel](#channel) and [Platform](#platform) objects
+- __features__ Object - computed from [Channel](#channel) and [Platform](#platform) objects
+- __views__ Object - set from [Platform](#platform) object
 - __jwt__ String
 
 ## View
