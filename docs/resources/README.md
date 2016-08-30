@@ -181,20 +181,23 @@ An identifier object is used as a reference to full resource objects. These are 
 - __id__ String - can be a slug-ified string or a UUID
 - __type__ String - must be one of the Oddworks resource types
 
-### Authentication
+### Features
+
+#### Authentication
 
 - __enabled__ Boolean
 
 What else goes here?
 
-### Sharing
+#### Sharing
 
 - __enabled__ Boolean
 - __text__ String - example: `Watch the @oddnetworks show live on mobile and TV connected devices!`
 
-### Metrics
+#### Metrics
 
 - __enabled__ Boolean
+- userAgent String - The user agent string to be used when posting events
 - __appInit__ Object
     - __action__ String - default: `app:init`
     - __enabled__ Boolean
