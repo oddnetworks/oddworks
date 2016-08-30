@@ -18,7 +18,7 @@ Config object attributes determine which features and configuration details are 
 - __channel__ String
 - __title__ String
 - __active__ Boolean
-- __display__ Array
+- __display__ Object
     - __images__ Array - contains [Image](#image) objects.
     - __colors__ Array - contains [Color](#color) objects.
     - __fonts__ Array - contains [Font](#font) objects
