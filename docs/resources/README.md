@@ -1,5 +1,8 @@
 # Resources
 
+- [__Channel__](#channel)
+- [__Platform__](#platform)
+- [__Viewer__](#viewer)
 - [__Config__](#config)
 - [__View__](#view)
 - [__Video__](#video)
@@ -7,15 +10,13 @@
 - [__Promotion__](#promotion)
 - [__Non-Resource Objects__](#non-resource-objects)
 
-## Config
+## Channel
 
-__Type:__ `config`
-
-Config object attributes determine which features and configuration details are available to a given Platform.
+__Type:__ `channel`
 
 ### Attributes
 
-- __channel__ String
+- __id__ String - the server's identifier for the Channel
 - __title__ String
 - __active__ Boolean
 - __display__ Array
@@ -26,16 +27,37 @@ Config object attributes determine which features and configuration details are 
     - __authentication__ [Authentication](#authentication)
     - __sharing__ [Sharing](#sharing)
     - __metrics__ [Metrics](#metrics)
-- __channel__ String - the server's identifier for the Channel
-- __platform__ Object
-    - __id__ String - the server's identifier for the requesting Platform's ID
-    - __type__ String - the server's identifier for the requesting Platform's type
-    - __category__ String - the server's identifier for the requesting Platform's category `WEB|TV|MOBILE`
-- __views__ Object - a simple key/value object to determine the name (key) and id (value) of the Views available to the requesting Platform
-- __user__ Object
-    - __id__ String
-    - __channel__ String
-    - __type__ String
+
+## Platform
+
+__Type:__ `platform`
+
+### Attributes
+
+- __id__ String - the server's identifier for the Platform
+- __title__ String - `Apple|Android|Web|Roku|Xbox`
+- __category__ String - `WEB|TV|MOBILE`
+- __active__ Boolean
+- __display__ Array
+    - __images__ Array - contains [Image](#image) objects.
+    - __colors__ Array - contains [Color](#color) objects.
+    - __fonts__ Array - contains [Font](#font) objects
+- __features__ Object
+    - __authentication__ [Authentication](#authentication)
+    - __sharing__ [Sharing](#sharing)
+    - __metrics__ [Metrics](#metrics)
+- __views__ Object - a simple key/value object to determine the name (key) and id (value) of the Views available
+
+## Viewer
+
+__Type:__ `platform`
+
+### Attributes
+
+- __id__ String - the server's identifier for the Viewer
+- __channel__ String
+- __active__ Boolean
+- __entitlements__ Array - list of string entitlement properties the viewer has
 - __jwt__ String
 
 ## View
