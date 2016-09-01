@@ -59,6 +59,12 @@ __Type:__ `viewer`
 - __active__ Boolean
 - __entitlements__ Array - list of string entitlement properties the viewer has
 
+### Relationships
+
+- __platforms__ Object - the viewer's currently "linked" platforms they have logged in with
+- __watchlist__ Object - collections and videos the viewer has set to "watch later"
+- __playstate__ Object - vidoes the viewer has in progress, each resouce will also have `meta` containing the actual play position of the video
+
 ## Config
 
 __Type:__ `config`
