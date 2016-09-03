@@ -2,16 +2,7 @@
 /* eslint prefer-arrow-callback: 0 */
 'use strict';
 
-let MockServerResponse;
-try {
-	MockServerResponse = require('mock-express-response/node_modules/mock-res');
-} catch (err) {
-	if (/Cannot find module/.test(err.message)) {
-		MockServerResponse = require('mock-res');
-	} else {
-		throw err;
-	}
-}
+const	MockServerResponse = require('mock-express-response/node_modules/mock-res');
 
 const support = require('../support/');
 

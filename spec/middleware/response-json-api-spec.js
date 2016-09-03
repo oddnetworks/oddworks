@@ -4,7 +4,6 @@
 'use strict';
 
 const JSONSchemaValidator = require('jsonschema').Validator;
-const Validator = new JSONSchemaValidator();
 const fakeredis = require('fakeredis');
 const MockExpressResponse = require('mock-express-response');
 const Promise = require('bluebird');
@@ -15,6 +14,8 @@ const identityService = require('../../lib/services/identity');
 const responseJsonApi = require('../../lib/middleware/response-json-api');
 const jsonApiSchema = require('../helpers/json-api-schema.json');
 const support = require('../support/');
+
+const Validator = new JSONSchemaValidator();
 
 describe('Middleware Response JSON API', () => {
 	let bus;
