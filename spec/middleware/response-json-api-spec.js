@@ -4,7 +4,6 @@
 'use strict';
 
 const JSONSchemaValidator = require('jsonschema').Validator;
-const Validator = new JSONSchemaValidator();
 const fakeredis = require('fakeredis');
 const MockExpressResponse = require('mock-express-response');
 const Promise = require('bluebird');
@@ -20,6 +19,7 @@ const COLLECTION = require('../fixtures/collections/collection-0.json');
 const REL_0 = require('../fixtures/videos/video-0.json');
 const REL_1 = require('../fixtures/videos/video-1.json');
 const REL_2 = require('../fixtures/videos/video-2.json');
+const Validator = new JSONSchemaValidator();
 
 describe('Middleware Response JSON API', () => {
 	let bus;
