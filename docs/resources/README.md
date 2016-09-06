@@ -107,6 +107,9 @@ __Type:__ `video`
 - __images__ Array - contains [Image](#image) objects.
 - __sources__ Array - contains one or more [Source](#source) objects.
 - __duration__ Integer - the duration of the video in milliseconds. Default: 0
+- __genres__ Array - contains a string of genres.
+- __cast__ Array - contains [Cast](#cast) objects.
+- __releaseDate_ String - ISO 8601 date string.
 
 ### Relationships
 
@@ -163,6 +166,14 @@ Some resources contain an array of images.
 - __width__ Integer
 - __maxBitrate__ String - figure this out
 - __label__ String - required. example `censored`
+
+### Cast
+
+Some resources contain an array of casts.
+
+- __name__ String
+- __role__ String
+- __character__ String
 
 ### Color
 
