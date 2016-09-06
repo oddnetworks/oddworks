@@ -19,6 +19,7 @@ const COLLECTION = require('../fixtures/collections/collection-0.json');
 const REL_0 = require('../fixtures/videos/video-0.json');
 const REL_1 = require('../fixtures/videos/video-1.json');
 const REL_2 = require('../fixtures/videos/video-2.json');
+
 const Validator = new JSONSchemaValidator();
 
 describe('Middleware Response JSON API', () => {
