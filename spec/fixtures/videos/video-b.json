@@ -1,0 +1,13 @@
+{
+	"id": "1111-B",
+	"type": "video",
+	"title": "B Video",
+	"description": "Description B",
+	"url": "http://www.nasa.gov/mp4/755425main_CoM_20130613b-320-jpl-2.mp3",
+	"meta": {
+		"source": "itunes",
+		"episode": "5",
+		"season": "1"
+	},
+	"channel": "channel-id"
+}

@@ -15,77 +15,17 @@ const responseJsonApi = require('../../lib/middleware/response-json-api');
 const jsonApiSchema = require('../helpers/json-api-schema.json');
 const support = require('../support/');
 
+const COLLECTION = require('../fixtures/collections/collection-0.json');
+const REL_0 = require('../fixtures/videos/video-0.json');
+const REL_1 = require('../fixtures/videos/video-1.json');
+const REL_2 = require('../fixtures/videos/video-2.json');
+
 const Validator = new JSONSchemaValidator();
 
 describe('Middleware Response JSON API', () => {
 	let bus;
 	const RES = new MockExpressResponse();
 	const RES2 = new MockExpressResponse();
-
-	const COLLECTION = Object.freeze({
-		id: '936ed036-45df-4190-afce-d71b860806d1',
-		type: 'collection',
-		channel: 'channel-id',
-		title: 'Title of the thing',
-		thing: 'This is a thing',
-		relationships: {
-			entities: {
-				data: [
-					{
-						id: '1111-0',
-						type: 'video'
-					},
-					{
-						id: '1111-1',
-						type: 'video'
-					},
-					{
-						id: '1111-2',
-						type: 'video'
-					}
-				]
-			}
-		},
-		meta: {
-			extra: 'info'
-		}
-	});
-
-	const REL_0 = Object.freeze({
-		id: '1111-0',
-		type: 'video',
-		title: 'Video 0',
-		description: 'Description 0',
-		url: 'http://www.nasa.gov/mp4/755425main_CoM_20130613b-320-jpl-0.mp4',
-		meta: {
-			source: 'itunes'
-		},
-		channel: 'channel-id'
-	});
-
-	const REL_1 = Object.freeze({
-		id: '1111-1',
-		type: 'video',
-		title: 'Video 1',
-		description: 'Description 1',
-		url: 'http://www.nasa.gov/mp4/755425main_CoM_20130613b-320-jpl-1.mp4',
-		meta: {
-			source: 'itunes'
-		},
-		channel: 'channel-id'
-	});
-
-	const REL_2 = Object.freeze({
-		id: '1111-2',
-		type: 'video',
-		title: 'Video 2',
-		description: 'Description 2',
-		url: 'http://www.nasa.gov/mp4/755425main_CoM_20130613b-320-jpl-2.mp3',
-		meta: {
-			source: 'itunes'
-		},
-		channel: 'channel-id'
-	});
 
 	const REQ = {
 		protocol: 'https',

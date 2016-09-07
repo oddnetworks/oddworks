@@ -1,0 +1,56 @@
+{
+	"id": "collection-1",
+	"type": "collection",
+	"channel": "channel-id",
+	"title": "Title of the thing",
+	"thing": "This is a thing",
+	"relationships": {
+		"entities": {
+			"data": [
+				{
+					"id": "1111-3",
+					"type": "video"
+				},
+				{
+					"id": "1111-5",
+					"type": "video"
+				},
+				{
+					"id": "1111-4",
+					"type": "video"
+				},
+				{
+					"id": "1111-10",
+					"type": "video"
+				},
+				{
+					"id": "1111-11",
+					"type": "video"
+				},
+				{
+					"id": "1111-30",
+					"type": "video"
+				},
+				{
+					"id": "1111-300",
+					"type": "video"
+				},
+				{
+					"id": "1111-A",
+					"type": "video"
+				},
+				{
+					"id": "1111-C",
+					"type": "video"
+				},
+				{
+					"id": "1111-B",
+					"type": "video"
+				}
+			]
+		}
+	},
+	"meta": {
+		"extra": "info"
+	}
+}

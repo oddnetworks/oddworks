@@ -1,0 +1,6 @@
+{
+	"id": "apple-ios",
+	"type": "platform",
+	"title": "Apple iOS",
+	"channel": "channel-id"
+}
