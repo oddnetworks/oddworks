@@ -1,0 +1,11 @@
+{
+	"id": "1111-0",
+	"type": "video",
+	"title": "Video 0",
+	"description": "Description 0",
+	"url": "http://www.nasa.gov/mp4/755425main_CoM_20130613b-320-jpl-0.mp4",
+	"meta": {
+		"source": "itunes"
+	},
+	"channel": "channel-id"
+}
