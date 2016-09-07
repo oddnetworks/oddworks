@@ -106,7 +106,7 @@ __Type:__ `video`
 - __description__ String
 - __images__ Array - contains [Image](#image) objects.
 - __sources__ Array - contains one or more [Source](#source) objects.
-- __duration__ Integer - the duration of the video in milliseconds. Default: 0
+- __duration__ Integer - the duration of the video in milliseconds. Default: `0`
 - __genres__ Array - contains a string of genres.
 - __cast__ Array - contains [Cast](#cast) objects.
 - __releaseDate_ String - ISO 8601 date string.
@@ -152,20 +152,20 @@ These are objects common to multiple different Resource objects.
 Some resources contain an array of images.
 
 - __url__ String
-- __mimeType__ String - example `image/png`
-- __width__ Integer - example `1280`
-- __height__ Integer - example `720`
-- __label__ String - required. example `box-art`
+- __mimeType__ String - Example: `image/png`
+- __width__ Integer - Example: `1280`
+- __height__ Integer - Example: `720`
+- __label__ String - required. Example: `box-art`
 
 ### Source
 
 - __url__ String
-- __container__ String - example `hls`
-- __mimeType__ String - example `application/x-mpegURL`
+- __container__ String - Example: `hls`
+- __mimeType__ String - Example: `application/x-mpegURL`
 - __height__ Integer
 - __width__ Integer
-- __maxBitrate__ String - figure this out
-- __label__ String - required. example `censored`
+- __maxBitrate__ Integer - the maximum bitrate in kbps. Example: `3000`. Default: `0`
+- __label__ String - required. Example: `censored`
 
 ### Cast
 
@@ -209,34 +209,34 @@ What else goes here?
 #### Sharing
 
 - __enabled__ Boolean
-- __text__ String - example: `Watch the @oddnetworks show live on mobile and TV connected devices!`
+- __text__ String - Example: `Watch the @oddnetworks show live on mobile and TV connected devices!`
 
 #### Metrics
 
 - __enabled__ Boolean
 - userAgent String - The user agent string to be used when posting events
 - __appInit__ Object
-    - __action__ String - default: `app:init`
+    - __action__ String - Default: `app:init`
     - __enabled__ Boolean
 - __viewLoad__ Object
-    - __action__ String - default: `view:load`
+    - __action__ String - Default: `view:load`
     - __enabled__ Boolean
 - __videoLoad__ Object
-    - __action__ String - default: `video:load`
+    - __action__ String - Default: `video:load`
     - __enabled__ Boolean
 - __videoPlay__ Object
-    - __action__ String - default: `video:play`
+    - __action__ String - Default: `video:play`
     - __enabled__ Boolean
 - __videoPlaying__ Object
-    - __action__ String - default: `video:playing`
+    - __action__ String - Default: `video:playing`
     - __enabled__ Boolean
     - __interval__ Integer - time in milliseconds
 - __videoStop__ Object
-    - __action__ String - default: `video:stop`
+    - __action__ String - Default: `video:stop`
     - __enabled__ Boolean
 - __videoError__ Object
-    - __action__ String - default: `video:error`
+    - __action__ String - Default: `video:error`
     - __enabled__ Boolean
 - __userNew__ Object
-    - __action__ String - default: `user:new`
+    - __action__ String - Default: `user:new`
     - __enabled__ Boolean
