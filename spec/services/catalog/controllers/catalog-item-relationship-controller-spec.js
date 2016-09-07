@@ -289,4 +289,36 @@ describe('Catalog Item Relationship Controller', function () {
 			expect(data[9].id).toBe('1111-300');
 		});
 	});
+
+	it('with page query param, something happens', function () {
+		const req = {
+			params: {
+				id: COLLECTION_1.id,
+				relationshipKey: 'entities'
+			},
+			query: {
+				sort: 'title',
+				page: {
+					offset: '1',
+					limit: 3
+				},
+				include: ['entities']
+			},
+			identity: {channel: {id: CHANNEL.id},
+			platform: {id: PLATFORM.id},
+			user: {id: USER.id}}
+		};
+		const res = {
+			body: {},
+			status() {}
+		};
+
+		this.controller.relationship.get(req, res, () => {
+			const data = res.body.data;
+			expect(res.body.included.length).toBe(3);
+			expect(data.length).toBe(3);
+			expect(data[0].id).toBe('1111-10');
+			expect(res.body.included[0].title).toBe('10 Video');
+		});
+	});
 });
