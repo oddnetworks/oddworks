@@ -3,7 +3,26 @@
 	"type": "video",
 	"title": "C Video",
 	"description": "Description C",
-	"url": "http://www.nasa.gov/mp4/755425main_CoM_20130613b-320-jpl-2.mp3",
+  "sources": [
+    {
+      "url": "http://www.nasa.gov/sites/default/files/atoms/video/lrc_2016_0905_168-viking-40_the-viking-team.mp4",
+      "container": "mp4",
+      "mimeType": "video/mp4",
+      "width": 1920,
+      "height": 1080,
+      "maxBitrate": 2923,
+      "label": "main"
+    }
+  ],
+  "images": [
+    {
+      "url": "http://www.oddnetworks.com.s3.amazonaws.com/assets/img/hero-odd-logo.png",
+      "mimeType": "image/png",
+      "width": 422,
+      "height": 467,
+      "label": "logo"
+    }
+  ],
 	"meta": {
 		"source": "itunes",
 		"episode": "6",

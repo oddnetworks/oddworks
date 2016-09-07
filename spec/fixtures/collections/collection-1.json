@@ -3,7 +3,15 @@
 	"type": "collection",
 	"channel": "channel-id",
 	"title": "Title of the thing",
-	"thing": "This is a thing",
+  "images": [
+    {
+      "url": "http://www.oddnetworks.com.s3.amazonaws.com/assets/img/hero-odd-logo.png",
+      "mimeType": "image/png",
+      "width": 422,
+      "height": 467,
+      "label": "logo"
+    }
+  ],
 	"relationships": {
 		"entities": {
 			"data": [
