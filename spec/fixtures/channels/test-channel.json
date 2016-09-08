@@ -1,0 +1,73 @@
+{
+	"id": "channel-id",
+	"type": "channel",
+	"title": "Odd Networks",
+  "active": true,
+  "display": {
+    "images": [
+      {
+        "url": "http://www.oddnetworks.com.s3.amazonaws.com/assets/img/hero-odd-logo.png",
+        "mimeType": "image/png",
+        "width": 422,
+        "height": 467,
+        "label": "logo"
+      }
+    ],
+    "colors": [
+      {
+        "red": 84,
+        "green": 46,
+        "blue": 142,
+        "alpha": 255,
+        "label": "primary"
+      }
+    ],
+    "fonts": []
+  },
+  "features": {
+    "authentication": {
+      "enabled": false
+    },
+    "sharing": {
+      "enabled": false,
+      "text": "Watch Odd Networks and follow @oddnetworks"
+    },
+    "metrics": {
+      "enabled": true,
+      "userAgent": "",
+      "appInit": {
+        "enabled": true,
+        "action": "app:init"
+      },
+      "viewLoad": {
+        "enabled": true,
+        "action": "view:load"
+      },
+      "videoLoad": {
+        "enabled": true,
+        "action": "video:load"
+      },
+      "videoPlay": {
+        "enabled": true,
+        "action": "video:play"
+      },
+      "videoPlaying": {
+        "enabled": false,
+        "action": "video:playing",
+        "interval": 30000
+      },
+      "videoStop": {
+        "enabled": true,
+        "action": "video:stop"
+      },
+      "videoError": {
+        "enabled": true,
+        "action": "video:error"
+      },
+      "userNew": {
+        "enabled": true,
+        "action": "user:new"
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+	"id": "collection-0",
+	"type": "collection",
+	"channel": "channel-id",
+	"title": "Title of the thing",
+	"images": [
+    {
+      "url": "http://www.oddnetworks.com.s3.amazonaws.com/assets/img/hero-odd-logo.png",
+      "mimeType": "image/png",
+      "width": 422,
+      "height": 467,
+      "label": "logo"
+    }
+  ],
+	"relationships": {
+		"entities": {
+			"data": [
+				{
+					"id": "1111-0",
+					"type": "video"
+				},
+				{
+					"id": "1111-1",
+					"type": "video"
+				},
+				{
+					"id": "1111-2",
+					"type": "video"
+				}
+			]
+		}
+	},
+	"meta": {
+		"extra": "info"
+	}
+}
