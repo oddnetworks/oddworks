@@ -199,6 +199,34 @@ describe('Redis Store', function () {
 				const included = RESULTS.get.video.included || [];
 				expect(included.length).toBe(0);
 			});
+
+			describe('with wrong type for args.include', function () {
+				let result;
+
+				beforeAll(function (done) {
+					Promise.resolve(null)
+						.then(() => {
+							return bus.query({role, cmd: 'get', type: 'collection'}, {
+								channel: 'hbogo',
+								id: RESULTS.get.collection.id,
+								type: RESULTS.get.collection.type,
+								include: 'entities'
+							});
+						})
+						// Record Error result
+						.catch(err => {
+							result = err;
+						})
+						// End test setup
+						.then(done)
+						.catch(done.fail);
+				});
+
+				it('raises an throws an error', function () {
+					expect(result instanceof Error).toBeTruthy();
+					expect(result.message).toBe('args.include must be an array.');
+				});
+			});
 		});
 
 		describe('when not found', function () {
