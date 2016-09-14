@@ -15,7 +15,7 @@ describe('Catalog Item Relationship Controller', function () {
 	const CHANNEL = require('../../../fixtures/channels/test-channel.json');
 	const COLLECTION = require('../../../fixtures/collections/collection-0.json');
 	const PLATFORM = require('../../../fixtures/platforms/test-channel-apple-ios.json');
-	const USER = require('../../../fixtures/users/user-0.json');
+	const VIEWER = require('../../../fixtures/viewers/viewer-0.json');
 	const VIDEO_0 = require('../../../fixtures/videos/video-0');
 	const VIDEO_1 = require('../../../fixtures/videos/video-1');
 	const VIDEO_2 = require('../../../fixtures/videos/video-2');
@@ -46,7 +46,7 @@ describe('Catalog Item Relationship Controller', function () {
 
 		// Initialize a store
 		redisStore(bus, {
-			types: ['channel', 'platform', 'user', 'collection', 'video'],
+			types: ['channel', 'platform', 'viewer', 'collection', 'video'],
 			redis: fakeredis.createClient()
 		})
 		.then(store => {
@@ -72,7 +72,7 @@ describe('Catalog Item Relationship Controller', function () {
 			return Promise.join(
 				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL),
 				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'user'}, USER),
+				bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER),
 				bus.sendCommand({role: 'catalog', cmd: 'setItem', type: 'collection'}, COLLECTION),
 				bus.sendCommand({role: 'catalog', cmd: 'setItem', type: 'video'}, VIDEO_0),
 				bus.sendCommand({role: 'catalog', cmd: 'setItem', type: 'video'}, VIDEO_1),
@@ -101,7 +101,7 @@ describe('Catalog Item Relationship Controller', function () {
 	// 		query: {},
 	// 		identity: {channel: {id: CHANNEL.id},
 	// 		platform: {id: PLATFORM.id},
-	// 		user: {id: USER.id}}
+	// 		viewer: {id: VIEWER.id}}
 	// 	};
 	// 	const res = {
 	// 		body: {},
@@ -125,7 +125,7 @@ describe('Catalog Item Relationship Controller', function () {
 			query: {},
 			identity: {channel: {id: CHANNEL.id},
 			platform: {id: PLATFORM.id},
-			user: {id: USER.id}}
+			viewer: {id: VIEWER.id}}
 		};
 		const res = {
 			body: {},
@@ -147,7 +147,7 @@ describe('Catalog Item Relationship Controller', function () {
 	// 		query: {include: ['entities']},
 	// 		identity: {channel: {id: CHANNEL.id},
 	// 		platform: {id: PLATFORM.id},
-	// 		user: {id: USER.id}}
+	// 		viewer: {id: VIEWER.id}}
 	// 	};
 	// 	const res = {
 	// 		body: {},
@@ -169,7 +169,7 @@ describe('Catalog Item Relationship Controller', function () {
 			query: {sort: 'title'},
 			identity: {channel: {id: CHANNEL.id},
 			platform: {id: PLATFORM.id},
-			user: {id: USER.id}}
+			viewer: {id: VIEWER.id}}
 		};
 		const res = {
 			body: {},
@@ -204,7 +204,7 @@ describe('Catalog Item Relationship Controller', function () {
 	// 		},
 	// 		identity: {channel: {id: CHANNEL.id},
 	// 		platform: {id: PLATFORM.id},
-	// 		user: {id: USER.id}}
+	// 		viewer: {id: VIEWER.id}}
 	// 	};
 	// 	const res = {
 	// 		body: {},
@@ -235,7 +235,7 @@ describe('Catalog Item Relationship Controller', function () {
 			query: {sort: '-title'},
 			identity: {channel: {id: CHANNEL.id},
 			platform: {id: PLATFORM.id},
-			user: {id: USER.id}}
+			viewer: {id: VIEWER.id}}
 		};
 		const res = {
 			body: {},
@@ -267,7 +267,7 @@ describe('Catalog Item Relationship Controller', function () {
 			query: {sort: 'meta.episode'},
 			identity: {channel: {id: CHANNEL.id},
 			platform: {id: PLATFORM.id},
-			user: {id: USER.id}}
+			viewer: {id: VIEWER.id}}
 		};
 		const res = {
 			body: {},
@@ -305,7 +305,7 @@ describe('Catalog Item Relationship Controller', function () {
 			},
 			identity: {channel: {id: CHANNEL.id},
 			platform: {id: PLATFORM.id},
-			user: {id: USER.id}}
+			viewer: {id: VIEWER.id}}
 		};
 		const res = {
 			body: {},
