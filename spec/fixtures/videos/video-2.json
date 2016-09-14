@@ -1,0 +1,30 @@
+{
+	"id": "1111-2",
+	"type": "video",
+	"title": "Video 2",
+	"description": "Description 2",
+  "sources": [
+    {
+      "url": "http://www.nasa.gov/sites/default/files/atoms/video/lrc_2016_0905_168-viking-40_the-viking-team.mp4",
+      "container": "mp4",
+      "mimeType": "video/mp4",
+      "width": 1920,
+      "height": 1080,
+      "maxBitrate": 2923,
+      "label": "main"
+    }
+  ],
+  "images": [
+    {
+      "url": "http://www.oddnetworks.com.s3.amazonaws.com/assets/img/hero-odd-logo.png",
+      "mimeType": "image/png",
+      "width": 422,
+      "height": 467,
+      "label": "logo"
+    }
+  ],
+	"meta": {
+		"source": "itunes"
+	},
+	"channel": "channel-id"
+}

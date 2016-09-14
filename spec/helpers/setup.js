@@ -7,7 +7,8 @@ try {
 	MockServerResponse = require('mock-express-response/node_modules/mock-res');
 } catch (err) {
 	if (/Cannot find module/.test(err.message)) {
-		MockServerResponse = require('mock-res');
+		// For some reason, this is how MockServerResponse is required on the CI
+		MockServerResponse = require('mock-res'); // eslint-disable-line import/no-extraneous-dependencies
 	} else {
 		throw err;
 	}
