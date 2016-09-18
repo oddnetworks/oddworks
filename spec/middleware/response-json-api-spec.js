@@ -126,8 +126,8 @@ describe('Middleware Response JSON API', function () {
 			expect(v.valid).toBe(true);
 		});
 
-		it('has no includes array', function () {
-			expect(res.body.includes).not.toBeDefined();
+		it('has no included array', function () {
+			expect(res.body.included).not.toBeDefined();
 		});
 
 		it('has a self link', function () {
@@ -151,7 +151,7 @@ describe('Middleware Response JSON API', function () {
 			middleware = responseJsonApi({bus});
 
 			return Promise.resolve(null)
-				// Load seed data (without using include)
+				// Load seed data
 				.then(() => {
 					const role = 'store';
 					const cmd = 'get';
@@ -187,7 +187,7 @@ describe('Middleware Response JSON API', function () {
 			expect(v.valid).toBe(true);
 		});
 
-		it('has an includes array', function () {
+		it('has an included array', function () {
 			expect(Array.isArray(res.body.included)).toBe(true);
 			expect(res.body.included.length).toBe(3);
 		});
@@ -205,6 +205,86 @@ describe('Middleware Response JSON API', function () {
 
 		it('adds a meta block', function () {
 			expect(res.body.meta).toEqual({channel: 'channel-id', platform: 'APPLE_TV'});
+		});
+	});
+
+	describe('with missing included resources', function () {
+		let brokenCollection = null;
+		let req = null;
+		let res = null;
+		let middleware = null;
+
+		beforeAll(function (done) {
+			req = _.cloneDeep(REQ);
+			req.query = {include: 'entities,video'};
+			res = new MockExpressResponse();
+			middleware = responseJsonApi({bus});
+
+			brokenCollection = _.cloneDeep(COLLECTION);
+			brokenCollection.id = _.uniqueId('broken-collection-');
+
+			// Create broken references to videos.
+			const data = brokenCollection.relationships.entities.data.map(item => {
+				item.id = `xxx-${item.id}`;
+				return item;
+			});
+
+			brokenCollection.relationships.entities.data = data;
+
+			return Promise.resolve(null)
+				// Seed content
+				.then(() => {
+					const cmd = 'set';
+					const role = 'store';
+
+					return Promise.all([
+						bus.sendCommand({role, cmd, type: 'collection'}, brokenCollection)
+					]);
+				})
+				// Load seed data
+				.then(() => {
+					const role = 'store';
+					const cmd = 'get';
+					const type = 'collection';
+
+					const args = {
+						channel: 'channel-id',
+						type,
+						id: brokenCollection.id,
+						platform: 'platform-id',
+						include: ['entities']
+					};
+
+					return bus.query({role, cmd, type}, args).then(result => {
+						res.body = result;
+					});
+				})
+				.then(() => {
+					return middleware(req, res, err => {
+						if (err) {
+							return done.fail(err);
+						}
+						done();
+					});
+				})
+				.then(_.noop)
+				.then(done)
+				.catch(done.fail);
+		});
+
+		it('formats response body to valid jsonapi.org schema', function () {
+			const v = Validator.validate(res.body, jsonApiSchema);
+			expect(v.valid).toBe(true);
+		});
+
+		it('has an included array', function () {
+			expect(Array.isArray(res.body.included)).toBe(true);
+			expect(res.body.included.length).toBe(0);
+		});
+
+		it('has no relationships references', function () {
+			const relationships = res.body.data.relationships;
+			expect(relationships.entities.data.length).toBe(0);
 		});
 	});
 });
