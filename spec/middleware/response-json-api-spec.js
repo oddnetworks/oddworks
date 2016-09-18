@@ -288,6 +288,78 @@ describe('Middleware Response JSON API', function () {
 		});
 	});
 
+	// xdescribe('with listing data', function () {
+	// 	let req = null;
+	// 	let res = null;
+	// 	let middleware = null;
+
+	// 	beforeAll(function (done) {
+	// 		req = _.cloneDeep(REQ);
+	// 		req.query = {include: 'entities,video'};
+	// 		res = new MockExpressResponse();
+	// 		middleware = responseJsonApi({bus});
+	// 		done();
+	// 	});
+	// });
+
+	describe('with baseUrlPrefix', function () {
+		let req = null;
+		let res = null;
+		let middleware = null;
+
+		beforeAll(function (done) {
+			req = _.cloneDeep(REQ);
+			req.query = {include: 'entities,video'};
+			res = new MockExpressResponse();
+			middleware = responseJsonApi({
+				bus,
+				baseUrlPrefix: '/v2'
+			});
+
+			return Promise.resolve(null)
+				// Load seed data
+				.then(() => {
+					const role = 'store';
+					const cmd = 'get';
+					const type = 'collection';
+
+					const args = {
+						channel: 'channel-id',
+						type,
+						id: COLLECTION.id,
+						platform: 'platform-id',
+						include: ['entities']
+					};
+
+					return bus.query({role, cmd, type}, args).then(result => {
+						res.body = result;
+					});
+				})
+				.then(() => {
+					return middleware(req, res, err => {
+						if (err) {
+							return done.fail(err);
+						}
+						done();
+					});
+				})
+				.then(_.noop)
+				.then(done)
+				.catch(done.fail);
+		});
+
+		it('includes base prefix in included resources links', function () {
+			const included = res.body.included || [];
+			expect(included[0].links.self).toBe('https://example.com:3000/v2/videos/1111-0');
+			expect(included[1].links.self).toBe('https://example.com:3000/v2/videos/1111-1');
+			expect(included[2].links.self).toBe('https://example.com:3000/v2/videos/1111-2');
+		});
+
+		it('includes base prefix in self link', function () {
+			expect(res.body.links.self).toBe('https://example.com:3000/v2/collections/collection-0');
+		});
+	});
+
 	describe('with excludePortFromLinks == true', function () {
 		let req = null;
 		let res = null;
