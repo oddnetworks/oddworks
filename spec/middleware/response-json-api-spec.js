@@ -130,6 +130,10 @@ describe('Middleware Response JSON API', function () {
 			expect(res.body.includes).not.toBeDefined();
 		});
 
+		it('has a self link', function () {
+			expect(res.body.links.self).toBe('https://example.com:3000/collections/collection-0');
+		});
+
 		it('adds a meta block', function () {
 			expect(res.body.meta).toEqual({channel: 'channel-id', platform: 'APPLE_TV'});
 		});
@@ -186,6 +190,17 @@ describe('Middleware Response JSON API', function () {
 		it('has an includes array', function () {
 			expect(Array.isArray(res.body.included)).toBe(true);
 			expect(res.body.included.length).toBe(3);
+		});
+
+		it('has included resources with self links', function () {
+			const included = res.body.included || [];
+			expect(included[0].links.self).toBe('https://example.com:3000/videos/1111-0');
+			expect(included[1].links.self).toBe('https://example.com:3000/videos/1111-1');
+			expect(included[2].links.self).toBe('https://example.com:3000/videos/1111-2');
+		});
+
+		it('has a self link', function () {
+			expect(res.body.links.self).toBe('https://example.com:3000/collections/collection-0');
 		});
 
 		it('adds a meta block', function () {
