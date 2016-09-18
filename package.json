@@ -5,7 +5,7 @@
   "main": "./lib/oddworks.js",
   "scripts": {
     "setup": "npm link",
-    "test": "NODE_ENV=test npm run lint && npm run sec && jasmine",
+    "test": "NODE_ENV=test npm run lint && NODE_ENV=test npm run sec && NODE_ENV=test jasmine",
     "lint": "xo",
     "sec": "./node_modules/.bin/nsp check -o summary --warn-only"
   },
