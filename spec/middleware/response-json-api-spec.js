@@ -1,4 +1,4 @@
-/* global describe, beforeAll, it, expect */
+/* global describe, beforeAll, it, expect, xit */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
@@ -288,19 +288,58 @@ describe('Middleware Response JSON API', function () {
 		});
 	});
 
-	// xdescribe('with listing data', function () {
-	// 	let req = null;
-	// 	let res = null;
-	// 	let middleware = null;
+	describe('with listing data', function () {
+		let req = null;
+		let res = null;
+		let middleware = null;
+		let resources = null;
 
-	// 	beforeAll(function (done) {
-	// 		req = _.cloneDeep(REQ);
-	// 		req.query = {include: 'entities,video'};
-	// 		res = new MockExpressResponse();
-	// 		middleware = responseJsonApi({bus});
-	// 		done();
-	// 	});
-	// });
+		const resourceFactory = () => {
+			const collection = _.cloneDeep(COLLECTION);
+			collection.id = _.uniqueId('random-resource-');
+			return collection;
+		};
+
+		beforeAll(function (done) {
+			middleware = responseJsonApi({bus});
+			resources = _.range(14).map(resourceFactory);
+
+			req = _.cloneDeep(REQ);
+			res = new MockExpressResponse();
+
+			res.body = resources;
+			res.body.linksQueries = {
+				next: {
+					'page[limit]': 10,
+					'page[offset]': 11
+				}
+			};
+
+			return middleware(req, res, err => {
+				if (err) {
+					return done.fail(err);
+				}
+				done();
+			});
+		});
+
+		it('formats response body to valid jsonapi.org schema', function () {
+			const v = Validator.validate(res.body, jsonApiSchema);
+			expect(v.valid).toBe(true);
+		});
+
+		it('includes all the resources in the listing', function () {
+			const items = res.body.data;
+			expect(Array.isArray(items)).toBe(true);
+			expect(items.length).toBe(14);
+			expect(items[2].id).toBe(resources[2].id);
+		});
+
+		xit('sets the resource next link', function () {
+			const links = res.body.links;
+			expect(links.next).toBe('foo');
+		});
+	});
 
 	describe('with baseUrlPrefix', function () {
 		let req = null;
