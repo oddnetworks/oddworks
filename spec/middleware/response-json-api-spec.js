@@ -1,8 +1,10 @@
-/* global describe, beforeAll, it, expect, xit */
+/* global describe, beforeAll, it, expect */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
 
+const querystring = require('querystring');
+const url = require('url');
 const JSONSchemaValidator = require('jsonschema').Validator;
 const fakeredis = require('fakeredis');
 const MockExpressResponse = require('mock-express-response');
@@ -305,6 +307,8 @@ describe('Middleware Response JSON API', function () {
 			resources = _.range(14).map(resourceFactory);
 
 			req = _.cloneDeep(REQ);
+			req.url = `/collections?${querystring.stringify({'page[limit]': 14, 'page[offset]': 0})}`;
+
 			res = new MockExpressResponse();
 
 			res.body = resources;
@@ -335,9 +339,22 @@ describe('Middleware Response JSON API', function () {
 			expect(items[2].id).toBe(resources[2].id);
 		});
 
-		xit('sets the resource next link', function () {
+		it('sets the resource self link', function () {
 			const links = res.body.links;
-			expect(links.next).toBe('foo');
+			expect(links.self).toBe('https://example.com:3000/collections?page%5Blimit%5D=14&page%5Boffset%5D=0');
+			const urlObject = url.parse(links.self);
+			const query = querystring.parse(urlObject.query);
+			expect(query['page[limit]']).toBe('14');
+			expect(query['page[offset]']).toBe('0');
+		});
+
+		it('sets the resource next link', function () {
+			const links = res.body.links;
+			expect(links.next).toBe('https://example.com:3000/collections?page%5Blimit%5D=10&page%5Boffset%5D=11');
+			const urlObject = url.parse(links.next);
+			const query = querystring.parse(urlObject.query);
+			expect(query['page[limit]']).toBe('10');
+			expect(query['page[offset]']).toBe('11');
 		});
 	});
 
