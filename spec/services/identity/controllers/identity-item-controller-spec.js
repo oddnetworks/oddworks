@@ -65,7 +65,7 @@ describe('Identity Service Controller', function () {
 		.catch(done.fail);
 	});
 
-	it('returns a channel object', function () {
+	it('returns a channel object', function (done) {
 		const req = {
 			params: {id: 'odd-networks'},
 			query: {},
@@ -76,10 +76,11 @@ describe('Identity Service Controller', function () {
 			expect(res.body.id).toBe('odd-networks');
 			expect(res.body.type).toBe('channel');
 			expect(res.body.title).toBe('Odd Networks');
+			done();
 		});
 	});
 
-	it('returns a platform object', function () {
+	it('returns a platform object', function (done) {
 		const req = {
 			params: {id: 'apple-ios'},
 			query: {},
@@ -91,10 +92,11 @@ describe('Identity Service Controller', function () {
 			expect(res.body.type).toBe('platform');
 			expect(res.body.channel).toBe('odd-networks');
 			expect(res.body.title).toBe('Apple iOS');
+			done();
 		});
 	});
 
-	it('updates a channel object', function () {
+	it('updates a channel object', function (done) {
 		const req = {
 			params: {id: 'odd-networks'},
 			query: {},
@@ -110,10 +112,11 @@ describe('Identity Service Controller', function () {
 			expect(res.body.type).toBe('channel');
 			expect(res.body.title).toBe('Odd');
 			expect(res.body.description).toBe('How odd are you?');
+			done();
 		});
 	});
 
-	it('updates a platform object', function () {
+	it('updates a platform object', function (done) {
 		const req = {
 			params: {id: 'apple-ios'},
 			query: {},
@@ -130,10 +133,11 @@ describe('Identity Service Controller', function () {
 			expect(res.body.channel).toBe('odd-networks');
 			expect(res.body.title).toBe('Apple iOS');
 			expect(res.body.category).toBe('MOBILE');
+			done();
 		});
 	});
 
-	it('deletes a channel object', function () {
+	it('deletes a channel object', function (done) {
 		const req = {
 			params: {id: 'odd-networks'},
 			query: {},
@@ -146,10 +150,11 @@ describe('Identity Service Controller', function () {
 			expect(res.body.type).toBeUndefined();
 			expect(res.body.title).toBeUndefined();
 			expect(res.body.description).toBeUndefined();
+			done();
 		});
 	});
 
-	it('deletes a platform object', function () {
+	it('deletes a platform object', function (done) {
 		const req = {
 			params: {id: 'apple-ios'},
 			query: {},
@@ -163,6 +168,7 @@ describe('Identity Service Controller', function () {
 			expect(res.body.channel).toBeUndefined();
 			expect(res.body.title).toBeUndefined();
 			expect(res.body.category).toBeUndefined();
+			done();
 		});
 	});
 });
