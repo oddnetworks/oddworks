@@ -90,7 +90,7 @@ describe('Catalog Service Controller', function () {
 		.catch(done.fail);
 	});
 
-	it('returns a collection object', function () {
+	it('returns a collection object', function (done) {
 		const req = {
 			params: {id: 'collection-13'},
 			query: {},
@@ -107,10 +107,11 @@ describe('Catalog Service Controller', function () {
 			expect(res.body.type).toBe('collection');
 			expect(res.body.title).toBe('Collection 13');
 			expect(res.body.channel).toBe('odd-networks');
+			done();
 		});
 	});
 
-	it('returns a video object', function () {
+	it('returns a video object', function (done) {
 		const req = {
 			params: {id: 'video-13'},
 			query: {},
@@ -127,10 +128,11 @@ describe('Catalog Service Controller', function () {
 			expect(res.body.type).toBe('video');
 			expect(res.body.title).toBe('Video 13');
 			expect(res.body.channel).toBe('odd-networks');
+			done();
 		});
 	});
 
-	it('updates a collection object', function () {
+	it('updates a collection object', function (done) {
 		const req = {
 			params: {id: 'collection-13'},
 			query: {},
@@ -151,10 +153,11 @@ describe('Catalog Service Controller', function () {
 			expect(res.body.type).toBe('collection');
 			expect(res.body.title).toBe('Odd');
 			expect(res.body.description).toBe('How odd are you?');
+			done();
 		});
 	});
 
-	it('updates a video object', function () {
+	it('updates a video object', function (done) {
 		const req = {
 			params: {id: 'video-13'},
 			query: {},
@@ -176,10 +179,11 @@ describe('Catalog Service Controller', function () {
 			expect(res.body.channel).toBe('odd-networks');
 			expect(res.body.title).toBe('Video 13');
 			expect(res.body.actor).toBe('Batman');
+			done();
 		});
 	});
 
-	it('deletes a collection object', function () {
+	it('deletes a collection object', function (done) {
 		const req = {
 			params: {id: 'collection-13'},
 			query: {},
@@ -197,10 +201,11 @@ describe('Catalog Service Controller', function () {
 			expect(res.body.type).toBeUndefined();
 			expect(res.body.title).toBeUndefined();
 			expect(res.body.description).toBeUndefined();
+			done();
 		});
 	});
 
-	it('deletes a video object', function () {
+	it('deletes a video object', function (done) {
 		const req = {
 			params: {id: 'video-13'},
 			query: {},
@@ -219,6 +224,7 @@ describe('Catalog Service Controller', function () {
 			expect(res.body.channel).toBeUndefined();
 			expect(res.body.title).toBeUndefined();
 			expect(res.body.category).toBeUndefined();
+			done();
 		});
 	});
 });
