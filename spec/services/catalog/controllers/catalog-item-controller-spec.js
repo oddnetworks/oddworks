@@ -94,7 +94,12 @@ describe('Catalog Service Controller', function () {
 		const req = {
 			params: {id: 'collection-13'},
 			query: {},
-			identity: {channel: {id: 'odd-networks'}, platform: {id: 'apple-ios'}, user: {id: 'user-id'}}
+			identity: {
+				channel: {id: 'odd-networks'},
+				platform: {id: 'apple-ios'},
+				user: {id: 'user-id'},
+				audience: 'admin'
+			}
 		};
 		const res = {
 			body: {},
@@ -136,7 +141,12 @@ describe('Catalog Service Controller', function () {
 		const req = {
 			params: {id: 'collection-13'},
 			query: {},
-			identity: {channel: {id: 'odd-networks'}, platform: {id: 'apple-ios'}, user: {id: 'user-id'}},
+			identity: {
+				channel: {id: 'odd-networks'},
+				platform: {id: 'apple-ios'},
+				user: {id: 'user-id'},
+				audience: 'admin'
+			},
 			body: {
 				title: 'Odd',
 				description: 'How odd are you?'
@@ -161,7 +171,12 @@ describe('Catalog Service Controller', function () {
 		const req = {
 			params: {id: 'video-13'},
 			query: {},
-			identity: {channel: {id: 'odd-networks'}, platform: {id: 'apple-ios'}, user: {id: 'user-id'}},
+			identity: {
+				channel: {id: 'odd-networks'},
+				platform: {id: 'apple-ios'},
+				user: {id: 'user-id'},
+				audience: 'admin'
+			},
 			body: {
 				channel: 'odd-networks',
 				actor: 'Batman'
