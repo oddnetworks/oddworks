@@ -109,7 +109,7 @@ __Type:__ `video`
 - __duration__ Integer - the duration of the video in milliseconds. Default: `0`
 - __genres__ Array - contains a string of genres.
 - __cast__ Array - contains [Cast](#cast) objects.
-- __releaseDate_ String - ISO 8601 date string.
+- __releaseDate__ String - ISO 8601 date string.
 
 ### Relationships
 
@@ -125,6 +125,8 @@ __Type:__ `collection`
 - __title__ String
 - __description__ String
 - __images__ Array - contains [Image](#image) objects.
+- __genres__ Array - contains a string of genres.
+- __releaseDate__ String - ISO 8601 date string.
 
 ### Relationships
 
@@ -151,7 +153,7 @@ These are objects common to multiple different Resource objects.
 
 Some resources contain an array of images.
 
-- __url__ String
+- __url__ String - required
 - __mimeType__ String - Example: `image/png`
 - __width__ Integer - Example: `1280`
 - __height__ Integer - Example: `720`
@@ -159,7 +161,7 @@ Some resources contain an array of images.
 
 ### Source
 
-- __url__ String
+- __url__ String - required
 - __container__ String - Example: `hls`
 - __mimeType__ String - Example: `application/x-mpegURL`
 - __height__ Integer

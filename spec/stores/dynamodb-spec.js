@@ -532,6 +532,34 @@ describe('DynamoDB Store', function () {
 				const rel = collection.relationships.videos.data[1];
 				expect(rel).toEqual({id: video.id, type: 'video'});
 			});
+
+			describe('with wrong type for args.include', function () {
+				let result;
+
+				beforeAll(function (done) {
+					Promise.resolve(null)
+						.then(() => {
+							return bus.query({role, cmd: 'get', type: 'collection'}, {
+								channel: 'hbogo',
+								id: RESULTS.get.collection.id,
+								type: RESULTS.get.collection.type,
+								include: 'entities'
+							});
+						})
+						// Record Error result
+						.catch(err => {
+							result = err;
+						})
+						// End test setup
+						.then(done)
+						.catch(done.fail);
+				});
+
+				it('raises an throws an error', function () {
+					expect(result instanceof Error).toBeTruthy();
+					expect(result.message).toBe('args.include must be an array.');
+				});
+			});
 		});
 
 		describe('with a channel type', function () {
