@@ -53,12 +53,12 @@ describe('Catalog Service Controller', function () {
 		channel: 'odd-networks'
 	};
 
-	// const VIDEO_14 = {
-	// 	id: 'video-14',
-	// 	type: 'video',
-	// 	title: 'Video 14',
-	// 	channel: 'odd-networks'
-	// };
+	const VIDEO_14 = {
+		id: 'video-14',
+		type: 'video',
+		title: 'Video 14',
+		channel: {id: 'odd-networks'}
+	};
 
 	beforeAll(function (done) {
 		bus = this.createBus();
@@ -126,7 +126,27 @@ describe('Catalog Service Controller', function () {
 		});
 	});
 
-	xdescribe('Admin POST adds a video object');
+	it('Admin POST adds a video object', function (done) {
+		const res = {
+			body: {},
+			status() {
+			}
+		};
+		const req = {
+			query: {},
+			params: {},
+			body: VIDEO_14,
+			identity: {audience: 'admin'}
+		};
+
+		this.controller.video.post(req, res, () => {
+			expect(res.body.id).toBe('video-14');
+			expect(res.body.type).toBe('video');
+			expect(res.body.title).toBe('Video 14');
+			expect(res.body.channel).toBe('odd-networks');
+			done();
+		});
+	});
 
 	xdescribe('Admin GET retrieves collection objects');
 
