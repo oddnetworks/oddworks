@@ -10,7 +10,6 @@ const identityService = require('../../../../lib/services/identity');
 
 describe('Identity Service Controller', function () {
 	let bus;
-	// let res;
 
 	const CHANNEL = {
 		id: 'odd-networks',
@@ -28,7 +27,12 @@ describe('Identity Service Controller', function () {
 		title: 'Apple iOS',
 		channel: 'odd-networks'
 	};
-	// TODO: two more platforms needed for testing purposes
+
+	const PLATFORM_2 = {
+		id: 'roku',
+		title: 'Roku',
+		channel: 'odd-networks'
+	};
 
 	beforeAll(function (done) {
 		bus = this.createBus();
@@ -88,7 +92,27 @@ describe('Identity Service Controller', function () {
 		});
 	});
 
-	xdescribe('Admin POST inserts a platform object');
+	it('Admin POST inserts a platform object', function (done) {
+		const res = {
+			body: {},
+			status() {
+			}
+		};
+		const req = {
+			query: {},
+			params: {},
+			body: PLATFORM_2,
+			identity: {audience: 'admin'}
+		};
+
+		this.controller.platform.post(req, res, () => {
+			expect(res.body.channel).toBe('odd-networks');
+			expect(res.body.type).toBe('platform');
+			expect(res.body.title).toBe('Roku');
+			expect(res.body.id).toBe('roku');
+			done();
+		});
+	});
 
 	xdescribe('Admin GET retrieves all present channel objects');
 
