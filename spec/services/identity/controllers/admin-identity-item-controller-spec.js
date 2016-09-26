@@ -69,7 +69,23 @@ describe('Identity Service Controller', function () {
 
 	xdescribe('Admin GET returns a platform object');
 
-	xdescribe('Admin PATCH updates a channel object');
+	it('Admin PATCH updates a channel object', function (done) {
+		const req = {
+			query: {},
+			params: {id: 'odd-networks'},
+			identity: {audience: 'admin'},
+			body: {
+				id: 'odd-networks',
+				title: 'Super Awesome Odd Networks Channel'
+			}
+		};
+
+		this.controller.channel.patch(req, res, () => {
+			expect(res.body.id).toBe('odd-networks');
+			expect(res.body.title).toBe('Super Awesome Odd Networks Channel');
+			done();
+		});
+	});
 
 	it('Admin PATCH updates a platform object', function (done) {
 		const req = {
