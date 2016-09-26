@@ -75,9 +75,9 @@ describe('Identity Service Controller', function () {
 		const req = {
 			params: {id: 'apple-ios'},
 			query: {},
-			identity: {channel: {id: 'odd-networks'}},
+			identity: {audience: 'admin'},
 			body: {
-				channel: 'odd-networks',
+				channel: {id: 'odd-networks'},
 				category: 'MOBILE'
 			}
 		};
