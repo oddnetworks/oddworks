@@ -97,8 +97,7 @@ describe('Catalog Service Controller', function () {
 			identity: {
 				channel: {id: 'odd-networks'},
 				platform: {id: 'apple-ios'},
-				user: {id: 'user-id'},
-				audience: 'admin'
+				user: {id: 'user-id'}
 			}
 		};
 		const res = {
@@ -144,8 +143,7 @@ describe('Catalog Service Controller', function () {
 			identity: {
 				channel: {id: 'odd-networks'},
 				platform: {id: 'apple-ios'},
-				user: {id: 'user-id'},
-				audience: 'admin'
+				user: {id: 'user-id'}
 			},
 			body: {
 				title: 'Odd',
@@ -174,8 +172,7 @@ describe('Catalog Service Controller', function () {
 			identity: {
 				channel: {id: 'odd-networks'},
 				platform: {id: 'apple-ios'},
-				user: {id: 'user-id'},
-				audience: 'admin'
+				user: {id: 'user-id'}
 			},
 			body: {
 				channel: 'odd-networks',
