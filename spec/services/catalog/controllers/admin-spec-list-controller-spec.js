@@ -1,4 +1,4 @@
-/* global describe, beforeAll, xdescribe */
+/* global describe, beforeAll, expect, it, xdescribe */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
@@ -39,7 +39,12 @@ describe('Catalog Service fetchItem', function () {
 		channel: 'odd-networks'
 	};
 
-	// TODO: two more specs will be needed to test the number of colelction-specs recieved
+	const COLLECTION_SPEC_14 = {
+		id: 'collection-14-spec',
+		type: 'collectionSpec',
+		source: 'testProvider14',
+		channel: 'odd-networks'
+	};
 
 	const COLLECTION_SPEC_DELETE = {
 		id: 'collection-13-spec-delete',
@@ -86,7 +91,7 @@ describe('Catalog Service fetchItem', function () {
 		.then(service => {
 			this.service = service;
 			this.controller = {
-				spec: new this.service.CatalogSpecController({bus, type: 'collectionSpec'})
+				spec: new this.service.CatalogSpecListController({bus, type: 'collectionSpec'})
 			};
 		})
 		.then(() => {
@@ -103,7 +108,27 @@ describe('Catalog Service fetchItem', function () {
 		.catch(done.fail);
 	});
 
-	xdescribe('Admin POST correctly inserts a spec object');
+	it('Admin POST correctly inserts a spec object', function (done) {
+		const res = {
+			body: {},
+			status() {
+			}
+		};
+		const req = {
+			query: {},
+			params: {},
+			body: COLLECTION_SPEC_14,
+			identity: {audience: 'admin'}
+		};
+
+		this.controller.spec.post(req, res, () => {
+			expect(res.body.id).toBe('collection-14-spec');
+			expect(res.body.type).toBe('collectionSpec');
+			expect(res.body.source).toBe('testProvider14');
+			expect(res.body.channel).toBe('odd-networks');
+			done();
+		});
+	});
 
 	xdescribe('Admin GET retrieves all preset specs a spec object');
 });
