@@ -101,6 +101,8 @@ describe('Catalog Service fetchItem', function () {
 		.catch(done.fail);
 	});
 
+	xdescribe('Admin GET fetches a spec object');
+
 	xdescribe('Admin PATCH updates a spec object');
 	// it('Admin PATCH updates a spec object', function (done) {
 	// 	const req = {
