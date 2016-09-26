@@ -1,4 +1,4 @@
-/* global describe, beforeAll, xdescribe */
+/* global describe, beforeAll, expect, it, xdescribe */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
@@ -16,7 +16,12 @@ describe('Identity Service Controller', function () {
 		id: 'odd-networks',
 		title: 'Odd Networks'
 	};
-	// TODO: two more channels needed for testing purposes
+
+	const CHANNEL_2 = {
+		channel: 'channel-2',
+		type: 'channel',
+		title: 'Channel 2 News | All the Odd You Can Handle'
+	};
 
 	const PLATFORM = {
 		id: 'apple-ios',
@@ -28,11 +33,6 @@ describe('Identity Service Controller', function () {
 	beforeAll(function (done) {
 		bus = this.createBus();
 		this.service = null;
-
-		// res = {
-		// 	status() {
-		// 	}
-		// };
 
 		Promise.promisifyAll(fakeredis.RedisClient.prototype);
 		Promise.promisifyAll(fakeredis.Multi.prototype);
@@ -52,8 +52,8 @@ describe('Identity Service Controller', function () {
 		.then(service => {
 			this.service = service;
 			this.controller = {
-				channel: new service.IdentityItemController({bus, type: 'channel'}),
-				platform: new service.IdentityItemController({bus, type: 'platform'})
+				channel: new service.IdentityListController({bus, type: 'channel'}),
+				platform: new service.IdentityListController({bus, type: 'platform'})
 			};
 		})
 		.then(() => {
@@ -67,7 +67,26 @@ describe('Identity Service Controller', function () {
 		.catch(done.fail);
 	});
 
-	xdescribe('Admin POST inserts a channel object');
+	it('Admin POST inserts a channel object', function (done) {
+		const res = {
+			body: {},
+			status() {
+			}
+		};
+		const req = {
+			query: {},
+			params: {},
+			body: CHANNEL_2,
+			identity: {audience: 'admin'}
+		};
+
+		this.controller.channel.post(req, res, () => {
+			expect(res.body.channel).toBe('channel-2');
+			expect(res.body.type).toBe('channel');
+			expect(res.body.title).toBe('Channel 2 News | All the Odd You Can Handle');
+			done();
+		});
+	});
 
 	xdescribe('Admin POST inserts a platform object');
 
