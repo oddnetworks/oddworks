@@ -473,4 +473,43 @@ describe('Middleware Response JSON API', function () {
 			expect(res.body.links.self).toBe('https://example.com/collections/collection-0');
 		});
 	});
+
+	describe('with an empty response', function () {
+		let req = null;
+		let res = null;
+		let middleware = null;
+		const RESPONSES = {
+			SEARCH: null
+		};
+
+		beforeAll(function (done) {
+			req = _.cloneDeep(REQ);
+			res = new MockExpressResponse();
+			middleware = responseJsonApi({bus});
+			req.url = `${REQ.protocol}://${REQ.hostname}:${REQ.socket.address().port}/search?q=axscdvf`;
+
+			return Promise.resolve(null)
+				.then(() => {
+					// from stores/redis, this is the response from an empty search
+					res.body = [];
+				})
+				.then(() => {
+					return middleware(req, res, err => {
+						if (err) {
+							return done.fail(err);
+						}
+						RESPONSES.SEARCH = res;
+						done();
+					});
+				})
+				.then(_.noop)
+				.then(done)
+				.catch(done.fail);
+		});
+
+		it('returns an empty data array', function () {
+			const v = Validator.validate(RESPONSES.SEARCH.body, jsonApiSchema);
+			expect(v.valid).toBe(true);
+		});
+	});
 });
