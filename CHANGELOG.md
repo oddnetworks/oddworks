@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.11.0 JSON API response improvements
+- Improves the tests for JSON API response middleware
+- Document testing best practices
+- Fixes bug #160 in dynamic broken relationships cleanup on response
+- Adds an excludePortFromLinks option
+- Adds paging (next, previous) links capability to json api response middleware
+
 ## 3.9.0 Breaking
 - response-send middleware will now need to be included when setting up Express.js routes. The response-json-api middleware no longer calls `res.send(res.body)`.
 - Fixes catalog [spec controller routing](https://github.com/oddnetworks/oddworks/commit/8cfb1bbd9ee7124fd0d60e3281e4674a8bd94ecc).

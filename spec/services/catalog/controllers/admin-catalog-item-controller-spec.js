@@ -1,4 +1,4 @@
-/* global describe, beforeAll, it, expect */
+/* global describe, beforeAll, it, expect, xdescribe */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
@@ -90,14 +90,14 @@ describe('Catalog Service Controller', function () {
 		.catch(done.fail);
 	});
 
-	it('returns a collection object', function (done) {
+	it('Admin GET returns a collection object', function (done) {
 		const req = {
 			params: {id: 'collection-13'},
-			query: {},
+			query: {channel: 'odd-networks'},
 			identity: {
-				channel: {id: 'odd-networks'},
 				platform: {id: 'apple-ios'},
-				user: {id: 'user-id'}
+				user: {id: 'user-id'},
+				audience: 'admin'
 			}
 		};
 		const res = {
@@ -115,11 +115,15 @@ describe('Catalog Service Controller', function () {
 		});
 	});
 
-	it('returns a video object', function (done) {
+	it('Admin GET returns a video object', function (done) {
 		const req = {
 			params: {id: 'video-13'},
-			query: {},
-			identity: {channel: {id: 'odd-networks'}, platform: {id: 'apple-ios'}, user: {id: 'user-id'}}
+			query: {channel: 'odd-networks'},
+			identity: {
+				platform: {id: 'apple-ios'},
+				user: {id: 'user-id'},
+				audience: 'admin'
+			}
 		};
 		const res = {
 			body: {},
@@ -136,18 +140,19 @@ describe('Catalog Service Controller', function () {
 		});
 	});
 
-	it('updates a collection object', function (done) {
+	it('Admin PATCH updates a collection object', function (done) {
 		const req = {
 			params: {id: 'collection-13'},
 			query: {},
 			identity: {
-				channel: {id: 'odd-networks'},
 				platform: {id: 'apple-ios'},
-				user: {id: 'user-id'}
+				user: {id: 'user-id'},
+				audience: 'admin'
 			},
 			body: {
 				title: 'Odd',
-				description: 'How odd are you?'
+				description: 'How odd are you?',
+				channel: {id: 'odd-networks'}
 			}
 		};
 		const res = {
@@ -165,17 +170,17 @@ describe('Catalog Service Controller', function () {
 		});
 	});
 
-	it('updates a video object', function (done) {
+	it('Admin PATCH updates a video object', function (done) {
 		const req = {
 			params: {id: 'video-13'},
 			query: {},
 			identity: {
-				channel: {id: 'odd-networks'},
 				platform: {id: 'apple-ios'},
-				user: {id: 'user-id'}
+				user: {id: 'user-id'},
+				audience: 'admin'
 			},
 			body: {
-				channel: 'odd-networks',
+				channel: {id: 'odd-networks'},
 				actor: 'Batman'
 			}
 		};
@@ -195,48 +200,7 @@ describe('Catalog Service Controller', function () {
 		});
 	});
 
-	it('deletes a collection object', function (done) {
-		const req = {
-			params: {id: 'collection-13'},
-			query: {},
-			identity: {channel: {id: 'odd-networks'}},
-			body: {}
-		};
-		const res = {
-			body: {},
-			status() {
-			}
-		};
+	xdescribe('Admin DELETE deletes a collection object');
 
-		this.controller.collection.delete(req, res, () => {
-			expect(res.body.id).toBeUndefined();
-			expect(res.body.type).toBeUndefined();
-			expect(res.body.title).toBeUndefined();
-			expect(res.body.description).toBeUndefined();
-			done();
-		});
-	});
-
-	it('deletes a video object', function (done) {
-		const req = {
-			params: {id: 'video-13'},
-			query: {},
-			identity: {channel: {id: 'odd-networks'}},
-			body: {}
-		};
-		const res = {
-			body: {},
-			status() {
-			}
-		};
-
-		this.controller.video.delete(req, res, () => {
-			expect(res.body.id).toBeUndefined();
-			expect(res.body.type).toBeUndefined();
-			expect(res.body.channel).toBeUndefined();
-			expect(res.body.title).toBeUndefined();
-			expect(res.body.category).toBeUndefined();
-			done();
-		});
-	});
+	xdescribe('Admin DELETE deletes a video object');
 });

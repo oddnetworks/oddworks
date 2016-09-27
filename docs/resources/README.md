@@ -153,7 +153,7 @@ These are objects common to multiple different Resource objects.
 
 Some resources contain an array of images.
 
-- __url__ String
+- __url__ String - required
 - __mimeType__ String - Example: `image/png`
 - __width__ Integer - Example: `1280`
 - __height__ Integer - Example: `720`
@@ -161,7 +161,7 @@ Some resources contain an array of images.
 
 ### Source
 
-- __url__ String
+- __url__ String - required
 - __container__ String - Example: `hls`
 - __mimeType__ String - Example: `application/x-mpegURL`
 - __height__ Integer
