@@ -93,7 +93,7 @@ describe('Identity Service Controller', function () {
 			query: {},
 			identity: {audience: 'admin'},
 			body: {
-				channel: {id: 'odd-networks'},
+				channel: 'odd-networks',
 				category: 'MOBILE'
 			}
 		};
