@@ -43,7 +43,7 @@ describe('Catalog Service Controller', function () {
 		id: 'collection-14',
 		type: 'collection',
 		title: 'Collection 14',
-		channel: {id: 'odd-networks'}
+		channel: 'odd-networks'
 	};
 
 	const VIDEO = {
@@ -57,7 +57,7 @@ describe('Catalog Service Controller', function () {
 		id: 'video-14',
 		type: 'video',
 		title: 'Video 14',
-		channel: {id: 'odd-networks'}
+		channel: 'odd-networks'
 	};
 
 	beforeAll(function (done) {
