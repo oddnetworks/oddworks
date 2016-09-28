@@ -29,7 +29,8 @@ describe('Redis Search Store', function () {
 
 	const RESPONSES = {
 		videoResults: null,
-		threeResults: null
+		threeResults: null,
+		noResults: null
 	};
 
 	Promise.promisifyAll(fakeredis.RedisClient.prototype);
@@ -69,6 +70,11 @@ describe('Redis Search Store', function () {
 		.then(threeResults => {
 			RESPONSES.threeResults = threeResults;
 
+			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'Al is awesome'});
+		})
+		.then(noResults => {
+			RESPONSES.noResults = noResults;
+
 			return true;
 		})
 		.then(done)
@@ -90,6 +96,13 @@ describe('Redis Search Store', function () {
 			expect(RESPONSES.threeResults.length).toBe(2);
 			expect(RESPONSES.threeResults[0].id).toBe('video-3');
 			expect(RESPONSES.threeResults[1].id).toBe('collection-3');
+			done();
+		});
+	});
+
+	describe('No Results', function () {
+		it('should have 0 results', function (done) {
+			expect(RESPONSES.noResults.length).toBe(0);
 			done();
 		});
 	});
