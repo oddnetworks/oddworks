@@ -48,7 +48,7 @@ During initialization the identity service defines handlers for the following pa
 #### verify
 `bus.query({role: 'identity', cmd: 'verify'}, args)`
 
-Decode and verify an encoded JSON Web Token String, then fetch the referenced channel, platform and user resources if they exist.
+Decode and verify an encoded JSON Web Token String, then fetch the referenced channel, platform and viewer resources if they exist.
 
 **Args**
 
@@ -62,7 +62,7 @@ An Identity Object:
     audience: ['platform'], // The audience Array
     channel: channel, // The Channel resource
     platform: platform, // The Platform resource
-    user: user // The User resource
+    viewer: viewer // The User resource
 }
 ```
 
@@ -76,7 +76,7 @@ Rejects with an Error if any of the referenced resources cannot be found in the 
 * args.subject - String *required if admin*.
 * args.channel - String *required if non admin*
 * args.platform - String *required if non admin*
-* args.user - String
+* args.viewer - String
 
 See [Authentication](#authentication) below for more info.
 
@@ -85,13 +85,13 @@ See [Authentication](#authentication) below for more info.
 #### config
 `bus.query({role: 'identity', cmd: 'config'}, args)`
 
-Merges the channel, platform and user objects into a single config object.
+Merges the channel, platform and viewer objects into a single config object.
 
 **Args**
 
 * args.channel - Channel Object
 * args.platform - Platform Object
-* args.user - User Object
+* args.viewer - User Object
 
 **Returns**
 A config Object.
@@ -200,7 +200,7 @@ sub: 'USER DEFINED STRING',
 aud: ['admin', 'platform']
 ```
 
-Platform, no user
+Platform, no viewer
 ```js
 iss: 'STRING options.jwtIssuer',
 aud: ['platform'],
@@ -208,13 +208,13 @@ channel: 'STRING - channel id',
 platform: 'STRING - platform id'
 ```
 
-Platform, with user
+Platform, with viewer
 ```js
 iss: 'STRING options.jwtIssuer',
 aud: ['platform'],
 channel: 'STRING - channel id',
 platform: 'STRING - platform id',
-user: 'STRING - user.id'
+viewer: 'STRING - viewer.id'
 ```
 
 An important consideration is that the Oddworks library can support two "servers": One for the consumer devices to access and consume content, and another admin "backend" API for server side tools to configure and update the content. In most cases, both of these concerns will be mixed on the same server instance, so there is some care taken to make sure that requests are authenticated and authorized properly.
@@ -224,7 +224,7 @@ The two types of services (consumer and admin) are represented on a JWT the audi
 * 'platform' - The consumer facing API accessed by devices to consume content.
 * 'admin' - The backend API accessed by other machines to configure content.
 
-Notice that platform consumer JWTs do not have a subject (`.sub`) member. This is because the combined channel, platform and user IDs compose the subject, so we don't want to mix concerns.
+Notice that platform consumer JWTs do not have a subject (`.sub`) member. This is because the combined channel, platform and viewer IDs compose the subject, so we don't want to mix concerns.
 
 ### Authenticating Middleware
 The authenticate middlware is constructed using
@@ -248,11 +248,11 @@ to parse and verify the token. This returns an Object from the identity service:
     audience: ['platform'], // The audience Array
     channel: channel, // The Channel resource
     platform: platform, // The Platform resource
-    user: user // The User resource
+    viewer: viewer // The User resource
 }
 ```
 
-This "identity" Object is assigned to the request as `req.identity` for use in middleware and route handlers. This is important because it allows other parts of the request/response cycle to fetch, configure and decorate the response without having to fetch fresh copies of the audience, channel, platform or user objects.
+This "identity" Object is assigned to the request as `req.identity` for use in middleware and route handlers. This is important because it allows other parts of the request/response cycle to fetch, configure and decorate the response without having to fetch fresh copies of the audience, channel, platform or viewer objects.
 
 ### Authorizing Middleware
 The authorizing middlware is constructed using
