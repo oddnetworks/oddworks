@@ -5,12 +5,14 @@
 
 const Promise = require('bluebird');
 const fakeredis = require('fakeredis');
+const aws = require('mock-aws');
 
 const redisStore = require('../../lib/stores/redis');
-const redisSearchStore = require('../../lib/stores/redis-search');
+const cloudsearchStore = require('../../lib/stores/cloudsearch');
 
-describe('Redis Search Store', function () {
+describe('Cloudsearch Store', function () {
 	const redisClient = fakeredis.createClient();
+	const cloudsearch = new aws.CloudSearchDomain({endpoint: 'http://cloudsearch.tld'});
 	let bus;
 
 	const VIDEOS = [
@@ -44,8 +46,8 @@ describe('Redis Search Store', function () {
 			redis: redisClient
 		})
 		.then(store => {
-			return redisSearchStore(bus, {
-				redis: redisClient,
+			return cloudsearchStore(bus, {
+				cloudsearch,
 				store
 			});
 		})
@@ -55,25 +57,49 @@ describe('Redis Search Store', function () {
 			});
 		})
 		.then(() => {
-			return Promise.map(RESOURCES, resource => {
-				return bus.sendCommand({role: 'store', cmd: 'index', type: resource.type}, {id: resource.id, text: resource.title});
+			aws.mock('CloudSearchDomain', 'search', {
+				hits: {
+					hit: [
+						{id: 'video-1'},
+						{id: 'video-2'},
+						{id: 'video-3'}
+					]
+				}
 			});
-		})
-		.then(() => {
+
 			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'video'});
 		})
 		.then(videoResults => {
 			RESPONSES.videoResults = videoResults;
+
+			aws.restore('CloudSearchDomain');
+			aws.mock('CloudSearchDomain', 'search', {
+				hits: {
+					hit: [
+						{id: 'video-3'},
+						{id: 'collection-3'}
+					]
+				}
+			});
 
 			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'three'});
 		})
 		.then(threeResults => {
 			RESPONSES.threeResults = threeResults;
 
+			aws.restore('CloudSearchDomain');
+			aws.mock('CloudSearchDomain', 'search', {
+				hits: {
+					hit: []
+				}
+			});
+
 			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'Al is awesome'});
 		})
 		.then(noResults => {
 			RESPONSES.noResults = noResults;
+
+			aws.restore('CloudSearchDomain');
 
 			return true;
 		})
