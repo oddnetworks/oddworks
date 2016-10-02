@@ -535,7 +535,6 @@ describe('Middleware Response JSON API', function () {
 		});
 	});
 
-<<<<<<< HEAD
 	describe('with partial included resourses present', function () {
 		let req = null;
 		let res = null;
@@ -566,7 +565,35 @@ describe('Middleware Response JSON API', function () {
 						// console.log('RESULT:  ', JSON.stringify(result, ' ', 2));
 						res.body = result;
 					});
-=======
+				})
+				.then(() => {
+					return middleware(req, res, err => {
+						if (err) {
+							return done.fail(err);
+						}
+						done();
+					});
+				})
+				.then(_.noop)
+				.then(done)
+				.catch(done.fail);
+		});
+
+		it('formats response body to valid jsonapi.org schema', function () {
+			const v = Validator.validate(res.body, jsonApiSchema);
+			expect(v.valid).toBe(true);
+		});
+
+		it('has only present entities in the included array', function () {
+			// console.log('RES.BODY:  ', JSON.stringify(res.body, ' ', 2));
+			// console.log('INCLUDED:  ', JSON.stringify(res.body.included, ' ', 2));
+			// console.log('ENTITIES.DATA:  ', JSON.stringify(res.body.data.relationships.entities.data, ' ', 2));
+			expect(res.body.included).toBeDefined();
+			expect(res.body.included.length).toBe(3);
+			expect(res.body.included.length).toBe(res.body.data.relationships.entities.data.length);
+		});
+	});
+
 	describe('with an empty response', function () {
 		let req = null;
 		let res = null;
@@ -585,17 +612,13 @@ describe('Middleware Response JSON API', function () {
 				.then(() => {
 					// from stores/redis, this is the response from an empty search
 					res.body = [];
->>>>>>> 4c2d021ab8cb9a45b6671a6d9c56c0651cbb8413
 				})
 				.then(() => {
 					return middleware(req, res, err => {
 						if (err) {
 							return done.fail(err);
 						}
-<<<<<<< HEAD
-=======
 						RESPONSES.SEARCH = res;
->>>>>>> 4c2d021ab8cb9a45b6671a6d9c56c0651cbb8413
 						done();
 					});
 				})
@@ -604,25 +627,9 @@ describe('Middleware Response JSON API', function () {
 				.catch(done.fail);
 		});
 
-<<<<<<< HEAD
-		it('formats response body to valid jsonapi.org schema', function () {
-			const v = Validator.validate(res.body, jsonApiSchema);
-			expect(v.valid).toBe(true);
-		});
-
-		it('has only present entities in the included array', function () {
-			// console.log('RES.BODY:  ', JSON.stringify(res.body, ' ', 2));
-			// console.log('INCLUDED:  ', JSON.stringify(res.body.included, ' ', 2));
-			// console.log('ENTITIES.DATA:  ', JSON.stringify(res.body.data.relationships.entities.data, ' ', 2));
-			expect(res.body.included).toBeDefined();
-			expect(res.body.included.length).toBe(3);
-			expect(res.body.included.length).toBe(res.body.data.relationships.entities.data.length);
-		});
-=======
 		it('returns an empty data array', function () {
 			const v = Validator.validate(RESPONSES.SEARCH.body, jsonApiSchema);
 			expect(v.valid).toBe(true);
 		});
->>>>>>> 4c2d021ab8cb9a45b6671a6d9c56c0651cbb8413
 	});
 });
