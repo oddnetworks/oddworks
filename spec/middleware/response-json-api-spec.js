@@ -17,9 +17,13 @@ const responseJsonApi = require('../../lib/middleware/response-json-api');
 const jsonApiSchema = require('../helpers/json-api-schema.json');
 
 const COLLECTION = require('../fixtures/collections/collection-0.json');
+const COLLECTION_1 = require('../fixtures/collections/collection-1.json');
 const REL_0 = require('../fixtures/videos/video-0.json');
 const REL_1 = require('../fixtures/videos/video-1.json');
 const REL_2 = require('../fixtures/videos/video-2.json');
+const REL_A = require('../fixtures/videos/video-a.json');
+const REL_B = require('../fixtures/videos/video-b.json');
+const REL_C = require('../fixtures/videos/video-c.json');
 
 const Validator = new JSONSchemaValidator();
 
@@ -74,7 +78,11 @@ describe('Middleware Response JSON API', function () {
 					bus.sendCommand({role, cmd, type: 'video'}, REL_0),
 					bus.sendCommand({role, cmd, type: 'video'}, REL_1),
 					bus.sendCommand({role, cmd, type: 'video'}, REL_2),
-					bus.sendCommand({role, cmd, type: 'collection'}, COLLECTION)
+					bus.sendCommand({role, cmd, type: 'video'}, REL_A),
+					bus.sendCommand({role, cmd, type: 'video'}, REL_B),
+					bus.sendCommand({role, cmd, type: 'video'}, REL_C),
+					bus.sendCommand({role, cmd, type: 'collection'}, COLLECTION),
+					bus.sendCommand({role, cmd, type: 'collection'}, COLLECTION_1)
 				]);
 			})
 			.then(_.noop)
@@ -138,6 +146,59 @@ describe('Middleware Response JSON API', function () {
 
 		it('adds a meta block', function () {
 			expect(res.body.meta).toEqual({channel: 'channel-id', platform: 'APPLE_TV'});
+		});
+	});
+
+	describe('with two collections', function () {
+		let req = null;
+		let res = null;
+		let middleware = null;
+
+		beforeAll(function (done) {
+			req = _.cloneDeep(REQ);
+			res = new MockExpressResponse();
+			middleware = responseJsonApi({bus});
+			req.url = 'https://localhost:3000/collections';
+
+			return Promise.resolve(null)
+				// Load seed data (without using include)
+				.then(() => {
+					// emulates GET /collections
+					const role = 'catalog';
+					const cmd = 'fetchItemList';
+					const type = 'collection';
+
+					const args = {
+						channel: {id: 'channel-id'},
+						type,
+						id: COLLECTION.id,
+						platform: 'platform-id'
+					};
+
+					return bus.query({role, cmd, type}, args).then(result => {
+						res.body = result;
+					});
+				})
+				.then(() => {
+					return middleware(req, res, err => {
+						if (err) {
+							return done.fail(err);
+						}
+						done();
+					});
+				})
+				.then(_.noop)
+				.then(done)
+				.catch(done.fail);
+		});
+
+		it('formats response body to valid jsonapi.org schema', function () {
+			const v = Validator.validate(res.body, jsonApiSchema);
+			expect(v.valid).toBe(true);
+		});
+
+		it('has no included array', function () {
+			expect(res.body.included).not.toBeDefined();
 		});
 	});
 
@@ -471,6 +532,65 @@ describe('Middleware Response JSON API', function () {
 
 		it('excludes port from self link', function () {
 			expect(res.body.links.self).toBe('https://example.com/collections/collection-0');
+		});
+	});
+
+	describe('with partial included resourses present', function () {
+		let req = null;
+		let res = null;
+		let middleware = null;
+
+		beforeAll(function (done) {
+			req = _.cloneDeep(REQ);
+			req.query = {include: 'entities'};
+			res = new MockExpressResponse();
+			middleware = responseJsonApi({bus});
+
+			return Promise.resolve(null)
+				// Load seed data (without using include)
+				.then(() => {
+					const role = 'store';
+					const cmd = 'get';
+					const type = 'collection';
+
+					const args = {
+						channel: 'channel-id',
+						type,
+						id: COLLECTION_1.id,
+						platform: 'platform-id',
+						include: ['entities']
+					};
+
+					return bus.query({role, cmd, type}, args).then(result => {
+						// console.log('RESULT:  ', JSON.stringify(result, ' ', 2));
+						res.body = result;
+					});
+				})
+				.then(() => {
+					return middleware(req, res, err => {
+						if (err) {
+							return done.fail(err);
+						}
+						done();
+					});
+				})
+				.then(_.noop)
+				.then(done)
+				.catch(done.fail);
+		});
+
+		it('formats response body to valid jsonapi.org schema', function () {
+			const v = Validator.validate(res.body, jsonApiSchema);
+			expect(v.valid).toBe(true);
+		});
+
+		it('has only present entities in the included array', function () {
+			// console.log('RES.BODY:  ', JSON.stringify(res.body, ' ', 2));
+			// console.log('INCLUDED:  ', JSON.stringify(res.body.included, ' ', 2));
+			// console.log('ENTITIES.DATA:  ', JSON.stringify(res.body.data.relationships.entities.data, ' ', 2));
+			expect(res.body.included).toBeDefined();
+			expect(res.body.included.length).toBe(3);
+			expect(res.body.included.length).toBe(res.body.data.relationships.entities.data.length);
 		});
 	});
 
