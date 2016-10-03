@@ -1,4 +1,4 @@
-/* global describe, beforeAll, xdescribe */
+/* global describe, beforeAll, expect, it, xdescribe */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
@@ -103,31 +103,32 @@ describe('Catalog Service fetchItem', function () {
 
 	xdescribe('Admin GET fetches a spec object');
 
-	xdescribe('Admin PATCH updates a spec object');
-	// it('Admin PATCH updates a spec object', function (done) {
-	// 	const req = {
-	// 		params: {id: 'collection-13-spec'},
-	// 		query: {channel: 'odd-networks'},
-	// 		identity: {audience: 'admin', platform: {id: 'apple-ios'}, user: {id: 'user-id'}},
-	// 		body: {
-	// 			someOtherProperty: 'Another property on the spec'
-	// 		}
-	// 	};
-	// 	const res = {
-	// 		body: {},
-	// 		status() {
-	// 		}
-	// 	};
+	describe('Admin PATCH updates a spec object', function () {
+		it('Admin PATCH updates a spec object', function (done) {
+			const req = {
+				params: {id: 'collection-13-spec'},
+				identity: {audience: 'admin', platform: {id: 'apple-ios'}, user: {id: 'user-id'}},
+				body: {
+					someOtherProperty: 'Another property on the spec',
+					channel: 'odd-networks'
+				}
+			};
+			const res = {
+				body: {},
+				status() {
+				}
+			};
 
-	// 	this.controller.spec.patch(req, res, () => {
-	// 		expect(res.body.id).toBe('collection-13-spec');
-	// 		expect(res.body.type).toBe('collectionSpec');
-	// 		expect(res.body.source).toBe('testProvider');
-	// 		expect(res.body.someOtherProperty).toBe('Another property on the spec');
-	// 		expect(res.body.channel).toBe('odd-networks');
-	// 		done();
-	// 	});
-	// });
+			this.controller.spec.patch(req, res, () => {
+				expect(res.body.id).toBe('collection-13-spec');
+				expect(res.body.type).toBe('collectionSpec');
+				expect(res.body.source).toBe('testProvider');
+				expect(res.body.someOtherProperty).toBe('Another property on the spec');
+				expect(res.body.channel).toBe('odd-networks');
+				done();
+			});
+		});
+	});
 
 	xdescribe('Admin DELETE deletes a spec object');
 });
