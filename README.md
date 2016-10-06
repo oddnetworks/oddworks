@@ -1,6 +1,6 @@
 # Oddworks
 
-[![Gitter chat](https://badges.gitter.im/USER/REPO.png)](https://gitter.im/oddnetworks/oddworks "Gitter chat")
+[![slack.oddnetworks.com](http://slack.oddnetworks.com/badge.svg)](http://slack.oddnetworks.com)
 
 [![Build Status](https://travis-ci.org/oddnetworks/oddworks.svg?branch=master)](https://travis-ci.org/oddnetworks/oddworks)
 [![Dependency Status](https://david-dm.org/oddnetworks/oddworks.svg)](https://david-dm.org/oddnetworks/oddworks)
