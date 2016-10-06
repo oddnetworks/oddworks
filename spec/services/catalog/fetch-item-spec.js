@@ -77,7 +77,9 @@ describe('Catalog Service fetchItem', function () {
 
 		const RESULTS = {
 			spec: null,
-			resource: null
+			resource: null,
+			resourceSpecRemoved: null,
+			afterCacheRemovesItem: 0
 		};
 
 		beforeAll(function (done) {
@@ -123,6 +125,57 @@ describe('Catalog Service fetchItem', function () {
 							return options;
 						});
 				})
+				// Delay for 1.1 seconds to get past the maxAge = 1 and force
+				// a cache miss.
+				.then(options => {
+					return Promise.delay(1100).then(_.constant(options));
+				})
+				// instead of using 'removeItemSpec'
+				// just do the deleting of the item manually
+				.then(() => {
+					const args = {
+						channel: SPEC.channel,
+						type: SPEC.type,
+						id: RESULTS.resource.spec
+					};
+
+					// these are the meaty bits of 'removeItemSpec'
+					return bus
+						.sendCommand({role: 'store', cmd: 'remove', type: args.type}, args)
+						.then(_.constant(true));
+				})
+				// Fetch the item even with the spec missing
+				.then(() => {
+					const args = {
+						channel: CHANNEL,
+						type: 'collection',
+						id: RESULTS.resource.id,
+						platform: PLATFORM
+					};
+
+					return bus
+						.query({role: 'catalog', cmd: 'fetchItem'}, args)
+						.then(res => {
+							RESULTS.resourceSpecRemoved = res;
+							return res;
+						});
+				})
+				// previous fetch should have removed the item itself
+				.then(() => {
+					const args = {
+						channel: CHANNEL,
+						type: 'collection',
+						id: RESULTS.resource.id,
+						platform: PLATFORM
+					};
+
+					return bus
+						.query({role: 'catalog', cmd: 'fetchItem'}, args)
+						.then(res => {
+							RESULTS.afterCacheRemovesItem = res;
+							return res;
+						});
+				})
 				.then(done)
 				.catch(done.fail);
 		});
@@ -155,6 +208,14 @@ describe('Catalog Service fetchItem', function () {
 		// fetchItem after the maxAge forced a cache miss.
 		it('called the provider 2 times', function () {
 			expect(this.provider).toHaveBeenCalledTimes(2);
+		});
+
+		it('with missing spec item, returns stale resource', function () {
+			expect(RESULTS.resourceSpecRemoved).toBeTruthy();
+		});
+
+		it('after finding missing spec, the item is removed', function () {
+			expect(RESULTS.afterCacheRemovesItem).toBe(null);
 		});
 	});
 });
