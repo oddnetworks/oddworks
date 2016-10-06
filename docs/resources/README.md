@@ -23,7 +23,7 @@ __Type:__ `channel`
     - __images__ Array - contains [Image](#image) objects.
     - __colors__ Array - contains [Color](#color) objects.
     - __fonts__ Array - contains [Font](#font) objects
-- __features__ Object
+- __features__ [Features](#features)
     - __authentication__ [Authentication](#authentication)
     - __sharing__ [Sharing](#sharing)
     - __metrics__ [Metrics](#metrics)
@@ -38,11 +38,11 @@ __Type:__ `platform`
 - __title__ String - `Apple|Android|Web|Roku|Xbox`
 - __category__ String - `WEB|TV|MOBILE`
 - __active__ Boolean
-- __display__ Array
+- __display__ Object
     - __images__ Array - contains [Image](#image) objects.
     - __colors__ Array - contains [Color](#color) objects.
     - __fonts__ Array - contains [Font](#font) objects
-- __features__ Object
+- __features__ [Features](#features)
     - __authentication__ [Authentication](#authentication)
     - __sharing__ [Sharing](#sharing)
     - __metrics__ [Metrics](#metrics)
@@ -205,8 +205,9 @@ An identifier object is used as a reference to full resource objects. These are 
 #### Authentication
 
 - __enabled__ Boolean
+- __type__ String
 
-What else goes here?
+__*__ _Any additional properties will be a String_
 
 #### Sharing
 
