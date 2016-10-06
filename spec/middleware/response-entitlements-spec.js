@@ -6,10 +6,13 @@
 const responseEntitlements = require('../../lib/middleware/response-entitlements');
 
 describe('Middleware: Response Entitlements', () => {
+	let bus;
 	let req;
 	let res;
 
-	beforeAll(() => {
+	beforeAll(function (done) {
+		bus = this.createBus();
+
 		req = {
 			identity: {
 				channel: {id: 'channel-id', features: {authentication: {}}},
@@ -17,6 +20,7 @@ describe('Middleware: Response Entitlements', () => {
 			}
 		};
 		res = {body: {data: null}};
+		done();
 	});
 
 	describe('entitles true when auth is disabled', () => {
@@ -33,7 +37,7 @@ describe('Middleware: Response Entitlements', () => {
 				meta: {}
 			};
 
-			responseEntitlements()(req, res, function () {
+			responseEntitlements({bus})(req, res, function () {
 				expect(res.body.data.meta.entitled).toBe(true);
 				done();
 			});
@@ -55,7 +59,7 @@ describe('Middleware: Response Entitlements', () => {
 				meta: {}
 			}];
 
-			responseEntitlements()(req, res, function () {
+			responseEntitlements({bus})(req, res, function () {
 				expect(res.body.data.meta.entitled).toBe(true);
 				expect(res.body.included[0].meta.entitled).toBe(true);
 				expect(res.body.included[1].meta.entitled).toBe(true);
@@ -76,7 +80,7 @@ describe('Middleware: Response Entitlements', () => {
 				meta: {}
 			}];
 
-			responseEntitlements()(req, res, function () {
+			responseEntitlements({bus})(req, res, function () {
 				expect(res.body.data[0].meta.entitled).toBe(true);
 				expect(res.body.data[1].meta.entitled).toBe(true);
 				expect(res.body.data[2].meta.entitled).toBe(true);
@@ -105,7 +109,7 @@ describe('Middleware: Response Entitlements', () => {
 				meta: {}
 			};
 
-			responseEntitlements()(req, res, function () {
+			responseEntitlements({bus})(req, res, function () {
 				expect(res.body.data.meta.entitled).toBe(true);
 				done();
 			});
@@ -127,7 +131,7 @@ describe('Middleware: Response Entitlements', () => {
 				meta: {}
 			}];
 
-			responseEntitlements()(req, res, function () {
+			responseEntitlements({bus})(req, res, function () {
 				expect(res.body.data.meta.entitled).toBe(true);
 				expect(res.body.included[0].meta.entitled).toBe(true);
 				expect(res.body.included[1].meta.entitled).toBe(true);
@@ -148,7 +152,7 @@ describe('Middleware: Response Entitlements', () => {
 				meta: {}
 			}];
 
-			responseEntitlements()(req, res, function () {
+			responseEntitlements({bus})(req, res, function () {
 				expect(res.body.data[0].meta.entitled).toBe(true);
 				expect(res.body.data[1].meta.entitled).toBe(true);
 				expect(res.body.data[2].meta.entitled).toBe(true);
@@ -177,7 +181,7 @@ describe('Middleware: Response Entitlements', () => {
 				meta: {}
 			};
 
-			responseEntitlements()(req, res, function () {
+			responseEntitlements({bus})(req, res, function () {
 				expect(res.body.data.meta.entitled).toBe(false);
 				done();
 			});
@@ -199,7 +203,7 @@ describe('Middleware: Response Entitlements', () => {
 				meta: {}
 			}];
 
-			responseEntitlements()(req, res, function () {
+			responseEntitlements({bus})(req, res, function () {
 				expect(res.body.data.meta.entitled).toBe(false);
 				expect(res.body.included[0].meta.entitled).toBe(false);
 				expect(res.body.included[1].meta.entitled).toBe(false);
@@ -220,10 +224,55 @@ describe('Middleware: Response Entitlements', () => {
 				meta: {}
 			}];
 
-			responseEntitlements()(req, res, function () {
+			responseEntitlements({bus})(req, res, function () {
 				expect(res.body.data[0].meta.entitled).toBe(false);
 				expect(res.body.data[1].meta.entitled).toBe(false);
 				expect(res.body.data[2].meta.entitled).toBe(false);
+				done();
+			});
+		});
+	});
+
+	describe('entitles false when auth is enabled with bad evaluator', () => {
+		beforeAll(() => {
+			req.identity.viewer.attributes.entitlements = ['silver'];
+		});
+
+		it('that cannot be parsed', done => {
+			req.identity.channel.features.authentication = {
+				enabled: true,
+				evaluator: `sdsa`
+			};
+
+			res.body.data = {
+				id: 'some-video',
+				meta: {}
+			};
+
+			responseEntitlements({bus})(req, res, function () {
+				expect(res.body.data.meta.entitled).toBe(false);
+				done();
+			});
+		});
+
+		it('that cannot be executed', done => {
+			req.identity.channel.features.authentication = {
+				enabled: true,
+				evaluator: `function (viewer, resource) {
+					if (viewer.attributes.entitlements.contains('gold') >= 0) {
+						return true;
+					}
+					return false;
+				}`
+			};
+
+			res.body.data = {
+				id: 'some-video',
+				meta: {}
+			};
+
+			responseEntitlements({bus})(req, res, function () {
+				expect(res.body.data.meta.entitled).toBe(false);
 				done();
 			});
 		});
