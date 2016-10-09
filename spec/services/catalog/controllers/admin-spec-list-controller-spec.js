@@ -152,5 +152,25 @@ describe('Catalog Service fetchItem', function () {
 		});
 	});
 
+	describe('POST with missing unsupported source', function () {
+		it('returns a 422 response', function (done) {
+			spyOn(Boom, 'conflict');
+			const res = new MockExpressResponse();
+			const req = {
+				query: {},
+				params: {},
+				body: COLLECTION_SPEC_14,
+				identity: {audience: 'admin'}
+			};
+
+			req.body.source = 'baz';
+
+			this.controller.spec.post(req, res, () => {
+				expect(Boom.conflict).toHaveBeenCalledTimes(1);
+				done();
+			});
+		});
+	});
+
 	xdescribe('Admin GET retrieves all preset specs a spec object');
 });
