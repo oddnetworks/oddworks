@@ -1,10 +1,12 @@
-/* global describe, beforeAll, expect, it, xdescribe */
+/* global describe, beforeAll, spyOn, expect, it, xdescribe */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
 
 const Promise = require('bluebird');
 const fakeredis = require('fakeredis');
+const MockExpressResponse = require('mock-express-response');
+const Boom = require('boom');
 const redisStore = require('../../../../lib/stores/redis/');
 const catalogService = require('../../../../lib/services/catalog');
 const identityService = require('../../../../lib/services/identity');
@@ -127,6 +129,26 @@ describe('Catalog Service fetchItem', function () {
 			expect(res.body.source).toBe('testProvider14');
 			expect(res.body.channel).toBe('odd-networks');
 			done();
+		});
+	});
+
+	describe('POST with missing .source', function () {
+		it('returns a 422 response', function (done) {
+			spyOn(Boom, 'conflict');
+			const res = new MockExpressResponse();
+			const req = {
+				query: {},
+				params: {},
+				body: COLLECTION_SPEC_14,
+				identity: {audience: 'admin'}
+			};
+
+			delete req.body.source;
+
+			this.controller.spec.post(req, res, () => {
+				expect(Boom.conflict).toHaveBeenCalledTimes(1);
+				done();
+			});
 		});
 	});
 
