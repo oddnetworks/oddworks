@@ -134,7 +134,7 @@ describe('Catalog Service fetchItem', function () {
 
 	describe('POST with missing .source', function () {
 		it('returns a 422 response', function (done) {
-			spyOn(Boom, 'conflict');
+			spyOn(Boom, 'badData');
 			const res = new MockExpressResponse();
 			const req = {
 				query: {},
@@ -146,7 +146,7 @@ describe('Catalog Service fetchItem', function () {
 			delete req.body.source;
 
 			this.controller.spec.post(req, res, () => {
-				expect(Boom.conflict).toHaveBeenCalledTimes(1);
+				expect(Boom.badData).toHaveBeenCalledTimes(1);
 				done();
 			});
 		});
@@ -154,7 +154,7 @@ describe('Catalog Service fetchItem', function () {
 
 	describe('POST with missing unsupported source', function () {
 		it('returns a 422 response', function (done) {
-			spyOn(Boom, 'conflict');
+			spyOn(Boom, 'badData');
 			const res = new MockExpressResponse();
 			const req = {
 				query: {},
@@ -166,7 +166,7 @@ describe('Catalog Service fetchItem', function () {
 			req.body.source = 'baz';
 
 			this.controller.spec.post(req, res, () => {
-				expect(Boom.conflict).toHaveBeenCalledTimes(1);
+				expect(Boom.badData).toHaveBeenCalledTimes(1);
 				done();
 			});
 		});
