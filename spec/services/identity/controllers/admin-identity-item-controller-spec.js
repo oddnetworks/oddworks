@@ -65,9 +65,36 @@ describe('Identity Service Controller', function () {
 		.catch(done.fail);
 	});
 
-	xdescribe('Admin GET returns a channel object');
+	describe('Admin GET', function () {
+		it('returns a channel object', function (done) {
+			const req = {
+				query: {channel: 'odd-networks'},
+				params: {id: 'odd-networks'},
+				identity: {audience: 'admin'}
+			};
 
-	xdescribe('Admin GET returns a platform object');
+			this.controller.channel.get(req, res, () => {
+				expect(res.body.id).toBe('odd-networks');
+				expect(res.body.title).toBe('Odd Networks');
+				done();
+			});
+		});
+
+		it('returns a platform object', function (done) {
+			const req = {
+				query: {channel: 'odd-networks'},
+				params: {id: 'apple-ios'},
+				identity: {audience: 'admin'}
+			};
+
+			this.controller.platform.get(req, res, () => {
+				expect(res.body.id).toBe('apple-ios');
+				expect(res.body.title).toBe('Apple iOS');
+				expect(res.body.channel).toBe('odd-networks');
+				done();
+			});
+		});
+	});
 
 	it('Admin PATCH updates a channel object', function (done) {
 		const req = {
