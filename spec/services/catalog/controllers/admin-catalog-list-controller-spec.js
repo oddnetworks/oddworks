@@ -101,7 +101,7 @@ describe('Catalog Service Controller', function () {
 			);
 		})
 		.then(done)
-		.catch(done.fail);
+		.catch(this.handleError(done));
 	});
 
 	it('Admin POST adds a collection object', function (done) {

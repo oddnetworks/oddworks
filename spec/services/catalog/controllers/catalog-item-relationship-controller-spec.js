@@ -92,7 +92,7 @@ describe('Catalog Item Relationship Controller', function () {
 			);
 		})
 		.then(done)
-		.catch(done.fail);
+		.catch(this.handleError(done));
 	});
 
 	it('get returns the correct relationship data', function (done) {
