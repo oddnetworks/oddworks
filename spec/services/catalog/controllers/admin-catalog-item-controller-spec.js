@@ -77,14 +77,17 @@ describe('Catalog Service Controller', function () {
 			};
 		})
 		.then(() => {
-			return Promise.join(
+			const promises = [
 				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL),
 				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM),
 				bus.sendCommand({role: 'store', cmd: 'set', type: 'user'}, USER),
 				bus.sendCommand({role: 'catalog', cmd: 'setItem', type: 'collection'}, COLLECTION),
 				bus.sendCommand({role: 'catalog', cmd: 'setItem', type: 'video'}, VIDEO),
-				() => {}
-			);
+			];
+
+			return Promise.all(promises).then(() => {
+				return true;
+			});
 		})
 		.then(done)
 		.catch(done.fail);
