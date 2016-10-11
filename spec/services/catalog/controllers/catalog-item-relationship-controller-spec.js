@@ -95,28 +95,7 @@ describe('Catalog Item Relationship Controller', function () {
 		.catch(done.fail);
 	});
 
-	// it('returns a collection object', function () {
-	// 	const req = {
-	// 		params: {id: COLLECTION.id},
-	// 		query: {},
-	// 		identity: {channel: {id: CHANNEL.id},
-	// 		platform: {id: PLATFORM.id},
-	// 		viewer: {id: VIEWER.id}}
-	// 	};
-	// 	const res = {
-	// 		body: {},
-	// 		status() {}
-	// 	};
-
-	// 	this.controller.collection.get(req, res, () => {
-	// 		expect(res.body.id).toBe('collection-0');
-	// 		expect(res.body.type).toBe('collection');
-	// 		expect(res.body.title).toBe('Title of the thing');
-	// 		expect(res.body.channel).toBe('channel-id');
-	// 	});
-	// });
-
-	it('get returns the correct relationship data', function () {
+	it('get returns the correct relationship data', function (done) {
 		const req = {
 			params: {
 				id: COLLECTION.id,
@@ -135,32 +114,11 @@ describe('Catalog Item Relationship Controller', function () {
 		this.controller.relationship.get(req, res, () => {
 			RESULTS.GET = res.body;
 			expect(res.body.data.length).toBe(3);
+			done();
 		});
 	});
 
-	// it('with include query param returns included entities', function () {
-	// 	const req = {
-	// 		params: {
-	// 			id: COLLECTION.id,
-	// 			relationshipKey: 'entities'
-	// 		},
-	// 		query: {include: ['entities']},
-	// 		identity: {channel: {id: CHANNEL.id},
-	// 		platform: {id: PLATFORM.id},
-	// 		viewer: {id: VIEWER.id}}
-	// 	};
-	// 	const res = {
-	// 		body: {},
-	// 		status() {}
-	// 	};
-
-	// 	this.controller.relationship.get(req, res, () => {
-	// 		RESULTS.INCLUDE = res.body;
-	// 		expect(res.body.included.length).toBe(3);
-	// 	});
-	// });
-
-	it('with sort query param, returns sorted relationships', function () {
+	it('with sort by title query param, returns sorted relationships', function (done) {
 		const req = {
 			params: {
 				id: COLLECTION_1.id,
@@ -189,44 +147,11 @@ describe('Catalog Item Relationship Controller', function () {
 			expect(data[7].id).toBe('1111-A');
 			expect(data[8].id).toBe('1111-B');
 			expect(data[9].id).toBe('1111-C');
+			done();
 		});
 	});
 
-	// it('with sort and include query params, returns sorted entities', function () {
-	// 	const req = {
-	// 		params: {
-	// 			id: COLLECTION_1.id,
-	// 			relationshipKey: 'entities'
-	// 		},
-	// 		query: {
-	// 			sort: 'title',
-	// 			include: ['entities']
-	// 		},
-	// 		identity: {channel: {id: CHANNEL.id},
-	// 		platform: {id: PLATFORM.id},
-	// 		viewer: {id: VIEWER.id}}
-	// 	};
-	// 	const res = {
-	// 		body: {},
-	// 		status() {}
-	// 	};
-
-	// 	this.controller.relationship.get(req, res, () => {
-	// 		const data = res.body.included;
-	// 		expect(data[0].title).toBe('3 Video');
-	// 		expect(data[1].title).toBe('4 Video');
-	// 		expect(data[2].title).toBe('5 Video');
-	// 		expect(data[3].title).toBe('10 Video');
-	// 		expect(data[4].title).toBe('11 Video');
-	// 		expect(data[5].title).toBe('30 Video');
-	// 		expect(data[6].title).toBe('300 Video');
-	// 		expect(data[7].title).toBe('A Video');
-	// 		expect(data[8].title).toBe('B Video');
-	// 		expect(data[9].title).toBe('C Video');
-	// 	});
-	// });
-
-	it('with sort reverse, returns sorted relationships in reverse', function () {
+	it('with sort reverse, returns sorted relationships in reverse', function (done) {
 		const req = {
 			params: {
 				id: COLLECTION_1.id,
@@ -255,10 +180,11 @@ describe('Catalog Item Relationship Controller', function () {
 			expect(data[2].id).toBe('1111-A');
 			expect(data[1].id).toBe('1111-B');
 			expect(data[0].id).toBe('1111-C');
+			done();
 		});
 	});
 
-	it('with sort query param, returns sorted relationships', function () {
+	it('with sort by meta.episode query param, returns sorted relationships', function (done) {
 		const req = {
 			params: {
 				id: COLLECTION_1.id,
@@ -287,10 +213,11 @@ describe('Catalog Item Relationship Controller', function () {
 			expect(data[7].id).toBe('1111-11');
 			expect(data[8].id).toBe('1111-30');
 			expect(data[9].id).toBe('1111-300');
+			done();
 		});
 	});
 
-	it('with page query param, something happens', function () {
+	it('with page query param, something happens', function (done) {
 		const req = {
 			params: {
 				id: COLLECTION_1.id,
@@ -316,6 +243,7 @@ describe('Catalog Item Relationship Controller', function () {
 			const data = res.body.data;
 			expect(data.length).toBe(3);
 			expect(data[0].id).toBe('1111-10');
+			done();
 		});
 	});
 });
