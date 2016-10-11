@@ -278,15 +278,15 @@ describe('Catalog Item Relationship Controller', function () {
 			const data = res.body.data;
 			expect(res.body.included).toBeFalsy();
 			expect(data[0].id).toBe('1111-3');
-			expect(data[1].id).toBe('1111-4');
-			expect(data[2].id).toBe('1111-5');
-			expect(data[3].id).toBe('1111-A');
-			expect(data[4].id).toBe('1111-B');
-			expect(data[5].id).toBe('1111-C');
-			expect(data[6].id).toBe('1111-10');
-			expect(data[7].id).toBe('1111-11');
-			expect(data[8].id).toBe('1111-30');
-			expect(data[9].id).toBe('1111-300');
+			expect(data[1].id).toBe('1111-5');
+			expect(data[2].id).toBe('1111-4');
+			expect(data[3].id).toBe('1111-10');
+			expect(data[4].id).toBe('1111-11');
+			expect(data[5].id).toBe('1111-30');
+			expect(data[6].id).toBe('1111-300');
+			expect(data[7].id).toBe('1111-A');
+			expect(data[8].id).toBe('1111-C');
+			expect(data[9].id).toBe('1111-B');
 		});
 	});
 
