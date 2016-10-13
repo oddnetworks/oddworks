@@ -1,4 +1,4 @@
-/* global describe, beforeAll, it, expect */
+/* global describe, beforeAll, spyOn, it, expect */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
@@ -6,6 +6,7 @@
 const Promise = require('bluebird');
 const fakeredis = require('fakeredis');
 const _ = require('lodash');
+const Boom = require('boom');
 const redisStore = require('../../../../lib/stores/redis/');
 const identityService = require('../../../../lib/services/identity');
 const catalogService = require('../../../../lib/services/catalog');
@@ -202,6 +203,29 @@ describe('Catalog Service Controller', function () {
 			expect(data[0].id).toBe('video-13');
 			expect(data[1].id).toBe('video-14');
 			done();
+		});
+	});
+
+	describe('GET of list endpoint with ?include query param', function () {
+		it('returns a 400 error (Boom.badRequest)', function done() {
+			spyOn(Boom, 'badRequest');
+			const res = _.cloneDeep(RES);
+			const req = {
+				query: {include: 'things'},
+				params: {},
+				identity: {audience: 'admin'}
+			};
+
+			Promise.resolve(null)
+			.then(() => {
+				return this.controller.collection.get(req, res, () => {
+					return null;
+				});
+			})
+			.then(() => {
+				expect(Boom.badRequest).toHaveBeenCalledTimes(1);
+				done();
+			});
 		});
 	});
 });
