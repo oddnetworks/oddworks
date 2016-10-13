@@ -113,7 +113,7 @@ describe('Catalog Item Relationship Controller', function () {
 
 		this.controller.relationship.get(req, res, () => {
 			RESULTS.GET = res.body;
-			expect(res.body.data.length).toBe(3);
+			expect(res.body.length).toBe(3);
 			done();
 		});
 	});
@@ -135,7 +135,7 @@ describe('Catalog Item Relationship Controller', function () {
 		};
 
 		this.controller.relationship.get(req, res, () => {
-			const data = res.body.data;
+			const data = res.body;
 			expect(res.body.included).toBeFalsy();
 			expect(data[0].id).toBe('1111-3');
 			expect(data[1].id).toBe('1111-4');
@@ -168,7 +168,7 @@ describe('Catalog Item Relationship Controller', function () {
 		};
 
 		this.controller.relationship.get(req, res, () => {
-			const data = res.body.data;
+			const data = res.body;
 			expect(res.body.included).toBeFalsy();
 			expect(data[9].id).toBe('1111-3');
 			expect(data[8].id).toBe('1111-4');
@@ -201,7 +201,7 @@ describe('Catalog Item Relationship Controller', function () {
 		};
 
 		this.controller.relationship.get(req, res, () => {
-			const data = res.body.data;
+			const data = res.body;
 			expect(res.body.included).toBeFalsy();
 			expect(data[0].id).toBe('1111-3');
 			expect(data[1].id).toBe('1111-4');
@@ -240,7 +240,7 @@ describe('Catalog Item Relationship Controller', function () {
 		};
 
 		this.controller.relationship.get(req, res, () => {
-			const data = res.body.data;
+			const data = res.body;
 			expect(data.length).toBe(3);
 			expect(data[0].id).toBe('1111-10');
 			done();
