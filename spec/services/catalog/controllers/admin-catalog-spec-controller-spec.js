@@ -101,7 +101,32 @@ describe('Catalog Service fetchItem', function () {
 		.catch(done.fail);
 	});
 
-	xdescribe('Admin GET fetches a spec object');
+	describe('Admin GET', function () {
+		it('fetches a spec object', function (done) {
+			const req = {
+				params: {id: 'collection-13-spec'},
+				identity: {
+					audience: 'admin',
+					platform: {id: 'apple-ios'},
+					user: {id: 'user-id'}
+				},
+				query: {channel: 'odd-networks'}
+			};
+			const res = {
+				body: {},
+				status() {
+				}
+			};
+
+			this.controller.spec.get(req, res, () => {
+				expect(res.body.id).toBe('collection-13-spec');
+				expect(res.body.type).toBe('collectionSpec');
+				expect(res.body.source).toBe('testProvider');
+				expect(res.body.channel).toBe('odd-networks');
+				done();
+			});
+		});
+	});
 
 	describe('Admin PATCH updates a spec object', function () {
 		it('Admin PATCH updates a spec object', function (done) {
