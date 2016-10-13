@@ -1,10 +1,11 @@
-/* global describe, beforeAll, it, expect, xdescribe */
+/* global describe, beforeAll, it, expect */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
 
 const Promise = require('bluebird');
 const fakeredis = require('fakeredis');
+const _ = require('lodash');
 const redisStore = require('../../../../lib/stores/redis/');
 const identityService = require('../../../../lib/services/identity');
 const catalogService = require('../../../../lib/services/catalog');
@@ -36,28 +37,52 @@ describe('Catalog Service Controller', function () {
 		id: 'collection-13',
 		type: 'collection',
 		title: 'Collection 13',
-		channel: 'odd-networks'
+		channel: 'odd-networks',
+		source:	'test-provider'
 	};
 
 	const COLLECTION_14 = {
 		id: 'collection-14',
 		type: 'collection',
 		title: 'Collection 14',
-		channel: 'odd-networks'
+		channel: 'odd-networks',
+		source:	'test-provider'
 	};
 
 	const VIDEO = {
 		id: 'video-13',
 		type: 'video',
 		title: 'Video 13',
-		channel: 'odd-networks'
+		channel: 'odd-networks',
+		source:	'test-provider'
 	};
 
 	const VIDEO_14 = {
 		id: 'video-14',
 		type: 'video',
 		title: 'Video 14',
-		channel: 'odd-networks'
+		channel: 'odd-networks',
+		source:	'test-provider'
+	};
+
+	const RES = {
+		body: {},
+		status() {
+		}
+	};
+
+	const req = {
+		query: {},
+		params: {},
+		body: null,
+		identity: {audience: 'admin'}
+	};
+
+	const RESPONSES = {
+		POST_COLLECTION: null,
+		POST_VIDEO: null,
+		GET_COLLECTIONS: null,
+		GET_VIDEOS: null
 	};
 
 	beforeAll(function (done) {
@@ -100,55 +125,83 @@ describe('Catalog Service Controller', function () {
 				() => {}
 			);
 		})
+		.then(() => {
+			const collectionRes = _.cloneDeep(RES);
+			req.body = COLLECTION_14;
+
+			return this.controller.collection.post(req, collectionRes, () => {
+				RESPONSES.POST_COLLECTION = collectionRes;
+				return collectionRes;
+			});
+		})
+		.then(() => {
+			const videoRes = _.cloneDeep(RES);
+			req.body = VIDEO_14;
+
+			return this.controller.video.post(req, videoRes, () => {
+				RESPONSES.POST_VIDEO = videoRes;
+				return videoRes;
+			});
+		})
+		.then(() => {
+			const getCollections = _.cloneDeep(RES);
+			req.body = {};
+			req.query = {channel: 'odd-networks'};
+
+			return this.controller.collection.get(req, getCollections, () => {
+				RESPONSES.GET_COLLECTIONS = getCollections;
+				return getCollections;
+			});
+		})
+		.then(() => {
+			const getVideos = _.cloneDeep(RES);
+			req.body = {};
+			req.query = {channel: 'odd-networks'};
+
+			return this.controller.video.get(req, getVideos, () => {
+				RESPONSES.GET_VIDEOS = getVideos;
+				return getVideos;
+			});
+		})
 		.then(done)
 		.catch(this.handleError(done));
 	});
 
-	it('Admin POST adds a collection object', function (done) {
-		const res = {
-			body: {},
-			status() {
-			}
-		};
-		const req = {
-			query: {},
-			params: {},
-			body: COLLECTION_14,
-			identity: {audience: 'admin'}
-		};
+	describe('Admin POST', function () {
+		it('adds a collection object', function (done) {
+			const data = (RESPONSES.POST_COLLECTION || {}).body;
+			expect(data.id).toBe('collection-14');
+			expect(data.type).toBe('collection');
+			expect(data.title).toBe('Collection 14');
+			expect(data.channel).toBe('odd-networks');
+			done();
+		});
 
-		this.controller.collection.post(req, res, () => {
-			expect(res.body.id).toBe('collection-14');
-			expect(res.body.type).toBe('collection');
-			expect(res.body.title).toBe('Collection 14');
-			expect(res.body.channel).toBe('odd-networks');
+		it('adds a video object', function (done) {
+			const data = (RESPONSES.POST_VIDEO || {}).body;
+			expect(data.id).toBe('video-14');
+			expect(data.type).toBe('video');
+			expect(data.title).toBe('Video 14');
+			expect(data.channel).toBe('odd-networks');
 			done();
 		});
 	});
 
-	it('Admin POST adds a video object', function (done) {
-		const res = {
-			body: {},
-			status() {
-			}
-		};
-		const req = {
-			query: {},
-			params: {},
-			body: VIDEO_14,
-			identity: {audience: 'admin'}
-		};
+	describe('Admin GET', function () {
+		it('retrieves all available collections', function (done) {
+			const data = (RESPONSES.GET_COLLECTIONS || {}).body;
+			expect(data.length).toBe(2);
+			expect(data[0].id).toBe('collection-13');
+			expect(data[1].id).toBe('collection-14');
+			done();
+		});
 
-		this.controller.video.post(req, res, () => {
-			expect(res.body.id).toBe('video-14');
-			expect(res.body.type).toBe('video');
-			expect(res.body.title).toBe('Video 14');
-			expect(res.body.channel).toBe('odd-networks');
+		it('retrieves all available videos', function (done) {
+			const data = (RESPONSES.GET_VIDEOS || {}).body;
+			expect(data.length).toBe(2);
+			expect(data[0].id).toBe('video-13');
+			expect(data[1].id).toBe('video-14');
 			done();
 		});
 	});
-
-	xdescribe('Admin GET retrieves collection objects');
-
-	xdescribe('Admin GET retrieves video objects');
 });
