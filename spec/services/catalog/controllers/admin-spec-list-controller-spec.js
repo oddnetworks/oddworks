@@ -145,10 +145,11 @@ describe('Catalog Service fetchItem', function () {
 
 			delete req.body.source;
 
-			this.controller.spec.post(req, res, () => {
-				expect(Boom.badData).toHaveBeenCalledTimes(1);
-				done();
-			});
+			this.controller.spec.post(req, res, () => {})
+				.then(() => {
+					expect(Boom.badData).toHaveBeenCalledTimes(1);
+					done();
+				});
 		});
 	});
 
@@ -165,10 +166,11 @@ describe('Catalog Service fetchItem', function () {
 
 			req.body.source = 'baz';
 
-			this.controller.spec.post(req, res, () => {
-				expect(Boom.badData).toHaveBeenCalledTimes(1);
-				done();
-			});
+			this.controller.spec.post(req, res, () => {})
+				.then(() => {
+					expect(Boom.badData).toHaveBeenCalledTimes(1);
+					done();
+				});
 		});
 	});
 
