@@ -24,6 +24,7 @@ __Type:__ `channel`
     - __colors__ Array - contains [Color](#color) objects.
     - __fonts__ Array - contains [Font](#font) objects
 - __features__ [Features](#features)
+    - __ads__ [Ads](#ads)
     - __authentication__ [Authentication](#authentication)
     - __sharing__ [Sharing](#sharing)
     - __metrics__ [Metrics](#metrics)
@@ -43,6 +44,7 @@ __Type:__ `platform`
     - __colors__ Array - contains [Color](#color) objects.
     - __fonts__ Array - contains [Font](#font) objects
 - __features__ [Features](#features)
+    - __ads__ [Ads](#ads)
     - __authentication__ [Authentication](#authentication)
     - __sharing__ [Sharing](#sharing)
     - __metrics__ [Metrics](#metrics)
@@ -201,6 +203,13 @@ An identifier object is used as a reference to full resource objects. These are 
 - __type__ String - must be one of the Oddworks resource types
 
 ### Features
+
+#### Ads
+
+- __enabled__ Boolean
+- __type__ String
+
+__*__ _Any additional properties will be a String_
 
 #### Authentication
 
