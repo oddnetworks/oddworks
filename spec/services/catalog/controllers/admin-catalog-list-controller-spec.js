@@ -207,8 +207,11 @@ describe('Catalog Service Controller', function () {
 	});
 
 	describe('GET of list endpoint with ?include query param', function () {
-		it('returns a 400 error (Boom.badRequest)', function done() {
+		beforeAll(function () {
 			spyOn(Boom, 'badRequest');
+		});
+
+		it('returns a 400 error (Boom.badRequest)', function (done) {
 			const res = _.cloneDeep(RES);
 			const req = {
 				query: {include: 'things'},
@@ -216,16 +219,12 @@ describe('Catalog Service Controller', function () {
 				identity: {audience: 'admin'}
 			};
 
-			Promise.resolve(null)
-			.then(() => {
-				return this.controller.collection.get(req, res, () => {
-					return null;
-				});
-			})
-			.then(() => {
-				expect(Boom.badRequest).toHaveBeenCalledTimes(1);
-				done();
+			this.controller.collection.get(req, res, () => {
+				return res;
 			});
+
+			expect(Boom.badRequest).toHaveBeenCalledTimes(1);
+			done();
 		});
 	});
 });
