@@ -107,9 +107,7 @@ describe('DynamoDB Store', function () {
 					this.store = store;
 					done();
 				})
-				.catch(err => {
-					console.error(err);
-				});
+				.catch(this.handleError(done));
 		});
 	});
 
@@ -158,7 +156,7 @@ describe('DynamoDB Store', function () {
 				})
 				// End test setup
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 
 		it('returns saved video', function () {
@@ -250,7 +248,7 @@ describe('DynamoDB Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns collection.included', function () {
@@ -285,7 +283,7 @@ describe('DynamoDB Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns null', function () {
@@ -311,7 +309,7 @@ describe('DynamoDB Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('raises an exception', function () {
@@ -358,7 +356,7 @@ describe('DynamoDB Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns saved channel', function () {
@@ -416,7 +414,7 @@ describe('DynamoDB Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns the new entity from cmd:set', function () {
@@ -510,7 +508,7 @@ describe('DynamoDB Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns the updated entities from cmd:set', function () {
@@ -552,7 +550,7 @@ describe('DynamoDB Store', function () {
 						})
 						// End test setup
 						.then(done)
-						.catch(done.fail);
+						.catch(this.handleError(done));
 				});
 
 				it('raises an throws an error', function () {
@@ -600,7 +598,7 @@ describe('DynamoDB Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns the new entity from cmd:set', function () {
@@ -647,7 +645,7 @@ describe('DynamoDB Store', function () {
 					results = res;
 				})
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 
 		it('returns a list of entities', function () {
@@ -688,7 +686,7 @@ describe('DynamoDB Store', function () {
 						RESULTS.high = res[1];
 					})
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('honors a low limit', function () {
@@ -714,7 +712,7 @@ describe('DynamoDB Store', function () {
 						results = res;
 					})
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('honors the channel filter', function () {
@@ -747,7 +745,7 @@ describe('DynamoDB Store', function () {
 						results = res;
 					})
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns a list of entities', function () {
@@ -786,7 +784,7 @@ describe('DynamoDB Store', function () {
 							RESULTS.high = res[1];
 						})
 						.then(done)
-						.catch(done.fail);
+						.catch(this.handleError(done));
 				});
 
 				it('honors a low limit', function () {
@@ -856,7 +854,7 @@ describe('DynamoDB Store', function () {
 					RESULTS = res;
 				})
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 
 		it('returns expected number of results', function () {
@@ -917,7 +915,7 @@ describe('DynamoDB Store', function () {
 						RESULTS = res;
 					})
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns expected number of results', function () {
