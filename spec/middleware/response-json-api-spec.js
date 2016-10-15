@@ -632,4 +632,60 @@ describe('Middleware Response JSON API', function () {
 			expect(v.valid).toBe(true);
 		});
 	});
+
+	describe('with an array from the relationships endpoint', function () {
+		const req = _.cloneDeep(REQ);
+		let res = null;
+		let middleware = null;
+		const RESPONSES = {
+			ARRAY_RES: null
+		};
+
+		beforeAll(function (done) {
+			req.url = '/collections/123/relationships/entities';
+
+			res = new MockExpressResponse();
+			res.body = [
+				{
+					id: '1',
+					type: 'video'
+				},
+				{
+					id: '2',
+					type: 'collection'
+				}
+			];
+
+			middleware = responseJsonApi({bus});
+
+			return Promise.resolve(null)
+					.then(() => {
+						return middleware(req, res, err => {
+							if (err) {
+								return done.fail(err);
+							}
+							RESPONSES.ARRAY_RES = res;
+						});
+					})
+					.then(_.noop)
+					.then(done)
+					.catch(done.fail);
+		});
+
+		it('returns a valid api response', function () {
+			const v = Validator.validate(RESPONSES.ARRAY_RES.body, jsonApiSchema);
+			expect(v.valid).toBe(true);
+		});
+
+		it('returns with the expected members in the data array', function () {
+			const data = (RESPONSES.ARRAY_RES.body || {}).data;
+			expect(data.length).toBe(2);
+			expect(data[0].id).toBe('1');
+			expect(data[0].type).toBe('video');
+			expect(data[1].id).toBe('2');
+			expect(data[1].type).toBe('collection');
+			expect(Object.keys(data[0]).length).toBe(2);
+			expect(Object.keys(data[1]).length).toBe(2);
+		});
+	});
 });
