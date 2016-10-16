@@ -1,9 +1,8 @@
-/* global describe, beforeAll, expect, it, spyOn, xdescribe */
+/* global describe, beforeAll, expect, it, xdescribe */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
 
-const Boom = require('boom');
 const Promise = require('bluebird');
 const fakeredis = require('fakeredis');
 const redisStore = require('../../../../lib/stores/redis/');
@@ -93,25 +92,6 @@ describe('Identity Service Controller', function () {
 		});
 	});
 
-	it('non-Admin POST of channel recieves a forbidden response', function (done) {
-		const res = {
-			body: {},
-			status() {
-			}
-		};
-		const req = {
-			query: {},
-			params: {},
-			body: CHANNEL_2,
-			identity: {audience: 'platform'}
-		};
-		spyOn(Boom, 'forbidden');
-
-		this.controller.channel.post(req, res, () => {
-			expect(Boom.forbidden).toHaveBeenCalledTimes(1);
-			done();
-		});
-	});
 	it('Admin POST inserts a platform object', function (done) {
 		const res = {
 			body: {},
