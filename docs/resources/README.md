@@ -144,8 +144,8 @@ __Type:__ `progress`
 - __channel__ String
 - __viewer__ String
 - __video__ String
-- __position__ Integer - the current position of the viewer's progress on the video
-- __complete__ Boolean - has the viewer completed watching the video
+- __position__ Integer - the current position of the viewer's progress on the video. Default: `0`
+- __complete__ Boolean - has the viewer completed watching the video. Default: `false`
 
 ## Promotion
 
