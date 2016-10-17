@@ -1,174 +1,1539 @@
-/* global describe, beforeAll, it, expect */
+/* global describe, beforeAll, it, expect, spyOn */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
 
 const Promise = require('bluebird');
-const fakeredis = require('fakeredis');
-const redisStore = require('../../../../lib/stores/redis/');
-const identityService = require('../../../../lib/services/identity');
+const _ = require('lodash');
+const IdentityItemController = require('../../../../lib/services/identity/controllers/identity-item-controller');
 
-describe('Identity Service Controller', function () {
+describe('Identity Item Controller', function () {
+	const TYPES = Object.freeze(['platform', 'viewer', 'cat', 'horse']);
 	let bus;
-	let res;
 
-	const CHANNEL = {
-		id: 'odd-networks',
-		title: 'Odd Networks'
-	};
+	function createRequest(spec) {
+		const req = {
+			method: 'GET',
+			identity: {},
+			params: {},
+			query: {},
+			body: null
+		};
 
-	const PLATFORM = {
-		id: 'apple-ios',
-		title: 'Apple iOS',
-		channel: 'odd-networks'
-	};
+		return _.merge(req, spec);
+	}
 
-	beforeAll(function (done) {
+	function createResponse(spec) {
+		const res = {
+			status(code) {
+				this.statusCode = code;
+			}
+		};
+
+		return _.merge(res, spec);
+	}
+
+	beforeAll(function () {
 		bus = this.createBus();
-		this.service = null;
 
-		res = {
-			status() {
+		bus.queryHandler({role: 'store', cmd: 'get', type: 'channel'}, args => {
+			if (args.id === 'non-existent-record') {
+				return Promise.resolve(null);
 			}
-		};
+			return Promise.resolve({type: 'channel', id: args.id});
+		});
 
-		Promise.promisifyAll(fakeredis.RedisClient.prototype);
-		Promise.promisifyAll(fakeredis.Multi.prototype);
+		bus.commandHandler({role: 'store', cmd: 'set', type: 'channel'}, args => {
+			return Promise.resolve(_.merge({type: 'channel'}, args));
+		});
 
-		// Initialize a store
-		redisStore(bus, {
-			types: ['channel', 'platform'],
-			redis: fakeredis.createClient()
-		})
-		.then(store => {
-			this.store = store;
-		})
-		// Initialize an identity service
-		.then(() => {
-			return identityService(bus, {});
-		})
-		.then(service => {
-			this.service = service;
-			this.controller = {
-				channel: new service.IdentityItemController({bus, type: 'channel'}),
-				platform: new service.IdentityItemController({bus, type: 'platform'})
-			};
-		})
-		.then(() => {
-			return Promise.join(
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM),
-				() => {}
-			);
-		})
-		.then(done)
-		.catch(this.handleError(done));
-	});
+		bus.commandHandler({role: 'store', cmd: 'remove', type: 'channel'}, () => {
+			return Promise.resolve(true);
+		});
 
-	it('returns a channel object', function (done) {
-		const req = {
-			params: {id: 'odd-networks'},
-			query: {},
-			identity: {channel: {id: 'odd-networks'}}
-		};
+		TYPES.forEach(type => {
+			bus.queryHandler({role: 'store', cmd: 'get', type}, args => {
+				if (args.id === 'non-existent-record') {
+					return Promise.resolve(null);
+				}
+				return Promise.resolve({type, id: args.id, channel: args.channel});
+			});
 
-		this.controller.channel.get(req, res, () => {
-			expect(res.body.id).toBe('odd-networks');
-			expect(res.body.type).toBe('channel');
-			expect(res.body.title).toBe('Odd Networks');
-			done();
+			bus.commandHandler({role: 'store', cmd: 'set', type}, args => {
+				return Promise.resolve(_.merge({type}, args));
+			});
+
+			bus.commandHandler({role: 'store', cmd: 'remove', type}, () => {
+				return Promise.resolve(true);
+			});
 		});
 	});
 
-	it('returns a platform object', function (done) {
-		const req = {
-			params: {id: 'apple-ios'},
-			query: {},
-			identity: {channel: {id: 'odd-networks'}}
-		};
+	// Identity Item Controller with random type definition (not "channel").
+	describe('with random type', function () {
+		const type = _.sample(TYPES);
+		let handler;
 
-		this.controller.platform.get(req, res, () => {
-			expect(res.body.id).toBe('apple-ios');
-			expect(res.body.type).toBe('platform');
-			expect(res.body.channel).toBe('odd-networks');
-			expect(res.body.title).toBe('Apple iOS');
-			done();
+		beforeAll(function () {
+			handler = IdentityItemController.create({bus, type});
+		});
+
+		// Identity Item Controller with random type definition (not "channel")
+		// Performing a GET request.
+		describe('GET', function () {
+			const method = 'GET';
+			const params = Object.freeze({id: 'record-id'});
+
+			// Identity Item Controller with random type definition (not "channel")
+			// Performing a GET request with "platform" role.
+			describe('as a platform', function () {
+				const IDENTITY = Object.freeze({
+					audience: Object.freeze(['platform'])
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a GET request with "platform" role.
+				describe('when channel not in the JWT', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not query for the channel', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('does not query for the resource', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('returns a 403 error', function () {
+						expect(error.output.payload.statusCode).toBe(403);
+						expect(error.output.payload.message).toBe('Non admin callers must have a channel embedded in the JSON Web Token');
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a GET request with "platform" role.
+				describe('when resource exists', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({channel: {type: 'channel', id: 'a-channel-id'}}, IDENTITY);
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('returns status code 200', function () {
+						expect(res.statusCode).toBe(200);
+					});
+
+					it('assigns the resource to the response body', function () {
+						expect(res.body).toEqual({type, id: params.id, channel: 'a-channel-id'});
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a GET request with "platform" role.
+				describe('when resource does not exist', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({channel: {type: 'channel', id: 'a-channel-id'}}, IDENTITY);
+						const params = {id: 'non-existent-record'};
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('returns a 404 status code', function () {
+						expect(error.output.payload.statusCode).toBe(404);
+					});
+
+					it('does not assign a resource to the response', function () {
+						expect(res.body).not.toBeDefined();
+					});
+				});
+			});
+
+			// Identity Item Controller with random type definition (not "channel")
+			// Performing a GET request with "admin" role.
+			describe('as an admin', function () {
+				const IDENTITY = Object.freeze({
+					audience: Object.freeze(['admin'])
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a GET request with "admin" role.
+				describe('with channel in query parameter and JWT', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const query = {channel: 'query-channel-id'};
+						const identity = _.merge({}, {channel: {type: 'channel', id: 'jwt-channel-id'}}, IDENTITY);
+
+						req = createRequest({method, identity, params, query});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('queries for the channel in the query parameter', function () {
+						expect(bus.query).toHaveBeenCalledTimes(2);
+						expect(bus.query.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'get', type: 'channel'});
+						expect(bus.query.calls.argsFor(0)[1]).toEqual({type: 'channel', id: 'query-channel-id'});
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a GET request with "admin" role.
+				describe('with channel in JWT only (not query parameter)', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({}, {channel: {type: 'channel', id: 'jwt-channel-id'}}, IDENTITY);
+
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('queries for the channel in the JWT', function () {
+						expect(bus.query).toHaveBeenCalledTimes(1);
+						expect(bus.query.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'get', type});
+						expect(bus.query.calls.argsFor(0)[1]).toEqual({type, id: params.id, channel: 'jwt-channel-id'});
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a GET request with "admin" role.
+				describe('when no channel is specified', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not query for the resource', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('return a 400 error', function () {
+						expect(error.output.payload.statusCode).toBe(400);
+						expect(error.output.payload.message).toBe('The "channel" query parameter is required');
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a GET request with "admin" role.
+				describe('when the specified channel does not exist', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const query = {channel: 'query-channel-id'};
+						const identity = IDENTITY;
+
+						req = createRequest({method, identity, params, query});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.returnValue(Promise.resolve(null));
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('returns a 403 error', function () {
+						expect(error.output.payload.statusCode).toBe(403);
+						expect(error.output.payload.message).toBe('Channel "query-channel-id" does not exist');
+					});
+
+					it('does not qeury for the resource', function () {
+						expect(bus.query).toHaveBeenCalledTimes(1);
+					});
+
+					it('does not attach the resource to the response body', function () {
+						expect(res.body).not.toBeDefined();
+					});
+				});
+			});
+		});
+
+		// Identity Item Controller with random type definition (not "channel")
+		// Performing a PATCH request.
+		describe('PATCH', function () {
+			const method = 'PATCH';
+			const params = Object.freeze({id: 'record-id'});
+			const BODY = Object.freeze({
+				type,
+				id: params.id,
+				foo: 'bar'
+			});
+
+			// Identity Item Controller with random type definition (not "channel")
+			// Performing a PATCH request with "platform" role.
+			describe('as a platform', function () {
+				const IDENTITY = Object.freeze({
+					audience: Object.freeze(['platform'])
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a PATCH request with "platform" role.
+				describe('when the channel is not in the JWT', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+						const body = _.merge({channel: 'a-channel-id'}, BODY);
+						req = createRequest({method, identity, params, body});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not query for the channel', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('does not query for the resource', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('does not attempt to save the resource', function () {
+						expect(bus.sendCommand).not.toHaveBeenCalled();
+					});
+
+					it('returns a 403', function () {
+						expect(error.output.payload.statusCode).toBe(403);
+						expect(error.output.payload.message).toBe('Non admin callers must have a channel embedded in the JSON Web Token');
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a PATCH request with "platform" role.
+				describe('when the resource does not exist', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({channel: {type: 'channel', id: 'a-channel-id'}}, IDENTITY);
+						const params = {id: 'non-existent-record'};
+						const body = _.merge({channel: identity.channel.id}, BODY);
+						req = createRequest({method, identity, params, body});
+						res = createResponse();
+
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not attempt to save the resource', function () {
+						expect(bus.sendCommand).not.toHaveBeenCalled();
+					});
+
+					it('returns a 404 status code', function () {
+						expect(error.output.payload.statusCode).toBe(404);
+					});
+
+					it('does not assign a resource to the response', function () {
+						expect(res.body).not.toBeDefined();
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a PATCH request with "platform" role.
+				describe('with valid request', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({channel: {type: 'channel', id: 'a-channel-id'}}, IDENTITY);
+						const body = _.merge({channel: identity.channel.id}, BODY);
+						req = createRequest({method, identity, params, body});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('queries for the resource', function () {
+						expect(bus.query).toHaveBeenCalledTimes(1);
+						expect(bus.query.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'get', type});
+						expect(bus.query.calls.argsFor(0)[1]).toEqual({type, id: params.id, channel: 'a-channel-id'});
+					});
+
+					it('saves the resource', function () {
+						expect(bus.sendCommand).toHaveBeenCalledTimes(1);
+						expect(bus.sendCommand.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'set', type});
+					});
+
+					it('updates the resource', function () {
+						expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({
+							type,
+							id: params.id,
+							channel: 'a-channel-id',
+							foo: 'bar'
+						});
+					});
+
+					it('returns a 200', function () {
+						expect(res.statusCode).toBe(200);
+					});
+
+					it('attaches the updated resource as response body', function () {
+						expect(res.body).toEqual({
+							type,
+							id: params.id,
+							channel: 'a-channel-id',
+							foo: 'bar'
+						});
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a PATCH request with "platform" role.
+				describe('when channel is not included in the payload', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({channel: {type: 'channel', id: 'a-channel-id'}}, IDENTITY);
+						const body = BODY;
+						req = createRequest({method, identity, params, body});
+						res = createResponse();
+
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('updates the resource with the channel ID', function () {
+						expect(bus.sendCommand).toHaveBeenCalledTimes(1);
+						expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({
+							type,
+							id: params.id,
+							channel: 'a-channel-id',
+							foo: 'bar'
+						});
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a PATCH request with "platform" role.
+				describe('when attempting to update channel, type, or id attributes', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({channel: {type: 'channel', id: 'a-channel-id'}}, IDENTITY);
+						const body = _.merge({}, BODY, {
+							type: 'pluto',
+							id: 'some-other-id',
+							channel: 'another-channel-id'
+						});
+						req = createRequest({method, identity, params, body});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('does not update channel, type, or id', function () {
+						expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({
+							type,
+							id: params.id,
+							channel: 'a-channel-id',
+							foo: 'bar'
+						});
+					});
+				});
+			});
+
+			// Identity Item Controller with random type definition (not "channel")
+			// Performing a PATCH request with "admin" role.
+			describe('as an admin', function () {
+				const IDENTITY = Object.freeze({
+					audience: Object.freeze(['admin'])
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a PATCH request with "admin" role.
+				describe('with channel in body and JWT', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const channelId = 'attribute-channel-id';
+						const body = _.merge({channel: channelId}, BODY);
+						const identity = _.merge({}, {channel: {type: 'channel', id: 'jwt-channel-id'}}, IDENTITY);
+
+						req = createRequest({method, identity, params, body});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('queries for the channel in the query parameter', function () {
+						expect(bus.query).toHaveBeenCalledTimes(2);
+						expect(bus.query.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'get', type: 'channel'});
+						expect(bus.query.calls.argsFor(0)[1]).toEqual({type: 'channel', id: 'attribute-channel-id'});
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a PATCH request with "admin" role.
+				describe('with channel in JWT only (not body)', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({}, {channel: {type: 'channel', id: 'jwt-channel-id'}}, IDENTITY);
+						const body = BODY;
+
+						req = createRequest({method, identity, params, body});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('queries for the channel in the JWT', function () {
+						expect(bus.query).toHaveBeenCalledTimes(1);
+						expect(bus.query.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'get', type});
+						expect(bus.query.calls.argsFor(0)[1]).toEqual({type, id: params.id, channel: 'jwt-channel-id'});
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a PATCH request with "admin" role.
+				describe('when no channel is specified', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+						const body = BODY;
+
+						req = createRequest({method, identity, params, body});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not query for the resource', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('does not save the resource', function () {
+						expect(bus.sendCommand).not.toHaveBeenCalled();
+					});
+
+					it('return a 422 error', function () {
+						expect(error.output.payload.statusCode).toBe(422);
+						expect(error.output.payload.message).toBe('The "channel" attribute is required');
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a PATCH request with "admin" role.
+				describe('when the channel does not exist', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const channelId = 'attribute-channel-id';
+						const body = _.merge({channel: channelId}, BODY);
+						const identity = _.merge({}, {channel: {type: 'channel', id: 'jwt-channel-id'}}, IDENTITY);
+
+						req = createRequest({method, identity, params, body});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.returnValue(Promise.resolve(null));
+						spyOn(bus, 'sendCommand').and.returnValue(Promise.resolve(null));
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not query for the resource', function () {
+						expect(bus.query).toHaveBeenCalledTimes(1);
+						expect(bus.query.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'get', type: 'channel'});
+					});
+
+					it('does not save the the source', function () {
+						expect(bus.sendCommand).not.toHaveBeenCalled();
+					});
+
+					it('returns a 403 error', function () {
+						expect(error.output.payload.statusCode).toBe(403);
+						expect(error.output.payload.message).toBe('Channel "attribute-channel-id" does not exist');
+					});
+				});
+			});
+		});
+
+		// Identity Item Controller with random type definition (not "channel")
+		// Performing a DELETE request.
+		describe('DELETE', function () {
+			const method = 'DELETE';
+			const params = Object.freeze({id: 'record-id'});
+
+			// Identity Item Controller with random type definition (not "channel")
+			// Performing a DELETE request.
+			describe('as a platform', function () {
+				const IDENTITY = Object.freeze({
+					audience: Object.freeze(['platform'])
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a DELETE request.
+				describe('when channel not in the JWT', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not query for the channel', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('does not remove the resource', function () {
+						expect(bus.sendCommand).not.toHaveBeenCalled();
+					});
+
+					it('returns a 403 error', function () {
+						expect(error.output.payload.statusCode).toBe(403);
+						expect(error.output.payload.message).toBe('Non admin callers must have a channel embedded in the JSON Web Token');
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a DELETE request with "platform" role.
+				describe('when resource exists', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({channel: {type: 'channel', id: 'a-channel-id'}}, IDENTITY);
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('removes the resource', function () {
+						expect(bus.sendCommand).toHaveBeenCalledTimes(1);
+						expect(bus.sendCommand.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'remove', type});
+						expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({type, id: params.id, channel: 'a-channel-id'});
+					});
+
+					it('returns status code 200', function () {
+						expect(res.statusCode).toBe(200);
+					});
+				});
+			});
+
+			// Identity Item Controller with random type definition (not "channel")
+			// Performing a DELETE request.
+			describe('as an admin', function () {
+				const IDENTITY = Object.freeze({
+					audience: Object.freeze(['admin'])
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a DELETE request with "admin" role.
+				describe('with channel in query parameter and JWT', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const query = {channel: 'query-channel-id'};
+						const identity = _.merge({}, {channel: {type: 'channel', id: 'jwt-channel-id'}}, IDENTITY);
+
+						req = createRequest({method, identity, params, query});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('queries for the channel in the query parameter', function () {
+						expect(bus.query).toHaveBeenCalledTimes(1);
+						expect(bus.query.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'get', type: 'channel'});
+						expect(bus.query.calls.argsFor(0)[1]).toEqual({type: 'channel', id: 'query-channel-id'});
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a DELETE request with "admin" role.
+				describe('with channel in JWT only (not query parameter)', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({}, {channel: {type: 'channel', id: 'jwt-channel-id'}}, IDENTITY);
+
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('removes the resource using channel in JWT', function () {
+						expect(bus.sendCommand).toHaveBeenCalledTimes(1);
+						expect(bus.sendCommand.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'remove', type});
+						expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({type, id: params.id, channel: 'jwt-channel-id'});
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a DELETE request with "admin" role.
+				describe('when no channel is specified', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not remove the resource', function () {
+						expect(bus.sendCommand).not.toHaveBeenCalled();
+					});
+
+					it('return a 400 error', function () {
+						expect(error.output.payload.statusCode).toBe(400);
+						expect(error.output.payload.message).toBe('The "channel" query parameter is required');
+					});
+				});
+
+				// Identity Item Controller with random type definition (not "channel")
+				// Performing a DELETE request with "admin" role.
+				describe('when the specified channel does not exist', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const query = {channel: 'query-channel-id'};
+						const identity = IDENTITY;
+
+						req = createRequest({method, identity, params, query});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.returnValue(Promise.resolve(null));
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('returns a 403 error', function () {
+						expect(error.output.payload.statusCode).toBe(403);
+						expect(error.output.payload.message).toBe('Channel "query-channel-id" does not exist');
+					});
+
+					it('does not remove the resource', function () {
+						expect(bus.sendCommand).not.toHaveBeenCalled();
+					});
+
+					it('does not attach the resource to the response body', function () {
+						expect(res.body).not.toBeDefined();
+					});
+				});
+			});
 		});
 	});
 
-	it('updates a channel object', function (done) {
-		const req = {
-			params: {id: 'odd-networks'},
-			query: {},
-			identity: {channel: {id: 'odd-networks'}},
-			body: {
-				title: 'Odd',
-				description: 'How odd are you?'
-			}
-		};
+	describe('with type === channel', function () {
+		const type = 'channel';
+		let handler;
 
-		this.controller.channel.patch(req, res, () => {
-			expect(res.body.id).toBe('odd-networks');
-			expect(res.body.type).toBe('channel');
-			expect(res.body.title).toBe('Odd');
-			expect(res.body.description).toBe('How odd are you?');
-			done();
+		beforeAll(function () {
+			handler = IdentityItemController.create({bus, type});
 		});
-	});
 
-	it('updates a platform object', function (done) {
-		const req = {
-			params: {id: 'apple-ios'},
-			query: {},
-			identity: {channel: {id: 'odd-networks'}},
-			body: {
-				channel: 'odd-networks',
-				category: 'MOBILE'
-			}
-		};
+		// Identity Item Controller with type === "channel"
+		// Performing a GET request.
+		describe('GET', function () {
+			const method = 'GET';
+			const params = Object.freeze({id: 'a-channel-id'});
 
-		this.controller.platform.patch(req, res, () => {
-			expect(res.body.id).toBe('apple-ios');
-			expect(res.body.type).toBe('platform');
-			expect(res.body.channel).toBe('odd-networks');
-			expect(res.body.title).toBe('Apple iOS');
-			expect(res.body.category).toBe('MOBILE');
-			done();
+			// Identity Item Controller with type === "channel"
+			// Performing a GET request with "platform" role.
+			describe('as a platform', function () {
+				const IDENTITY = Object.freeze({
+					audience: Object.freeze(['platform'])
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a GET request with "platform" role.
+				describe('when channel not in the JWT', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not query for the channel', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('does not query for the resource', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('returns a 403 error', function () {
+						expect(error.output.payload.statusCode).toBe(403);
+						expect(error.output.payload.message).toBe('Non admin callers must have a channel embedded in the JSON Web Token');
+					});
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a GET request with "platform" role.
+				describe('JWT channel does not match requested channel ID', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({channel: {type: 'channel', id: 'a-different-channel-id'}}, IDENTITY);
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not query for the channel', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('does not query for the resource', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('returns a 403 error', function () {
+						expect(error.output.payload.statusCode).toBe(403);
+						expect(error.output.payload.message).toBe('Access to the requested channel is forbidden');
+					});
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a GET request with "platform" role.
+				describe('when resource exists', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({channel: {type: 'channel', id: 'a-channel-id'}}, IDENTITY);
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('returns status code 200', function () {
+						expect(res.statusCode).toBe(200);
+					});
+
+					it('assigns the resource to the response body', function () {
+						expect(res.body).toEqual({type, id: params.id});
+					});
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a GET request with "platform" role.
+				//
+				// We don't test this case, because if the channel did not exist,
+				// the request would not have authenticated.
+				// describe('when resource does not exist', function () {
+				// });
+			});
+
+			// Identity Item Controller with type === "channel"
+			// Performing a GET request with "admin" role.
+			describe('as an admin', function () {
+				const IDENTITY = Object.freeze({
+					audience: Object.freeze(['admin'])
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a GET request with "admin" role.
+				describe('when no channel is specified', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					// An admin caller can access a channel resource without specifying it
+					// in the JWT or query parameters.
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('returns status code 200', function () {
+						expect(res.statusCode).toBe(200);
+					});
+
+					it('assigns the resource to the response body', function () {
+						expect(res.body).toEqual({type, id: params.id});
+					});
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a GET request with "admin" role.
+				describe('when resource does not exist', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+						const params = {id: 'non-existent-record'};
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('returns a 404 status code', function () {
+						expect(error.output.payload.statusCode).toBe(404);
+					});
+
+					it('does not assign a resource to the response', function () {
+						expect(res.body).not.toBeDefined();
+					});
+				});
+			});
 		});
-	});
 
-	it('deletes a channel object', function (done) {
-		const req = {
-			params: {id: 'odd-networks'},
-			query: {},
-			identity: {channel: {id: 'odd-networks'}},
-			body: {}
-		};
+		// Identity Item Controller with type === "channel"
+		// Performing a PATCH request.
+		describe('PATCH', function () {
+			const method = 'PATCH';
+			const params = Object.freeze({id: 'a-channel-id'});
+			const BODY = Object.freeze({
+				type,
+				id: params.id,
+				foo: 'bar'
+			});
 
-		this.controller.channel.delete(req, res, () => {
-			expect(res.body.id).toBeUndefined();
-			expect(res.body.type).toBeUndefined();
-			expect(res.body.title).toBeUndefined();
-			expect(res.body.description).toBeUndefined();
-			done();
+			// Identity Item Controller with type === "channel"
+			// Performing a PATCH request with "platform" role.
+			describe('as a platform', function () {
+				const IDENTITY = Object.freeze({
+					audience: Object.freeze(['platform'])
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a PATCH request with "platform" role.
+				describe('when the channel is not in the JWT', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+						const body = BODY;
+						req = createRequest({method, identity, params, body});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not query for the channel', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('does not query for the resource', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('does not attempt to save the resource', function () {
+						expect(bus.sendCommand).not.toHaveBeenCalled();
+					});
+
+					it('returns a 403', function () {
+						expect(error.output.payload.statusCode).toBe(403);
+						expect(error.output.payload.message).toBe('Non admin callers must have a channel embedded in the JSON Web Token');
+					});
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a PATCH request with "platform" role.
+				describe('with valid request', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({channel: {type: 'channel', id: 'a-channel-id'}}, IDENTITY);
+						const body = BODY;
+						req = createRequest({method, identity, params, body});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('queries for the resource', function () {
+						expect(bus.query).toHaveBeenCalledTimes(1);
+						expect(bus.query.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'get', type});
+						expect(bus.query.calls.argsFor(0)[1]).toEqual({type, id: params.id});
+					});
+
+					it('saves the resource', function () {
+						expect(bus.sendCommand).toHaveBeenCalledTimes(1);
+						expect(bus.sendCommand.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'set', type});
+					});
+
+					it('updates the resource', function () {
+						expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({
+							type,
+							id: params.id,
+							foo: 'bar'
+						});
+					});
+
+					it('returns a 200', function () {
+						expect(res.statusCode).toBe(200);
+					});
+
+					it('attaches the updated resource as response body', function () {
+						expect(res.body).toEqual({
+							type,
+							id: params.id,
+							foo: 'bar'
+						});
+					});
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a PATCH request with "platform" role.
+				//
+				// We don't test this case, because if the channel did not exist,
+				// the request would not have authenticated.
+				// describe('when resource does not exist', function () {
+				// });
+			});
+
+			// Identity Item Controller with type === "channel"
+			// Performing a PATCH request with "admin" role.
+			describe('as an admin', function () {
+				const IDENTITY = Object.freeze({
+					audience: Object.freeze(['admin'])
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a PATCH request with "admin" role.
+				describe('when no channel is specified', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+						const body = BODY;
+						req = createRequest({method, identity, params, body});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					// An admin caller can access a channel resource without specifying it
+					// in the JWT or query parameters.
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('queries for the resource', function () {
+						expect(bus.query).toHaveBeenCalledTimes(1);
+						expect(bus.query.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'get', type});
+						expect(bus.query.calls.argsFor(0)[1]).toEqual({type, id: params.id});
+					});
+
+					it('saves the resource', function () {
+						expect(bus.sendCommand).toHaveBeenCalledTimes(1);
+						expect(bus.sendCommand.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'set', type});
+					});
+
+					it('updates the resource', function () {
+						expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({
+							type,
+							id: params.id,
+							foo: 'bar'
+						});
+					});
+
+					it('returns status code 200', function () {
+						expect(res.statusCode).toBe(200);
+					});
+
+					it('assigns the resource to the response body', function () {
+						expect(res.body).toEqual({type, id: params.id, foo: 'bar'});
+					});
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a PATCH request with "admin" role.
+				describe('when the resource does not exist', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+						const params = {id: 'non-existent-record'};
+						const body = BODY;
+						req = createRequest({method, identity, params, body});
+						res = createResponse();
+
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not attempt to save the resource', function () {
+						expect(bus.sendCommand).not.toHaveBeenCalled();
+					});
+
+					it('returns a 404 status code', function () {
+						expect(error.output.payload.statusCode).toBe(404);
+					});
+
+					it('does not assign a resource to the response', function () {
+						expect(res.body).not.toBeDefined();
+					});
+				});
+			});
 		});
-	});
 
-	it('deletes a platform object', function (done) {
-		const req = {
-			params: {id: 'apple-ios'},
-			query: {},
-			identity: {channel: {id: 'odd-networks'}},
-			body: {}
-		};
+		// Identity Item Controller with type === "channel"
+		// Performing a DELETE request.
+		describe('DELETE', function () {
+			const method = 'DELETE';
+			const params = Object.freeze({id: 'a-channel-id'});
 
-		this.controller.platform.delete(req, res, () => {
-			expect(res.body.id).toBeUndefined();
-			expect(res.body.type).toBeUndefined();
-			expect(res.body.channel).toBeUndefined();
-			expect(res.body.title).toBeUndefined();
-			expect(res.body.category).toBeUndefined();
-			done();
+			// Identity Item Controller with type === "channel"
+			// Performing a DELETE request with "platform" role.
+			describe('as a platform', function () {
+				const IDENTITY = Object.freeze({
+					audience: Object.freeze(['platform'])
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a DELETE request with "platform" role.
+				describe('when channel not in the JWT', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not query for the channel', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('does not remove the resource', function () {
+						expect(bus.sendCommand).not.toHaveBeenCalled();
+					});
+
+					it('returns a 403 error', function () {
+						expect(error.output.payload.statusCode).toBe(403);
+						expect(error.output.payload.message).toBe('Non admin callers must have a channel embedded in the JSON Web Token');
+					});
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a DELETE request with "platform" role.
+				describe('JWT channel does not match requested channel ID', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({channel: {type: 'channel', id: 'a-different-channel-id'}}, IDENTITY);
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						spyOn(bus, 'query').and.callThrough();
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not query for the channel', function () {
+						expect(bus.query).not.toHaveBeenCalled();
+					});
+
+					it('does not remove the resource', function () {
+						expect(bus.sendCommand).not.toHaveBeenCalled();
+					});
+
+					it('returns a 403 error', function () {
+						expect(error.output.payload.statusCode).toBe(403);
+						expect(error.output.payload.message).toBe('Access to the requested channel is forbidden');
+					});
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a DELETE request with "platform" role.
+				describe('when resource exists', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = _.merge({channel: {type: 'channel', id: 'a-channel-id'}}, IDENTITY);
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('removes the resource', function () {
+						expect(bus.sendCommand).toHaveBeenCalledTimes(1);
+						expect(bus.sendCommand.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'remove', type});
+						expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({type, id: params.id});
+					});
+
+					it('returns status code 200', function () {
+						expect(res.statusCode).toBe(200);
+					});
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a DELETE request with "platform" role.
+				//
+				// We don't test this case, because if the channel did not exist,
+				// the request would not have authenticated.
+				// describe('when resource does not exist', function () {
+				// });
+			});
+
+			// Identity Item Controller with type === "channel"
+			// Performing a DELETE request with "admin" role.
+			describe('as an admin', function () {
+				const IDENTITY = Object.freeze({
+					audience: Object.freeze(['admin'])
+				});
+
+				// Identity Item Controller with type === "channel"
+				// Performing a DELETE request with "admin" role.
+				describe('when no channel is specified', function () {
+					let req;
+					let res;
+					let error;
+
+					beforeAll(function (done) {
+						const identity = IDENTITY;
+						req = createRequest({method, identity, params});
+						res = createResponse();
+
+						spyOn(bus, 'sendCommand').and.callThrough();
+
+						handler(req, res, err => {
+							error = err;
+							done();
+						});
+					});
+
+					// An admin caller can access a channel resource without specifying it
+					// in the JWT or query parameters.
+					it('removes the resource', function () {
+						expect(bus.sendCommand).toHaveBeenCalledTimes(1);
+						expect(bus.sendCommand.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'remove', type});
+						expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({type, id: params.id});
+					});
+
+					it('does not return an error', function () {
+						expect(error).not.toBeDefined();
+					});
+
+					it('returns status code 200', function () {
+						expect(res.statusCode).toBe(200);
+					});
+				});
+			});
 		});
 	});
 });
