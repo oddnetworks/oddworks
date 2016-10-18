@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/oddnetworks/oddworks",
   "dependencies": {
+    "bcrypt": "^0.8.7",
     "bluebird": "~3.4.0",
     "body-parser": "~1.15.0",
     "boom": "~4.0.0",
