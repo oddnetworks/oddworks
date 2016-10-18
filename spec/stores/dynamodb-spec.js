@@ -1,4 +1,4 @@
-/* global xdescribe, describe, beforeAll, it, expect */
+/* global describe, beforeAll, it, expect */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
@@ -616,8 +616,55 @@ describe('DynamoDB Store', function () {
 		});
 	});
 
-	xdescribe('cmd:remove', function () {
-		it('should be tested');
+	describe('cmd:remove', function () {
+		const RESULTS = {
+			GET_BEFORE: null,
+			GET_AFTER: null
+		};
+
+		const entities = _.range(3).map(n => {
+			return {title: `identity-${n}`, channel: 'oddnews'};
+		});
+
+		const type = 'video';
+		const channel = 'oddnews';
+
+		beforeAll(function (done) {
+			Promise.resolve(entities)
+				.then(entities => {
+					const cmd = 'set';
+					return Promise.all(entities.map(entity => {
+						return bus.sendCommand({role, cmd, type}, entity);
+					}));
+				})
+				.then(() => {
+					return bus.query({role, cmd: 'scan', type}, {channel});
+				})
+				.then(res => {
+					RESULTS.GET_BEFORE = res;
+					return res;
+				})
+				.then(() => {
+					const video = RESULTS.GET_BEFORE[0];
+					// the memory store doesn't seem to have a remove command
+					return bus.sendCommand({role, cmd: 'remove', type}, {id: video.id, channel});
+				})
+				.then(() => {
+					return bus.query({role, cmd: 'scan', type}, {channel});
+				})
+				.then(res => {
+					RESULTS.GET_AFTER = res;
+					return res;
+				})
+				.then(done)
+				.catch(done.fail);
+		});
+
+		it('should remove an item', function (done) {
+			expect(RESULTS.GET_BEFORE.length).toBe(3);
+			expect(RESULTS.GET_AFTER.length).toBe(2);
+			done();
+		});
 	});
 
 	describe('cmd:scan', function () {
