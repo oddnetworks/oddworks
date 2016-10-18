@@ -1,4 +1,4 @@
-/* global describe, beforeAll, it, expect, xit */
+/* global describe, beforeAll, it, expect */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
@@ -591,7 +591,7 @@ describe('Memory Store', function () {
 				.catch(done.fail);
 		});
 
-		xit('should remove an item', function (done) {
+		it('should remove an item', function (done) {
 			expect(RESULTS.GET_BEFORE.length).toBe(3);
 			expect(RESULTS.GET_AFTER.length).toBe(2);
 			done();
