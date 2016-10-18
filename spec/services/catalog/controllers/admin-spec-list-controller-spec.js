@@ -1,4 +1,4 @@
-/* global describe, beforeAll, spyOn, expect, it, xdescribe */
+/* global describe, beforeAll, spyOn, expect, it */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
@@ -174,5 +174,26 @@ describe('Catalog Service fetchItem', function () {
 		});
 	});
 
-	xdescribe('Admin GET retrieves all preset specs a spec object');
+	describe('Admin GET', function () {
+		it('retrieves all preset specs', function (done) {
+			const res = new MockExpressResponse();
+			const req = {
+				query: {},
+				params: {},
+				body: COLLECTION_SPEC_14,
+				identity: {audience: 'admin'}
+			};
+
+			req.query = {channel: 'odd-networks'};
+
+			this.controller.spec.get(req, res, () => {
+				const data = res.body || [];
+				expect(data.length).toBe(3);
+				expect(data[0].id).toBe('collection-13-spec');
+				expect(data[1].id).toBe('collection-13-spec-delete');
+				expect(data[2].id).toBe('collection-14-spec');
+				done();
+			});
+		});
+	});
 });
