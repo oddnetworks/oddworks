@@ -33,7 +33,8 @@
     "object-property-natural-sort": "0.0.4",
     "oddcast": "~2.1.0",
     "redis-search": "~0.0.1",
-    "reds": "^0.2.5"
+    "reds": "^0.2.5",
+    "superagent": "^2.3.0"
   },
   "devDependencies": {
     "aws-sdk": "~2.5.0",
