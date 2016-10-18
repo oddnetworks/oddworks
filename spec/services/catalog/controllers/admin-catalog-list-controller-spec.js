@@ -214,6 +214,7 @@ describe('Catalog Service Controller', function () {
 		it('returns a 400 error (Boom.badRequest)', function (done) {
 			const res = _.cloneDeep(RES);
 			const req = {
+				method: 'GET',
 				query: {include: 'things'},
 				params: {},
 				identity: {audience: 'admin'}
