@@ -30,7 +30,7 @@
     "lodash": "^3.0.0",
     "node-uuid": "~1.4.0",
     "object-property-natural-sort": "0.0.4",
-    "oddcast": "~2.1.0",
+    "oddcast": "2.2.0",
     "redis-search": "~0.0.1",
     "reds": "^0.2.5"
   },
