@@ -1,12 +1,12 @@
-/* global describe, beforeAll, spyOn, expect, it, xdescribe */
+/* global describe, beforeAll, expect, it */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
 
 const Promise = require('bluebird');
+const _ = require('lodash');
 const fakeredis = require('fakeredis');
 const MockExpressResponse = require('mock-express-response');
-const Boom = require('boom');
 const redisStore = require('../../../../lib/stores/redis/');
 const catalogService = require('../../../../lib/services/catalog');
 const identityService = require('../../../../lib/services/identity');
@@ -107,7 +107,7 @@ describe('Catalog Service fetchItem', function () {
 			);
 		})
 		.then(done)
-		.catch(done.fail);
+		.catch(this.handleError(done));
 	});
 
 	it('Admin POST correctly inserts a spec object', function (done) {
@@ -134,28 +134,50 @@ describe('Catalog Service fetchItem', function () {
 
 	describe('POST with missing .source', function () {
 		it('returns a 422 response', function (done) {
-			spyOn(Boom, 'badData');
+			const spec = _.cloneDeep(COLLECTION_SPEC_14);
+			delete spec.source;
+
 			const res = new MockExpressResponse();
+
 			const req = {
 				query: {},
 				params: {},
-				body: COLLECTION_SPEC_14,
+				body: spec,
 				identity: {audience: 'admin'}
 			};
 
-			delete req.body.source;
-
-			this.controller.spec.post(req, res, () => {})
-				.then(() => {
-					expect(Boom.badData).toHaveBeenCalledTimes(1);
-					done();
-				});
+			this.controller.spec.post(req, res, err => {
+				// TODO Respond with Boom error
+				expect(err).toBeTruthy();
+				done();
+			});
 		});
 	});
 
-	describe('POST with missing unsupported source', function () {
+	describe('POST with unsupported source', function () {
 		it('returns a 422 response', function (done) {
-			spyOn(Boom, 'badData');
+			const spec = _.cloneDeep(COLLECTION_SPEC_14);
+			spec.source = 'baz';
+
+			const res = new MockExpressResponse();
+
+			const req = {
+				query: {},
+				params: {},
+				body: spec,
+				identity: {audience: 'admin'}
+			};
+
+			this.controller.spec.post(req, res, err => {
+				// TODO Respond with Boom error
+				expect(err).toBeTruthy();
+				done();
+			});
+		});
+	});
+
+	describe('Admin GET', function () {
+		it('retrieves all preset specs', function (done) {
 			const res = new MockExpressResponse();
 			const req = {
 				query: {},
@@ -164,15 +186,16 @@ describe('Catalog Service fetchItem', function () {
 				identity: {audience: 'admin'}
 			};
 
-			req.body.source = 'baz';
+			req.query = {channel: 'odd-networks'};
 
-			this.controller.spec.post(req, res, () => {})
-				.then(() => {
-					expect(Boom.badData).toHaveBeenCalledTimes(1);
-					done();
-				});
+			this.controller.spec.get(req, res, () => {
+				const data = res.body || [];
+				expect(data.length).toBe(3);
+				expect(data[0].id).toBe('collection-13-spec');
+				expect(data[1].id).toBe('collection-13-spec-delete');
+				expect(data[2].id).toBe('collection-14-spec');
+				done();
+			});
 		});
 	});
-
-	xdescribe('Admin GET retrieves all preset specs a spec object');
 });

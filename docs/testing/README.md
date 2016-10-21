@@ -25,7 +25,7 @@ describe('My thing', function () {
         return fetchSomething().then(something => {
             subject = something;
             subject.setKey(this.createKey());
-        }).then(done).catch(done.fail);
+        }).then(done).catch(this.handleError(done));
     });
 
     it('has correct key', function () {
@@ -38,6 +38,8 @@ describe('My thing', function () {
 Perform all asynchronous test setup tasks in a `beforeAll()` block within the `describe()` block where you intend to test it with `it()` blocks. This keeps all the asynchronous action in one place where it is easier to debug, and makes the rest of the test suite more readable.
 
 Set your test subjects inside the `describe()` block using `let` statements, and set them initially to `null`. Then, within your `beforeAll()` block assign the actual values.
+
+Use the Oddworks test error handler utility to make sure test setup errors are caught and eposed: `.then(done).catch(this.handleError(done));`. See examples below.
 
 ```js
 /* global describe, beforeAll, it, expect */
@@ -125,9 +127,8 @@ describe('Middleware Response JSON API', function () {
             // that no arguments will be pased to `done()`.
             .then(_.noop)
             .then(done)
-            // Using done.fail as our error handler will allow Jasmine error
-            // handling to kick in and make error conditions more readable.
-            .catch(done.fail);
+            // We have a special error reporting utility to make it easier to // catch and read errors during test setup.
+            .catch(this.handleError(done));
     });
 
     describe('with single resource', function () {
@@ -168,7 +169,7 @@ describe('Middleware Response JSON API', function () {
                 })
                 .then(_.noop)
                 .then(done)
-                .catch(done.fail);
+                .catch(this.handleError(done));
         });
 
         it('formats response body to valid jsonapi.org schema', function () {
@@ -225,7 +226,7 @@ describe('Middleware Response JSON API', function () {
                 })
                 .then(_.noop)
                 .then(done)
-                .catch(done.fail);
+                .catch(this.handleError(done));
         });
 
         it('formats response body to valid jsonapi.org schema', function () {

@@ -1,4 +1,4 @@
-/* global xdescribe, describe, beforeAll, it, expect */
+/* global describe, beforeAll, it, expect */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
@@ -44,7 +44,7 @@ describe('Redis Store', function () {
 			this.store = store;
 			done();
 		})
-		.catch(done.fail);
+		.catch(this.handleError(done));
 	});
 
 	describe('cmd:get', function () {
@@ -92,7 +92,7 @@ describe('Redis Store', function () {
 				})
 				// End test setup
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 
 		it('returns saved video', function () {
@@ -184,7 +184,7 @@ describe('Redis Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns collection.included', function () {
@@ -219,7 +219,7 @@ describe('Redis Store', function () {
 						})
 						// End test setup
 						.then(done)
-						.catch(done.fail);
+						.catch(this.handleError(done));
 				});
 
 				it('raises an throws an error', function () {
@@ -247,7 +247,7 @@ describe('Redis Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns null', function () {
@@ -273,7 +273,7 @@ describe('Redis Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('raises an exception', function () {
@@ -320,7 +320,7 @@ describe('Redis Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns saved channel', function () {
@@ -378,7 +378,7 @@ describe('Redis Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns the new entity from cmd:set', function () {
@@ -472,7 +472,7 @@ describe('Redis Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns the updated entities from cmd:set', function () {
@@ -534,7 +534,7 @@ describe('Redis Store', function () {
 					})
 					// End test setup
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns the new entity from cmd:set', function () {
@@ -552,8 +552,54 @@ describe('Redis Store', function () {
 		});
 	});
 
-	xdescribe('cmd:remove', function () {
-		it('should be tested');
+	describe('cmd:remove', function () {
+		const RESULTS = {
+			GET_BEFORE: null,
+			GET_AFTER: null
+		};
+
+		const entities = _.range(3).map(n => {
+			return {title: `identity-${n}`, channel: 'oddnews'};
+		});
+
+		const type = 'video';
+		const channel = 'oddnews';
+
+		beforeAll(function (done) {
+			Promise.resolve(entities)
+				.then(entities => {
+					const cmd = 'set';
+					return Promise.all(entities.map(entity => {
+						return bus.sendCommand({role, cmd, type}, entity);
+					}));
+				})
+				.then(() => {
+					return bus.query({role, cmd: 'scan', type}, {channel});
+				})
+				.then(res => {
+					RESULTS.GET_BEFORE = res;
+					return res;
+				})
+				.then(() => {
+					const video = RESULTS.GET_BEFORE[0];
+					return bus.sendCommand({role, cmd: 'remove', type}, {id: video.id, channel});
+				})
+				.then(() => {
+					return bus.query({role, cmd: 'scan', type}, {channel});
+				})
+				.then(res => {
+					RESULTS.GET_AFTER = res;
+					return res;
+				})
+				.then(done)
+				.catch(done.fail);
+		});
+
+		it('should remove an item', function (done) {
+			expect(RESULTS.GET_BEFORE.length).toBe(3);
+			expect(RESULTS.GET_AFTER.length).toBe(2);
+			done();
+		});
 	});
 
 	describe('cmd:scan', function () {
@@ -581,7 +627,7 @@ describe('Redis Store', function () {
 					results = res;
 				})
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 
 		it('returns a list of entities', function () {
@@ -622,7 +668,7 @@ describe('Redis Store', function () {
 						RESULTS.high = res[1];
 					})
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('honors a low limit', function () {
@@ -648,7 +694,7 @@ describe('Redis Store', function () {
 						results = res;
 					})
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('honors the channel filter', function () {
@@ -681,7 +727,7 @@ describe('Redis Store', function () {
 						results = res;
 					})
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns a list of entities', function () {
@@ -720,7 +766,7 @@ describe('Redis Store', function () {
 							RESULTS.high = res[1];
 						})
 						.then(done)
-						.catch(done.fail);
+						.catch(this.handleError(done));
 				});
 
 				it('honors a low limit', function () {
@@ -790,7 +836,7 @@ describe('Redis Store', function () {
 					RESULTS = res;
 				})
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 
 		it('returns expected number of results', function () {
@@ -851,7 +897,7 @@ describe('Redis Store', function () {
 						RESULTS = res;
 					})
 					.then(done)
-					.catch(done.fail);
+					.catch(this.handleError(done));
 			});
 
 			it('returns expected number of results', function () {

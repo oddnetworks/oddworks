@@ -34,6 +34,7 @@ MockServerResponse.prototype._getJSON = function () {
 
 beforeAll(function (done) {
 	this.createBus = support.createBus;
+	this.handleError = support.handleError;
 	done();
 }, SETUP_TIMEOUT);
 
