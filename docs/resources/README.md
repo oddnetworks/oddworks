@@ -7,6 +7,7 @@
 - [__View__](#view)
 - [__Video__](#video)
 - [__Collection__](#collection)
+- [__Progress__](#progress)
 - [__Promotion__](#promotion)
 - [__Non-Resource Objects__](#non-resource-objects)
 
@@ -65,7 +66,6 @@ __Type:__ `viewer`
 
 - __platforms__ Object - the viewer's currently "linked" platforms they have logged in with
 - __watchlist__ Object - collections and videos the viewer has set to "watch later"
-- __playstate__ Object - vidoes the viewer has in progress, each resouce will also have `meta` containing the actual play position of the video
 
 ## Config
 
@@ -134,6 +134,18 @@ __Type:__ `collection`
 
 - __entities__ - The `entities` relationship is used to define which resources are contained within the collection. These can be `video` or `collection` resource types.
 - __featured__ - The `featured` relationship is used to define which resources are a featured part of the collection. These can be `video` or `collection` resource types.
+
+## Progress
+
+__Type:__ `progress`
+
+### Attributes
+
+- __channel__ String
+- __viewer__ String
+- __video__ String
+- __position__ Integer - the current position of the viewer's progress on the video. Default: `0`
+- __complete__ Boolean - has the viewer completed watching the video. Default: `false`
 
 ## Promotion
 

@@ -165,7 +165,7 @@ describe('Catalog Service Controller', function () {
 			});
 		})
 		.then(done)
-		.catch(done.fail);
+		.catch(this.handleError(done));
 	});
 
 	describe('Admin POST', function () {
@@ -214,6 +214,7 @@ describe('Catalog Service Controller', function () {
 		it('returns a 400 error (Boom.badRequest)', function (done) {
 			const res = _.cloneDeep(RES);
 			const req = {
+				method: 'GET',
 				query: {include: 'things'},
 				params: {},
 				identity: {audience: 'admin'}

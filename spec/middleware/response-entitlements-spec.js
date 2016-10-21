@@ -10,7 +10,7 @@ describe('Middleware: Response Entitlements', () => {
 	let req;
 	let res;
 
-	beforeAll(function (done) {
+	beforeAll(function () {
 		bus = this.createBus();
 
 		req = {
@@ -20,7 +20,6 @@ describe('Middleware: Response Entitlements', () => {
 			}
 		};
 		res = {body: {data: null}};
-		done();
 	});
 
 	describe('entitles true when auth is disabled', () => {
