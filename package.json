@@ -45,6 +45,7 @@
     "mock-aws": "^1.2.3",
     "mock-express-request": "~0.1.0",
     "mock-express-response": "~0.1.0",
+    "nock": "^8.1.0",
     "nsp": "~2.6.0",
     "xo": "0.16.0"
   },
