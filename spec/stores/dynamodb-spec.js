@@ -314,7 +314,7 @@ describe('DynamoDB Store', function () {
 
 			it('raises an exception', function () {
 				expect(result instanceof Error).toBeTruthy();
-				expect(result.message).toBe('No handler for pattern role:store,cmd:get,type:ardvark');
+				expect(result.message).toBe('No handler for pattern {"role":"store","cmd":"get","type":"ardvark"}');
 			});
 		});
 
