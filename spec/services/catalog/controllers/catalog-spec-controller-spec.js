@@ -98,7 +98,7 @@ describe('Catalog Service fetchItem', function () {
 			);
 		})
 		.then(done)
-		.catch(done.fail);
+		.catch(this.handleError(done));
 	});
 
 	it('updates a spec object', function () {

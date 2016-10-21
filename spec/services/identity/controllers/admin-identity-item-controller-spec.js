@@ -62,7 +62,7 @@ describe('Identity Service Controller', function () {
 			);
 		})
 		.then(done)
-		.catch(done.fail);
+		.catch(this.handleError(done));
 	});
 
 	describe('Admin GET', function () {
