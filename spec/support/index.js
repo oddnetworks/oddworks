@@ -11,3 +11,11 @@ exports.createBus = function createBus() {
 
 	return bus;
 };
+
+exports.handleError = function (done) {
+	return function (err) {
+		console.error('Error report from testing:');
+		console.error(err.stack);
+		return done.fail(err);
+	};
+};

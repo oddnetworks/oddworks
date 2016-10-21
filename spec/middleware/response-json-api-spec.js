@@ -128,7 +128,7 @@ describe('Middleware Response JSON API', function () {
 				})
 				.then(_.noop)
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 
 		it('formats response body to valid jsonapi.org schema', function () {
@@ -189,7 +189,7 @@ describe('Middleware Response JSON API', function () {
 				})
 				.then(_.noop)
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 
 		it('formats response body to valid jsonapi.org schema', function () {
@@ -242,7 +242,7 @@ describe('Middleware Response JSON API', function () {
 				})
 				.then(_.noop)
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 
 		it('formats response body to valid jsonapi.org schema', function () {
@@ -332,7 +332,7 @@ describe('Middleware Response JSON API', function () {
 				})
 				.then(_.noop)
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError());
 		});
 
 		it('formats response body to valid jsonapi.org schema', function () {
@@ -463,7 +463,7 @@ describe('Middleware Response JSON API', function () {
 				})
 				.then(_.noop)
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 
 		it('includes base prefix in included resources links', function () {
@@ -522,7 +522,7 @@ describe('Middleware Response JSON API', function () {
 				})
 				.then(_.noop)
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 
 		it('excludes port from included resources links', function () {
@@ -599,7 +599,7 @@ describe('Middleware Response JSON API', function () {
 				})
 				.then(_.noop)
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 		describe('and partial results NOT allowed', function () {
 			it('formats response body to valid jsonapi.org schema', function () {
@@ -664,7 +664,7 @@ describe('Middleware Response JSON API', function () {
 				})
 				.then(_.noop)
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 
 		it('returns an empty data array', function () {

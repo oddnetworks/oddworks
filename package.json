@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/oddnetworks/oddworks",
   "dependencies": {
+    "bcrypt": "^0.8.7",
     "bluebird": "~3.4.0",
     "body-parser": "~1.15.0",
     "boom": "~4.0.0",
@@ -30,15 +31,16 @@
     "lodash": "^3.0.0",
     "node-uuid": "~1.4.0",
     "object-property-natural-sort": "0.0.4",
-    "oddcast": "~2.1.0",
+    "oddcast": "2.2.0",
     "redis-search": "~0.0.1",
-    "reds": "^0.2.5"
+    "reds": "^0.2.5",
+    "superagent": "^2.3.0"
   },
   "devDependencies": {
     "aws-sdk": "~2.5.0",
     "dynalite": "~1.0.0",
     "fakeredis": "~1.0.0",
-    "jasmine": "~2.4.0",
+    "jasmine": "^2.5.2",
     "jsonschema": "^1.1.0",
     "mock-aws": "^1.2.3",
     "mock-express-request": "~0.1.0",

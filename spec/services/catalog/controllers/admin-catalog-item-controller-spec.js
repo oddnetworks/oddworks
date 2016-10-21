@@ -54,7 +54,7 @@ describe('Catalog Service Controller', function () {
 		Promise.promisifyAll(fakeredis.Multi.prototype);
 
 		// Initialize a store
-		redisStore(bus, {
+		return redisStore(bus, {
 			types: ['channel', 'platform', 'user', 'collection', 'video'],
 			redis: fakeredis.createClient()
 		})
@@ -77,17 +77,16 @@ describe('Catalog Service Controller', function () {
 			};
 		})
 		.then(() => {
-			return Promise.join(
+			return Promise.all([
 				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL),
 				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM),
 				bus.sendCommand({role: 'store', cmd: 'set', type: 'user'}, USER),
 				bus.sendCommand({role: 'catalog', cmd: 'setItem', type: 'collection'}, COLLECTION),
-				bus.sendCommand({role: 'catalog', cmd: 'setItem', type: 'video'}, VIDEO),
-				() => {}
-			);
+				bus.sendCommand({role: 'catalog', cmd: 'setItem', type: 'video'}, VIDEO)
+			]);
 		})
 		.then(done)
-		.catch(done.fail);
+		.catch(this.handleError(done));
 	});
 
 	it('Admin GET returns a collection object', function (done) {
@@ -97,13 +96,13 @@ describe('Catalog Service Controller', function () {
 			identity: {
 				platform: {id: 'apple-ios'},
 				user: {id: 'user-id'},
-				audience: 'admin'
+				audience: ['admin']
 			}
 		};
+
 		const res = {
 			body: {},
-			status() {
-			}
+			status() {}
 		};
 
 		this.controller.collection.get(req, res, () => {
@@ -122,7 +121,7 @@ describe('Catalog Service Controller', function () {
 			identity: {
 				platform: {id: 'apple-ios'},
 				user: {id: 'user-id'},
-				audience: 'admin'
+				audience: ['admin']
 			}
 		};
 		const res = {
@@ -149,7 +148,7 @@ describe('Catalog Service Controller', function () {
 			identity: {
 				platform: {id: 'apple-ios'},
 				user: {id: 'user-id'},
-				audience: 'admin'
+				audience: ['admin']
 			},
 			body: {
 				title: 'Odd',
@@ -181,7 +180,7 @@ describe('Catalog Service Controller', function () {
 			identity: {
 				platform: {id: 'apple-ios'},
 				user: {id: 'user-id'},
-				audience: 'admin'
+				audience: ['admin']
 			},
 			body: {
 				channel: {id: 'odd-networks'},

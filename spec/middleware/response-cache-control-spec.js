@@ -27,6 +27,14 @@ describe('Middleware: Response Cache Control', () => {
 		});
 	});
 
+	it('allows route-level overrides', () => {
+		res.set('Cache-Control', 'private'); // Do not cache
+
+		responseCacheControl()(req, res, () => {
+			expect(res.get('Cache-Control')).toBe('private');
+		});
+	});
+
 	it('adds Surrogate Key header for single resource', () => {
 		res.body = {id: 'resource-id', type: 'resource-type'};
 

@@ -87,7 +87,7 @@ describe('Catalog Service Controller', function () {
 			);
 		})
 		.then(done)
-		.catch(done.fail);
+		.catch(this.handleError(done));
 	});
 
 	it('returns a collection object', function (done) {

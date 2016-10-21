@@ -42,7 +42,7 @@ describe('Catalog Service fetchItem', function () {
 			this.service = service;
 		})
 		.then(done)
-		.catch(done.fail);
+		.catch(this.handleError(done));
 	});
 
 	describe('with spec and maxAge', function () {
@@ -177,7 +177,7 @@ describe('Catalog Service fetchItem', function () {
 						});
 				})
 				.then(done)
-				.catch(done.fail);
+				.catch(this.handleError(done));
 		});
 
 		afterAll(function () {

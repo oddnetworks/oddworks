@@ -78,7 +78,7 @@ describe('reds Store', function () {
 			return true;
 		})
 		.then(done)
-		.catch(done.fail);
+		.catch(this.handleError(done));
 	});
 
 	describe('"video" Results', function () {
