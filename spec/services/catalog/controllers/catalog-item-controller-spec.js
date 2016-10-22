@@ -258,6 +258,7 @@ describe('Catalog Item Controller', function () {
 				it('queries the resource through the store insetad of the catalog', function () {
 					expect(bus.query).toHaveBeenCalledTimes(2);
 					expect(bus.query.calls.argsFor(1)[0]).toEqual({role: 'store', cmd: 'get', type});
+					expect(bus.query.calls.argsFor(1)[1]).toEqual({channel: 'query-channel-id', type, id: params.id});
 				});
 			});
 
@@ -285,18 +286,13 @@ describe('Catalog Item Controller', function () {
 					expect(error).not.toBeDefined();
 				});
 
-				it('queries the resource using the channel in the JWT', function () {
-					expect(bus.query).toHaveBeenCalledTimes(1);
-					const args = bus.query.calls.argsFor(0)[1];
-					expect(args.channel).toEqual({type: 'channel', id: 'jwt-channel-id'});
-				});
-
 				// When no platform ID is present in the JWT during an admin role request,
 				// the query for the resource is made directly to the store instead of through
 				// the catalog service.
 				it('queries the resource through the store insetad of the catalog', function () {
 					expect(bus.query).toHaveBeenCalledTimes(1);
 					expect(bus.query.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'get', type});
+					expect(bus.query.calls.argsFor(0)[1]).toEqual({channel: 'jwt-channel-id', type, id: params.id});
 				});
 			});
 
