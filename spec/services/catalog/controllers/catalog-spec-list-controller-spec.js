@@ -352,6 +352,40 @@ describe('Catalog List Controller', function () {
 				});
 			});
 
+			// Performing a PATCH request with "platform" role.
+			describe('when the source is not included', function () {
+				let req;
+				let res;
+				let error;
+
+				beforeAll(function (done) {
+					const identity = _.merge({channel: {id: 'jwt-channel-id'}}, IDENTITY);
+					const body = _.merge({channel: identity.channel.id}, BODY);
+					req = createRequest({method, identity, body});
+					res = createResponse();
+
+					spyOn(bus, 'query').and.callThrough();
+					spyOn(bus, 'sendCommand').and.callThrough();
+
+					handler(req, res, err => {
+						error = err;
+						done();
+					});
+				});
+
+				it('does not attempt to save the resource', function () {
+					expect(bus.sendCommand).not.toHaveBeenCalled();
+				});
+
+				it('returns a 422 status code', function () {
+					expect(error.output.payload.statusCode).toBe(422);
+				});
+
+				it('does not assign a resource to the response', function () {
+					expect(res.body).not.toBeDefined();
+				});
+			});
+
 			// Performing a POST request with platform role.
 			describe('with valid request', function () {
 				let req;
@@ -656,6 +690,40 @@ describe('Catalog List Controller', function () {
 				it('returns a 403 error', function () {
 					expect(error.output.payload.statusCode).toBe(403);
 					expect(error.output.payload.message).toBe('Channel "non-existent-channel" does not exist');
+				});
+			});
+
+			// Performing a PATCH request with "admin" role.
+			describe('when the source is not included', function () {
+				let req;
+				let res;
+				let error;
+
+				beforeAll(function (done) {
+					const identity = _.merge({channel: {id: 'jwt-channel-id'}}, IDENTITY);
+					const body = _.merge({channel: identity.channel.id}, BODY);
+					req = createRequest({method, identity, body});
+					res = createResponse();
+
+					spyOn(bus, 'query').and.callThrough();
+					spyOn(bus, 'sendCommand').and.callThrough();
+
+					handler(req, res, err => {
+						error = err;
+						done();
+					});
+				});
+
+				it('does not attempt to save the resource', function () {
+					expect(bus.sendCommand).not.toHaveBeenCalled();
+				});
+
+				it('returns a 422 status code', function () {
+					expect(error.output.payload.statusCode).toBe(422);
+				});
+
+				it('does not assign a resource to the response', function () {
+					expect(res.body).not.toBeDefined();
 				});
 			});
 		});
