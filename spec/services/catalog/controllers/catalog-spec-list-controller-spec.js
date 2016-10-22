@@ -311,6 +311,7 @@ describe('Catalog List Controller', function () {
 		const method = 'POST';
 		const BODY = Object.freeze({
 			type,
+			source: 'ovp',
 			foo: 'bar'
 		});
 
@@ -327,7 +328,8 @@ describe('Catalog List Controller', function () {
 
 				beforeAll(function (done) {
 					const identity = IDENTITY;
-					req = createRequest({method, identity});
+					const body = BODY;
+					req = createRequest({method, identity, body});
 					res = createResponse();
 
 					spyOn(bus, 'query').and.callThrough();
@@ -361,6 +363,7 @@ describe('Catalog List Controller', function () {
 				beforeAll(function (done) {
 					const identity = _.merge({channel: {id: 'jwt-channel-id'}}, IDENTITY);
 					const body = _.merge({channel: identity.channel.id}, BODY);
+					delete body.source;
 					req = createRequest({method, identity, body});
 					res = createResponse();
 
@@ -417,6 +420,7 @@ describe('Catalog List Controller', function () {
 					expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({
 						channel: 'jwt-channel-id',
 						type,
+						source: BODY.source,
 						foo: 'bar'
 					});
 				});
@@ -429,6 +433,7 @@ describe('Catalog List Controller', function () {
 					expect(res.body).toEqual({
 						type,
 						channel: 'jwt-channel-id',
+						source: BODY.source,
 						foo: 'bar'
 					});
 				});
@@ -496,6 +501,7 @@ describe('Catalog List Controller', function () {
 					expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({
 						type,
 						channel: 'jwt-channel-id',
+						source: BODY.source,
 						foo: 'bar'
 					});
 				});
@@ -598,7 +604,12 @@ describe('Catalog List Controller', function () {
 				it('saves the resource with the channel in the query parameter', function () {
 					expect(bus.sendCommand).toHaveBeenCalledTimes(1);
 					expect(bus.sendCommand.calls.argsFor(0)[0]).toEqual({role: 'catalog', cmd: 'setItemSpec'});
-					expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({channel: 'attribute-channel-id', type, foo: 'bar'});
+					expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({
+						channel: 'attribute-channel-id',
+						type,
+						source: BODY.source,
+						foo: 'bar'
+					});
 				});
 			});
 
@@ -629,7 +640,12 @@ describe('Catalog List Controller', function () {
 				it('saves the resource with the channel in the JWT', function () {
 					expect(bus.sendCommand).toHaveBeenCalledTimes(1);
 					expect(bus.sendCommand.calls.argsFor(0)[0]).toEqual({role: 'catalog', cmd: 'setItemSpec'});
-					expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({type, foo: 'bar', channel: 'jwt-channel-id'});
+					expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({
+						channel: 'jwt-channel-id',
+						type,
+						source: BODY.source,
+						foo: 'bar'
+					});
 				});
 			});
 
@@ -702,6 +718,7 @@ describe('Catalog List Controller', function () {
 				beforeAll(function (done) {
 					const identity = _.merge({channel: {id: 'jwt-channel-id'}}, IDENTITY);
 					const body = _.merge({channel: identity.channel.id}, BODY);
+					delete body.source;
 					req = createRequest({method, identity, body});
 					res = createResponse();
 
