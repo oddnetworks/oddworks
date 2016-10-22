@@ -53,13 +53,6 @@ describe('Catalog Item Controller', function () {
 			return Promise.resolve({type, id: args.id, channel: args.channel});
 		});
 
-		bus.queryHandler({role: 'store', cmd: 'get', type}, args => {
-			if (args.id === 'non-existent-record') {
-				return Promise.resolve(null);
-			}
-			return Promise.resolve({type, id: args.id, channel: args.channel});
-		});
-
 		bus.commandHandler({role: 'catalog', cmd: 'setItemSpec'}, payload => {
 			return Promise.resolve(payload);
 		});
