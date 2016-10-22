@@ -2,14 +2,33 @@
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
-
-const MockExpressResponse = require('mock-express-response');
-
 const responseCacheControl = require('../../lib/middleware/response-cache-control');
 
 describe('Middleware: Response Cache Control', () => {
 	let req;
 	let res;
+
+	function mockExpressResponse(spec) {
+		spec = spec || {};
+		const headers = spec.headers || {};
+
+		return {
+			body: null,
+
+			status(status) {
+				this.statusCode = status;
+				return this;
+			},
+
+			get(key) {
+				return headers[key];
+			},
+
+			set(key, val) {
+				headers[key] = val;
+			}
+		};
+	}
 
 	beforeAll(() => {
 		req = {
@@ -18,7 +37,7 @@ describe('Middleware: Response Cache Control', () => {
 				platform: {id: 'platform-id'}
 			}
 		};
-		res = new MockExpressResponse();
+		res = mockExpressResponse();
 	});
 
 	it('applies defaults', () => {
