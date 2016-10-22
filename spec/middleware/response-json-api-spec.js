@@ -211,7 +211,7 @@ describe('Middleware Response JSON API', function () {
 			req = _.cloneDeep(REQ);
 			req.query = {include: 'entities,video'};
 			res = new MockExpressResponse();
-			middleware = responseJsonApi({bus});
+			middleware = responseJsonApi({bus, allowPartialIncluded: true});
 
 			return Promise.resolve(null)
 				// Load seed data
@@ -281,7 +281,7 @@ describe('Middleware Response JSON API', function () {
 			req = _.cloneDeep(REQ);
 			req.query = {include: 'entities,video'};
 			res = new MockExpressResponse();
-			middleware = responseJsonApi({bus});
+			middleware = responseJsonApi({bus, allowPartialIncluded: true});
 
 			brokenCollection = _.cloneDeep(COLLECTION);
 			brokenCollection.id = _.uniqueId('broken-collection-');
@@ -364,7 +364,7 @@ describe('Middleware Response JSON API', function () {
 		};
 
 		beforeAll(function (done) {
-			middleware = responseJsonApi({bus});
+			middleware = responseJsonApi({bus, allowPartialIncluded: true});
 			resources = _.range(14).map(resourceFactory);
 
 			req = _.cloneDeep(REQ);
@@ -430,7 +430,8 @@ describe('Middleware Response JSON API', function () {
 			res = new MockExpressResponse();
 			middleware = responseJsonApi({
 				bus,
-				baseUrlPrefix: '/v2'
+				baseUrlPrefix: '/v2',
+				allowPartialIncluded: true
 			});
 
 			return Promise.resolve(null)
@@ -488,7 +489,8 @@ describe('Middleware Response JSON API', function () {
 			res = new MockExpressResponse();
 			middleware = responseJsonApi({
 				bus,
-				excludePortFromLinks: true
+				excludePortFromLinks: true,
+				allowPartialIncluded: true
 			});
 
 			return Promise.resolve(null)
@@ -535,10 +537,15 @@ describe('Middleware Response JSON API', function () {
 		});
 	});
 
-	describe('with partial included resourses present', function () {
+	describe('with partial included resourses', function () {
 		let req = null;
 		let res = null;
 		let middleware = null;
+		const RESULTS = {
+			INITIAL_GET: null,
+			ERRORS: null,
+			SUCCESS: null
+		};
 
 		beforeAll(function (done) {
 			req = _.cloneDeep(REQ);
@@ -546,28 +553,44 @@ describe('Middleware Response JSON API', function () {
 			res = new MockExpressResponse();
 			middleware = responseJsonApi({bus});
 
+			const role = 'store';
+			const cmd = 'get';
+			const type = 'collection';
+
+			const args = {
+				channel: 'channel-id',
+				type,
+				id: COLLECTION_1.id,
+				platform: 'platform-id',
+				include: ['entities']
+			};
+
+			req.url = `/${type}s/${COLLECTION_1.id}?include=entities`;
+
 			return Promise.resolve(null)
 				// Load seed data (without using include)
 				.then(() => {
-					const role = 'store';
-					const cmd = 'get';
-					const type = 'collection';
-
-					const args = {
-						channel: 'channel-id',
-						type,
-						id: COLLECTION_1.id,
-						platform: 'platform-id',
-						include: ['entities']
-					};
-
 					return bus.query({role, cmd, type}, args).then(result => {
 						// console.log('RESULT:  ', JSON.stringify(result, ' ', 2));
 						res.body = result;
+						RESULTS.INITIAL_GET = _.cloneDeep(res);
+						return res;
 					});
 				})
 				.then(() => {
 					return middleware(req, res, err => {
+						RESULTS.ERRORS = _.cloneDeep(res);
+						if (err) {
+							return done.fail(err);
+						}
+						return null;
+					});
+				})
+				.then(() => {
+					const middleware2 = responseJsonApi({bus, allowPartialIncluded: true});
+					res = RESULTS.INITIAL_GET;
+					return middleware2(req, res, err => {
+						RESULTS.SUCCESS = _.cloneDeep(res);
 						if (err) {
 							return done.fail(err);
 						}
@@ -578,19 +601,36 @@ describe('Middleware Response JSON API', function () {
 				.then(done)
 				.catch(this.handleError(done));
 		});
+		describe('and partial results NOT allowed', function () {
+			it('formats response body to valid jsonapi.org schema', function () {
+				const body = RESULTS.ERRORS.body;
+				const v = Validator.validate(body, jsonApiSchema);
+				expect(v.valid).toBe(true);
+			});
 
-		it('formats response body to valid jsonapi.org schema', function () {
-			const v = Validator.validate(res.body, jsonApiSchema);
-			expect(v.valid).toBe(true);
+			it('has missing items in the errors array', function () {
+				const body = RESULTS.ERRORS.body;
+				expect(body.errors).toBeTruthy();
+				expect(body.errors.length).toBe(8);
+			});
 		});
 
-		it('has only present entities in the included array', function () {
-			// console.log('RES.BODY:  ', JSON.stringify(res.body, ' ', 2));
-			// console.log('INCLUDED:  ', JSON.stringify(res.body.included, ' ', 2));
-			// console.log('ENTITIES.DATA:  ', JSON.stringify(res.body.data.relationships.entities.data, ' ', 2));
-			expect(res.body.included).toBeDefined();
-			expect(res.body.included.length).toBe(3);
-			expect(res.body.included.length).toBe(res.body.data.relationships.entities.data.length);
+		describe('and partial results ARE allowed', function () {
+			it('formats response body to valid jsonapi.org schema', function () {
+				const body = RESULTS.SUCCESS.body;
+				const v = Validator.validate(body, jsonApiSchema);
+				expect(v.valid).toBe(true);
+			});
+
+			it('has only present entities in the included array', function () {
+				const body = RESULTS.SUCCESS.body;
+				// console.log('RES.BODY:  ', JSON.stringify(res.body, ' ', 2));
+				// console.log('INCLUDED:  ', JSON.stringify(res.body.included, ' ', 2));
+				// console.log('ENTITIES.DATA:  ', JSON.stringify(res.body.data.relationships.entities.data, ' ', 2));
+				expect(body.included).toBeDefined();
+				expect(body.included.length).toBe(3);
+				expect(body.included.length).toBe(body.data.relationships.entities.data.length);
+			});
 		});
 	});
 
