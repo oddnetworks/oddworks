@@ -74,13 +74,48 @@ describe('Identity Service Controller', function () {
 		})
 		.reply(401);
 
-	const CHANNEL = {
+	const CHANNEL_PROXY = {
 		id: 'odd-networks',
 		title: 'Odd Networks',
 		features: {
 			authentication: {
 				enabled: true,
-				url: 'http://auth.oddworks.io/login'
+				url: 'http://content.oddworks.io/v2/login',
+				proxy: {
+					login: 'http://auth.oddworks.io/login',
+					verify: 'http://auth.oddworks.io/verify'
+				}
+			}
+		}
+	};
+
+	const CHANNEL_EVALUATORS = {
+		id: 'odd-networks-evals',
+		title: 'Odd Networks',
+		features: {
+			authentication: {
+				enabled: true,
+				url: 'http://content.oddworks.io/v2/login',
+				evaluators: {
+					login: `function (bus, req, res, next) {
+						return new Promise(function (resolve, reject) {
+							if (req.body.email === 'viewer999@oddnetworks.com') {
+								const viewer = {
+									id: 'viewer999@oddnetworks.com',
+									type: 'viewer',
+									channel: req.identity.channel.id,
+									email: 'viewer999@oddnetworks.com',
+									entitlements: ['allowed'],
+									meta: {
+										source: 'evaluator'
+									}
+								};
+
+								return resolve(viewer);
+							}
+						});
+					}`
+				}
 			}
 		}
 	};
@@ -127,7 +162,8 @@ describe('Identity Service Controller', function () {
 		})
 		.then(() => {
 			return Promise.join(
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL),
+				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL_PROXY),
+				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL_EVALUATORS),
 				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM),
 				bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER),
 				() => {}
@@ -150,7 +186,7 @@ describe('Identity Service Controller', function () {
 		it('creates a viewer on successful login', function (done) {
 			const req = {
 				identity: {
-					channel: CHANNEL,
+					channel: CHANNEL_PROXY,
 					platform: PLATFORM
 				},
 				body: {
@@ -184,7 +220,7 @@ describe('Identity Service Controller', function () {
 		it('does not create a viewer on successful login', function (done) {
 			const req = {
 				identity: {
-					channel: CHANNEL,
+					channel: CHANNEL_PROXY,
 					platform: PLATFORM
 				},
 				body: {
@@ -213,7 +249,7 @@ describe('Identity Service Controller', function () {
 		it('updates existing viewer we have with new entitlements after login', function (done) {
 			const req = {
 				identity: {
-					channel: CHANNEL,
+					channel: CHANNEL_PROXY,
 					platform: PLATFORM
 				},
 				body: {
@@ -237,7 +273,7 @@ describe('Identity Service Controller', function () {
 		it('replies with a 401 if invalid login', function (done) {
 			const req = {
 				identity: {
-					channel: CHANNEL,
+					channel: CHANNEL_PROXY,
 					platform: PLATFORM
 				},
 				body: {
@@ -249,6 +285,32 @@ describe('Identity Service Controller', function () {
 
 			this.controller.login.post(req, res, err => {
 				expect(err).toBeDefined();
+				done();
+			});
+		});
+	});
+
+	describe('evaluator login', function () {
+		it('creates a viewer on successful login', function (done) {
+			const req = {
+				identity: {
+					channel: CHANNEL_EVALUATORS,
+					platform: PLATFORM
+				},
+				body: {
+					type: 'authentication',
+					email: 'viewer999@oddnetworks.com',
+					password: 'pass12345'
+				}
+			};
+
+			this.controller.login.post(req, res, () => {
+				expect(res.body.id).toBe('viewer999@oddnetworks.com');
+				expect(res.body.type).toBe('viewer');
+				expect(res.body.channel).toBe('odd-networks-evals');
+				expect(res.body.entitlements.length).toBe(1);
+				expect(res.body.jwt).toBeDefined();
+				expect(res.body.meta.source).toBe('evaluator');
 				done();
 			});
 		});
