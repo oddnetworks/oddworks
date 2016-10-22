@@ -514,7 +514,7 @@ describe('Identity List Controller', function () {
 						expect(error).not.toBeDefined();
 					});
 
-					it('does not use given channel or type', function () {
+					it('uses pre-determined channel and type', function () {
 						const resource = bus.sendCommand.calls.argsFor(0)[1];
 						expect(resource.type).toBe(type);
 						expect(resource.channel).toBe('jwt-channel-id');
@@ -523,7 +523,7 @@ describe('Identity List Controller', function () {
 
 				// Identity List Controller with random type definition (not "channel").
 				// Performing a POST request with platform role.
-				describe('when when the resource already exists', function () {
+				describe('when the resource already exists', function () {
 					let req;
 					let res;
 					let error;
