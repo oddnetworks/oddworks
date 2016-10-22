@@ -332,6 +332,7 @@ describe('Catalog Item Controller', function () {
 		const BODY = Object.freeze({
 			type,
 			id: params.id,
+			source: 'ovp',
 			foo: 'bar'
 		});
 
@@ -376,6 +377,41 @@ describe('Catalog Item Controller', function () {
 				it('returns a 403', function () {
 					expect(error.output.payload.statusCode).toBe(403);
 					expect(error.output.payload.message).toBe('Non admin callers must have a channel embedded in the JSON Web Token');
+				});
+			});
+
+			// Performing a PATCH request with "platform" role.
+			describe('when the source is not included', function () {
+				let req;
+				let res;
+				let error;
+
+				beforeAll(function (done) {
+					const identity = _.merge({channel: {type: 'channel', id: 'a-channel-id'}}, IDENTITY);
+					const body = _.merge({channel: identity.channel.id}, BODY);
+					delete body.source;
+					req = createRequest({method, identity, params, body});
+					res = createResponse();
+
+					spyOn(bus, 'query').and.callThrough();
+					spyOn(bus, 'sendCommand').and.callThrough();
+
+					handler(req, res, err => {
+						error = err;
+						done();
+					});
+				});
+
+				it('does not attempt to save the resource', function () {
+					expect(bus.sendCommand).not.toHaveBeenCalled();
+				});
+
+				it('returns a 422 status code', function () {
+					expect(error.output.payload.statusCode).toBe(422);
+				});
+
+				it('does not assign a resource to the response', function () {
+					expect(res.body).not.toBeDefined();
 				});
 			});
 
@@ -450,9 +486,7 @@ describe('Catalog Item Controller', function () {
 
 				it('saves the resource', function () {
 					expect(bus.sendCommand).toHaveBeenCalledTimes(1);
-					const args = bus.sendCommand.calls.argsFor(0);
-					expect(args[0]).toEqual({role: 'catalog', cmd: 'setItemSpec'});
-					expect(args[1]).toEqual({type, id: BODY.id, channel: 'a-channel-id', foo: 'bar'});
+					expect(bus.sendCommand.calls.argsFor(0)[0]).toEqual({role: 'catalog', cmd: 'setItemSpec'});
 				});
 
 				it('updates the resource', function () {
@@ -460,6 +494,7 @@ describe('Catalog Item Controller', function () {
 						type,
 						id: params.id,
 						channel: 'a-channel-id',
+						source: BODY.source,
 						foo: 'bar'
 					});
 				});
@@ -473,6 +508,7 @@ describe('Catalog Item Controller', function () {
 						type,
 						id: params.id,
 						channel: 'a-channel-id',
+						source: BODY.source,
 						foo: 'bar'
 					});
 				});
@@ -508,6 +544,7 @@ describe('Catalog Item Controller', function () {
 						type,
 						id: params.id,
 						channel: 'a-channel-id',
+						source: BODY.source,
 						foo: 'bar'
 					});
 				});
@@ -547,6 +584,7 @@ describe('Catalog Item Controller', function () {
 						type,
 						id: params.id,
 						channel: 'a-channel-id',
+						source: BODY.source,
 						foo: 'bar'
 					});
 				});
@@ -702,6 +740,41 @@ describe('Catalog Item Controller', function () {
 			});
 
 			// Performing a PATCH request with "admin" role.
+			describe('when the source is not included', function () {
+				let req;
+				let res;
+				let error;
+
+				beforeAll(function (done) {
+					const identity = IDENTITY;
+					const body = _.merge({channel: 'attribute-channel-id'}, BODY);
+					delete body.source;
+					req = createRequest({method, identity, params, body});
+					res = createResponse();
+
+					spyOn(bus, 'query').and.callThrough();
+					spyOn(bus, 'sendCommand').and.callThrough();
+
+					handler(req, res, err => {
+						error = err;
+						done();
+					});
+				});
+
+				it('does not attempt to save the resource', function () {
+					expect(bus.sendCommand).not.toHaveBeenCalled();
+				});
+
+				it('returns a 422 status code', function () {
+					expect(error.output.payload.statusCode).toBe(422);
+				});
+
+				it('does not assign a resource to the response', function () {
+					expect(res.body).not.toBeDefined();
+				});
+			});
+
+			// Performing a PATCH request with "admin" role.
 			describe('with a valid request', function () {
 				let req;
 				let res;
@@ -736,7 +809,13 @@ describe('Catalog Item Controller', function () {
 				it('updates the resource', function () {
 					const args = bus.sendCommand.calls.argsFor(0);
 					expect(args[0]).toEqual({role: 'catalog', cmd: 'setItemSpec'});
-					expect(args[1]).toEqual({type, id: BODY.id, channel: 'attribute-channel-id', foo: 'bar'});
+					expect(args[1]).toEqual({
+						type,
+						id: BODY.id,
+						channel: 'attribute-channel-id',
+						source: BODY.source,
+						foo: 'bar'
+					});
 				});
 
 				it('does not return an error', function () {
@@ -748,7 +827,13 @@ describe('Catalog Item Controller', function () {
 				});
 
 				it('returns the updated resource', function () {
-					expect(res.body).toEqual({type, id: BODY.id, channel: 'attribute-channel-id', foo: 'bar'});
+					expect(res.body).toEqual({
+						type,
+						id: BODY.id,
+						channel: 'attribute-channel-id',
+						source: BODY.source,
+						foo: 'bar'
+					});
 				});
 			});
 		});

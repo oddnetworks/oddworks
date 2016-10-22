@@ -311,6 +311,7 @@ describe('Catalog List Controller', function () {
 		const method = 'POST';
 		const BODY = Object.freeze({
 			type,
+			source: 'ovp',
 			foo: 'bar'
 		});
 
@@ -327,7 +328,8 @@ describe('Catalog List Controller', function () {
 
 				beforeAll(function (done) {
 					const identity = IDENTITY;
-					req = createRequest({method, identity});
+					const body = BODY;
+					req = createRequest({method, identity, body});
 					res = createResponse();
 
 					spyOn(bus, 'query').and.callThrough();
@@ -349,6 +351,41 @@ describe('Catalog List Controller', function () {
 				it('returns a 403 error', function () {
 					expect(error.output.payload.statusCode).toBe(403);
 					expect(error.output.payload.message).toBe('Non admin callers must have a channel embedded in the JSON Web Token');
+				});
+			});
+
+			// Performing a PATCH request with "platform" role.
+			describe('when the source is not included', function () {
+				let req;
+				let res;
+				let error;
+
+				beforeAll(function (done) {
+					const identity = _.merge({channel: {id: 'jwt-channel-id'}}, IDENTITY);
+					const body = _.merge({channel: identity.channel.id}, BODY);
+					delete body.source;
+					req = createRequest({method, identity, body});
+					res = createResponse();
+
+					spyOn(bus, 'query').and.callThrough();
+					spyOn(bus, 'sendCommand').and.callThrough();
+
+					handler(req, res, err => {
+						error = err;
+						done();
+					});
+				});
+
+				it('does not attempt to save the resource', function () {
+					expect(bus.sendCommand).not.toHaveBeenCalled();
+				});
+
+				it('returns a 422 status code', function () {
+					expect(error.output.payload.statusCode).toBe(422);
+				});
+
+				it('does not assign a resource to the response', function () {
+					expect(res.body).not.toBeDefined();
 				});
 			});
 
@@ -383,6 +420,7 @@ describe('Catalog List Controller', function () {
 					expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({
 						channel: 'jwt-channel-id',
 						type,
+						source: BODY.source,
 						foo: 'bar'
 					});
 				});
@@ -395,6 +433,7 @@ describe('Catalog List Controller', function () {
 					expect(res.body).toEqual({
 						type,
 						channel: 'jwt-channel-id',
+						source: BODY.source,
 						foo: 'bar'
 					});
 				});
@@ -462,6 +501,7 @@ describe('Catalog List Controller', function () {
 					expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({
 						type,
 						channel: 'jwt-channel-id',
+						source: BODY.source,
 						foo: 'bar'
 					});
 				});
@@ -564,7 +604,12 @@ describe('Catalog List Controller', function () {
 				it('saves the resource with the channel in the query parameter', function () {
 					expect(bus.sendCommand).toHaveBeenCalledTimes(1);
 					expect(bus.sendCommand.calls.argsFor(0)[0]).toEqual({role: 'catalog', cmd: 'setItemSpec'});
-					expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({channel: 'attribute-channel-id', type, foo: 'bar'});
+					expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({
+						channel: 'attribute-channel-id',
+						type,
+						source: BODY.source,
+						foo: 'bar'
+					});
 				});
 			});
 
@@ -595,7 +640,12 @@ describe('Catalog List Controller', function () {
 				it('saves the resource with the channel in the JWT', function () {
 					expect(bus.sendCommand).toHaveBeenCalledTimes(1);
 					expect(bus.sendCommand.calls.argsFor(0)[0]).toEqual({role: 'catalog', cmd: 'setItemSpec'});
-					expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({type, foo: 'bar', channel: 'jwt-channel-id'});
+					expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({
+						channel: 'jwt-channel-id',
+						type,
+						source: BODY.source,
+						foo: 'bar'
+					});
 				});
 			});
 
@@ -656,6 +706,41 @@ describe('Catalog List Controller', function () {
 				it('returns a 403 error', function () {
 					expect(error.output.payload.statusCode).toBe(403);
 					expect(error.output.payload.message).toBe('Channel "non-existent-channel" does not exist');
+				});
+			});
+
+			// Performing a PATCH request with "admin" role.
+			describe('when the source is not included', function () {
+				let req;
+				let res;
+				let error;
+
+				beforeAll(function (done) {
+					const identity = _.merge({channel: {id: 'jwt-channel-id'}}, IDENTITY);
+					const body = _.merge({channel: identity.channel.id}, BODY);
+					delete body.source;
+					req = createRequest({method, identity, body});
+					res = createResponse();
+
+					spyOn(bus, 'query').and.callThrough();
+					spyOn(bus, 'sendCommand').and.callThrough();
+
+					handler(req, res, err => {
+						error = err;
+						done();
+					});
+				});
+
+				it('does not attempt to save the resource', function () {
+					expect(bus.sendCommand).not.toHaveBeenCalled();
+				});
+
+				it('returns a 422 status code', function () {
+					expect(error.output.payload.statusCode).toBe(422);
+				});
+
+				it('does not assign a resource to the response', function () {
+					expect(res.body).not.toBeDefined();
 				});
 			});
 		});
