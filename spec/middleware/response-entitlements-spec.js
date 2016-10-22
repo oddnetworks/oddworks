@@ -92,12 +92,14 @@ describe('Middleware: Response Entitlements', () => {
 		beforeAll(() => {
 			req.identity.channel.features.authentication = {
 				enabled: true,
-				evaluator: `function (viewer, resource) {
-					if (viewer.attributes.entitlements.indexOf('gold') >= 0) {
-						return true;
-					}
-					return false;
-				}`
+				entitlements: {
+					evaluator: `function (viewer, resource) {
+						if (viewer.attributes.entitlements.indexOf('gold') >= 0) {
+							return true;
+						}
+						return false;
+					}`
+				}
 			};
 			req.identity.viewer.attributes.entitlements = ['gold', 'monthly'];
 		});
@@ -164,12 +166,14 @@ describe('Middleware: Response Entitlements', () => {
 		beforeAll(() => {
 			req.identity.channel.features.authentication = {
 				enabled: true,
-				evaluator: `function (viewer, resource) {
-					if (viewer.attributes.entitlements.indexOf('gold') >= 0) {
-						return true;
-					}
-					return false;
-				}`
+				entitlements: {
+					evaluator: `function (viewer, resource) {
+						if (viewer.attributes.entitlements.indexOf('gold') >= 0) {
+							return true;
+						}
+						return false;
+					}`
+				}
 			};
 			req.identity.viewer.attributes.entitlements = ['silver'];
 		});
@@ -240,7 +244,9 @@ describe('Middleware: Response Entitlements', () => {
 		it('that cannot be parsed', done => {
 			req.identity.channel.features.authentication = {
 				enabled: true,
-				evaluator: `sdsa`
+				entitlements: {
+					evaluator: `sdsa`
+				}
 			};
 
 			res.body.data = {
@@ -257,12 +263,14 @@ describe('Middleware: Response Entitlements', () => {
 		it('that cannot be executed', done => {
 			req.identity.channel.features.authentication = {
 				enabled: true,
-				evaluator: `function (viewer, resource) {
-					if (viewer.attributes.entitlements.contains('gold') >= 0) {
-						return true;
-					}
-					return false;
-				}`
+				entitlements: {
+					evaluator: `function (viewer, resource) {
+						if (viewer.attributes.entitlements.contains('gold') >= 0) {
+							return true;
+						}
+						return false;
+					}`
+				}
 			};
 
 			res.body.data = {
