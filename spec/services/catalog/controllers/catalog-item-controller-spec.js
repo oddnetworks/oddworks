@@ -622,7 +622,7 @@ describe('Catalog Item Controller', function () {
 					expect(error).not.toBeDefined();
 				});
 
-				it('queries for the channel in the query parameter', function () {
+				it('queries for the channel in the body', function () {
 					expect(bus.query).toHaveBeenCalledTimes(2);
 					expect(bus.query.calls.argsFor(0)[0]).toEqual({role: 'store', cmd: 'get', type: 'channel'});
 					expect(bus.query.calls.argsFor(0)[1]).toEqual({type: 'channel', id: 'attribute-channel-id'});
@@ -706,7 +706,7 @@ describe('Catalog Item Controller', function () {
 				beforeAll(function (done) {
 					const channelId = 'attribute-channel-id';
 					const body = _.merge({channel: channelId}, BODY);
-					const identity = _.merge({}, {channel: {type: 'channel', id: 'jwt-channel-id'}}, IDENTITY);
+					const identity = IDENTITY;
 
 					req = createRequest({method, identity, params, body});
 					res = createResponse();
@@ -732,6 +732,53 @@ describe('Catalog Item Controller', function () {
 				it('returns a 403 error', function () {
 					expect(error.output.payload.statusCode).toBe(403);
 					expect(error.output.payload.message).toBe('Channel "attribute-channel-id" does not exist');
+				});
+			});
+
+			// Performing a PATCH request with "admin" role.
+			describe('with a valid request', function () {
+				let req;
+				let res;
+				let error;
+
+				beforeAll(function (done) {
+					const body = _.merge({channel: 'attribute-channel-id'}, BODY);
+					const identity = IDENTITY;
+
+					req = createRequest({method, identity, params, body});
+					res = createResponse();
+
+					spyOn(bus, 'query').and.callThrough();
+					spyOn(bus, 'sendCommand').and.callThrough();
+
+					handler(req, res, err => {
+						error = err;
+						done();
+					});
+				});
+
+				it('queries for the resource', function () {
+					const args = bus.query.calls.argsFor(1);
+					expect(args[0]).toEqual({role: 'store', cmd: 'get', type});
+					expect(args[1]).toEqual({channel: 'attribute-channel-id', type, id: BODY.id});
+				});
+
+				it('updates the resource', function () {
+					const args = bus.sendCommand.calls.argsFor(0);
+					expect(args[0]).toEqual({role: 'catalog', cmd: 'setItem'});
+					expect(args[1]).toEqual({type, id: BODY.id, channel: 'attribute-channel-id', foo: 'bar'});
+				});
+
+				it('does not return an error', function () {
+					expect(error).not.toBeDefined();
+				});
+
+				it('returns a 200', function () {
+					expect(res.statusCode).toBe(200);
+				});
+
+				it('returns the updated resource', function () {
+					expect(res.body).toEqual({type, id: BODY.id, channel: 'attribute-channel-id', foo: 'bar'});
 				});
 			});
 		});
@@ -946,6 +993,41 @@ describe('Catalog Item Controller', function () {
 
 				it('does not attach the resource to the response body', function () {
 					expect(res.body).not.toBeDefined();
+				});
+			});
+
+			// Performing a DELETE request with "platform" role.
+			describe('with valid request', function () {
+				let req;
+				let res;
+				let error;
+
+				beforeAll(function (done) {
+					const identity = IDENTITY;
+					const query = {channel: 'query-channel-id'};
+					req = createRequest({method, identity, params, query});
+					res = createResponse();
+
+					spyOn(bus, 'sendCommand').and.callThrough();
+
+					handler(req, res, err => {
+						error = err;
+						done();
+					});
+				});
+
+				it('does not return an error', function () {
+					expect(error).not.toBeDefined();
+				});
+
+				it('removes the resource', function () {
+					expect(bus.sendCommand).toHaveBeenCalledTimes(1);
+					expect(bus.sendCommand.calls.argsFor(0)[0]).toEqual({role: 'catalog', cmd: 'removeItem'});
+					expect(bus.sendCommand.calls.argsFor(0)[1]).toEqual({channel: 'query-channel-id', type, id: params.id});
+				});
+
+				it('returns status code 200', function () {
+					expect(res.statusCode).toBe(200);
 				});
 			});
 		});
