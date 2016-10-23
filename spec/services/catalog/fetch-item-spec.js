@@ -83,7 +83,7 @@ describe('Catalog Service fetchItem', function () {
 		};
 
 		beforeAll(function (done) {
-			this.provider = function provider() {
+			this.provider = () => {
 				return Promise.resolve(_.cloneDeep(RESOURCE));
 			};
 

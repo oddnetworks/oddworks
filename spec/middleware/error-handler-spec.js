@@ -4,20 +4,38 @@
 'use strict';
 
 const Boom = require('boom');
-const MockExpressResponse = require('mock-express-response');
-
 const errorHandler = require('../../lib/middleware/error-handler');
 
 describe('Middleware: Error Handler', () => {
 	// Just a dummy object for reference
 	const REQ = {REQ: 'request'};
 
+	function mockExpressResponse() {
+		return {
+			body: null,
+
+			status(status) {
+				this.statusCode = status;
+				return this;
+			},
+
+			send(body) {
+				this.body = body;
+				return this;
+			},
+
+			_getJSON() {
+				return this.body;
+			}
+		};
+	}
+
 	describe('when error is a plain Object', () => {
 		let RES = null;
 		const ERR = {};
 
 		beforeAll(function () {
-			RES = new MockExpressResponse();
+			RES = mockExpressResponse();
 			errorHandler()(ERR, REQ, RES);
 		});
 
@@ -47,7 +65,7 @@ describe('Middleware: Error Handler', () => {
 		const ERR = [{}, new Error('TEST')];
 
 		beforeAll(function () {
-			RES = new MockExpressResponse();
+			RES = mockExpressResponse();
 			errorHandler()(ERR, REQ, RES);
 		});
 
@@ -78,7 +96,7 @@ describe('Middleware: Error Handler', () => {
 		const ERR = new Error('NATIVE_ERROR_MESSAGE');
 
 		beforeAll(function () {
-			RES = new MockExpressResponse();
+			RES = mockExpressResponse();
 			errorHandler()(ERR, REQ, RES);
 		});
 
@@ -100,7 +118,7 @@ describe('Middleware: Error Handler', () => {
 		const ERR = Boom.badData('Channel ID is required');
 
 		beforeAll(function () {
-			RES = new MockExpressResponse();
+			RES = mockExpressResponse();
 			errorHandler()(ERR, REQ, RES);
 		});
 
@@ -132,7 +150,7 @@ describe('Middleware: Error Handler', () => {
 		ERR.meta = META;
 
 		beforeAll(function () {
-			RES = new MockExpressResponse();
+			RES = mockExpressResponse();
 			errorHandler()(ERR, REQ, RES);
 		});
 

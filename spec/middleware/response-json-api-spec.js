@@ -7,7 +7,6 @@ const querystring = require('querystring');
 const url = require('url');
 const JSONSchemaValidator = require('jsonschema').Validator;
 const fakeredis = require('fakeredis');
-const MockExpressResponse = require('mock-express-response');
 const Promise = require('bluebird');
 const _ = require('lodash');
 const redisStore = require('../../lib/stores/redis/');
@@ -32,6 +31,15 @@ Promise.promisifyAll(fakeredis.Multi.prototype);
 
 describe('Middleware Response JSON API', function () {
 	let bus = null;
+
+	function mockExpressResponse() {
+		return {
+			status(status) {
+				this.statusCode = status;
+				return this;
+			}
+		};
+	}
 
 	const REQ = {
 		protocol: 'https',
@@ -97,7 +105,7 @@ describe('Middleware Response JSON API', function () {
 
 		beforeAll(function (done) {
 			req = _.cloneDeep(REQ);
-			res = new MockExpressResponse();
+			res = mockExpressResponse();
 			middleware = responseJsonApi({bus});
 
 			return Promise.resolve(null)
@@ -156,7 +164,7 @@ describe('Middleware Response JSON API', function () {
 
 		beforeAll(function (done) {
 			req = _.cloneDeep(REQ);
-			res = new MockExpressResponse();
+			res = mockExpressResponse();
 			middleware = responseJsonApi({bus});
 			req.url = 'https://localhost:3000/collections';
 
@@ -210,7 +218,7 @@ describe('Middleware Response JSON API', function () {
 		beforeAll(function (done) {
 			req = _.cloneDeep(REQ);
 			req.query = {include: 'entities,video'};
-			res = new MockExpressResponse();
+			res = mockExpressResponse();
 			middleware = responseJsonApi({bus, allowPartialIncluded: true});
 
 			return Promise.resolve(null)
@@ -280,7 +288,7 @@ describe('Middleware Response JSON API', function () {
 		beforeAll(function (done) {
 			req = _.cloneDeep(REQ);
 			req.query = {include: 'entities,video'};
-			res = new MockExpressResponse();
+			res = mockExpressResponse();
 			middleware = responseJsonApi({bus, allowPartialIncluded: true});
 
 			brokenCollection = _.cloneDeep(COLLECTION);
@@ -370,7 +378,7 @@ describe('Middleware Response JSON API', function () {
 			req = _.cloneDeep(REQ);
 			req.url = `/collections?${querystring.stringify({'page[limit]': 14, 'page[offset]': 0})}`;
 
-			res = new MockExpressResponse();
+			res = mockExpressResponse();
 
 			res.body = resources;
 			res.body.linksQueries = {
@@ -427,7 +435,7 @@ describe('Middleware Response JSON API', function () {
 		beforeAll(function (done) {
 			req = _.cloneDeep(REQ);
 			req.query = {include: 'entities,video'};
-			res = new MockExpressResponse();
+			res = mockExpressResponse();
 			middleware = responseJsonApi({
 				bus,
 				baseUrlPrefix: '/v2',
@@ -486,7 +494,7 @@ describe('Middleware Response JSON API', function () {
 		beforeAll(function (done) {
 			req = _.cloneDeep(REQ);
 			req.query = {include: 'entities,video'};
-			res = new MockExpressResponse();
+			res = mockExpressResponse();
 			middleware = responseJsonApi({
 				bus,
 				excludePortFromLinks: true,
@@ -550,7 +558,7 @@ describe('Middleware Response JSON API', function () {
 		beforeAll(function (done) {
 			req = _.cloneDeep(REQ);
 			req.query = {include: 'entities'};
-			res = new MockExpressResponse();
+			res = mockExpressResponse();
 			middleware = responseJsonApi({bus});
 
 			const role = 'store';
@@ -644,7 +652,7 @@ describe('Middleware Response JSON API', function () {
 
 		beforeAll(function (done) {
 			req = _.cloneDeep(REQ);
-			res = new MockExpressResponse();
+			res = mockExpressResponse();
 			middleware = responseJsonApi({bus});
 			req.url = `${REQ.protocol}://${REQ.hostname}:${REQ.socket.address().port}/search?q=axscdvf`;
 
@@ -684,7 +692,7 @@ describe('Middleware Response JSON API', function () {
 		beforeAll(function (done) {
 			req.url = '/collections/123/relationships/entities';
 
-			res = new MockExpressResponse();
+			res = mockExpressResponse();
 			res.body = [
 				{
 					id: '1',

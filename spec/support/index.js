@@ -2,7 +2,7 @@
 
 const oddcast = require('oddcast');
 
-exports.createBus = function createBus() {
+exports.createBus = () => {
 	const bus = oddcast.bus();
 
 	bus.events.use({}, oddcast.inprocessTransport());
@@ -12,7 +12,7 @@ exports.createBus = function createBus() {
 	return bus;
 };
 
-exports.handleError = function (done) {
+exports.handleError = done => {
 	return function (err) {
 		console.error('Error report from testing:');
 		console.error(err.stack);
