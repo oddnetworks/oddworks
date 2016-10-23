@@ -32,13 +32,13 @@ describe('DynamoDB Store', function () {
 	});
 
 	const TABLES = {
-		/**
+		/*
 		+------------+-----+
 		| HASH       | ... |
 		+------------+-----+
 		| channel.id | ... |
 		+------------+-----+
-		**/
+		*/
 		CHANNEL: {
 			TableName: 'channel',
 			ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
@@ -46,13 +46,13 @@ describe('DynamoDB Store', function () {
 			KeySchema: [{AttributeName: 'id', KeyType: 'HASH'}]
 		},
 
-		/**
+		/*
 		+--------------------+---------------+-----+
 		| HASH               | RANGE         | ... |
 		+--------------------+---------------+-----+
 		| collection.channel | collection.id | ... |
 		+--------------------+---------------+-----+
-		**/
+		*/
 		COLLECTION: {
 			TableName: 'collection',
 			ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
@@ -60,13 +60,13 @@ describe('DynamoDB Store', function () {
 			KeySchema: [{AttributeName: 'channel', KeyType: 'HASH'}, {AttributeName: 'id', KeyType: 'RANGE'}]
 		},
 
-		/**
+		/*
 		+---------------+----------+-----+
 		| HASH          | RANGE    | ... |
 		+---------------+----------+-----+
 		| video.channel | video.id | ... |
 		+---------------+----------+-----+
-		**/
+		*/
 		VIDEO: {
 			TableName: 'video',
 			ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
