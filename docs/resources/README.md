@@ -20,7 +20,7 @@ __Type:__ `channel`
 - __id__ String - the server's identifier for the Channel
 - __title__ String
 - __active__ Boolean
-- __display__ Object
+- __display__ [Display](#display)
     - __images__ Array - contains [Image](#image) objects.
     - __colors__ Array - contains [Color](#color) objects.
     - __fonts__ Array - contains [Font](#font) objects
@@ -40,7 +40,7 @@ __Type:__ `platform`
 - __title__ String - `Apple|Android|Web|Roku|Xbox`
 - __category__ String - `WEB|TV|MOBILE`
 - __active__ Boolean
-- __display__ Object
+- __display__ [Display](#display)
     - __images__ Array - contains [Image](#image) objects.
     - __colors__ Array - contains [Color](#color) objects.
     - __fonts__ Array - contains [Font](#font) objects
@@ -76,8 +76,8 @@ Config object attributes determine which features and configuration details are 
 ### Attributes
 
 - __active__ Boolean
-- __display__ Array - computed from [Channel](#channel) and [Platform](#platform) objects
-- __features__ Object - computed from [Channel](#channel) and [Platform](#platform) objects
+- __display__ [Display](#display) - computed from [Channel](#channel) and [Platform](#platform) Display objects
+- __features__ [Features](#features) - computed from [Channel](#channel) and [Platform](#platform) Features objects
 - __views__ Object - set from [Platform](#platform) object
 - __jwt__ String
 
@@ -103,7 +103,6 @@ __Type:__ `video`
 
 ### Attributes
 
-- __channel__ String
 - __title__ String
 - __description__ String
 - __images__ Array - contains [Image](#image) objects.
@@ -238,7 +237,7 @@ __*__ _Any additional properties will be a String_
 #### Metrics
 
 - __enabled__ Boolean
-- userAgent String - The user agent string to be used when posting events
+- __userAgent__ String - The user agent string to be used when posting events
 - __appInit__ Object
     - __action__ String - Default: `app:init`
     - __enabled__ Boolean
