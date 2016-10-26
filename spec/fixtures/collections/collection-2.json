@@ -1,0 +1,18 @@
+{
+	"id": "collection-2",
+	"type": "collection",
+	"channel": "channel-id",
+	"title": "This collection has no relationships on purpose",
+	"images": [
+		{
+			"url": "http://www.oddnetworks.com.s3.amazonaws.com/assets/img/hero-odd-logo.png",
+			"mimeType": "image/png",
+			"width": 422,
+			"height": 467,
+			"label": "logo"
+		}
+	],
+	"meta": {
+		"extra": "info"
+	}
+}
