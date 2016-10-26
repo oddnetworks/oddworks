@@ -153,7 +153,7 @@ describe('Middleware Response JSON API', function () {
 		});
 
 		it('adds a meta block', function () {
-			expect(res.body.meta).toEqual({channel: 'channel-id', platform: 'APPLE_TV'});
+			expect(res.body.meta).toEqual({channel: 'channel-id', platform: 'platform-id'});
 		});
 	});
 
@@ -275,7 +275,7 @@ describe('Middleware Response JSON API', function () {
 		});
 
 		it('adds a meta block', function () {
-			expect(res.body.meta).toEqual({channel: 'channel-id', platform: 'APPLE_TV'});
+			expect(res.body.meta).toEqual({channel: 'channel-id', platform: 'platform-id'});
 		});
 	});
 
