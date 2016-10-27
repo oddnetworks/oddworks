@@ -457,7 +457,7 @@ describe('Middleware Response JSON API', function () {
 						type,
 						id: COLLECTION.id,
 						platform: 'platform-id',
-						include: ['entities']
+						include: ['entities', 'video']
 					};
 
 					return bus.query({role, cmd, type}, args).then(result => {
