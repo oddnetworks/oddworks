@@ -8,9 +8,7 @@ const _ = require('lodash');
 const IdentityItemController = require('../../../../lib/services/identity/controllers/identity-item-controller');
 
 describe('Identity Item Controller', function () {
-	// TODO: Undo this @kixxauth
-	// const TYPES = Object.freeze(['platform', 'viewer', 'cat', 'horse']);
-	const TYPES = Object.freeze(['viewer']);
+	const TYPES = Object.freeze(['platform', 'viewer', 'cat', 'horse']);
 
 	const type = _.sample(TYPES);
 

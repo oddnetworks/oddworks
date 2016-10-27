@@ -9,9 +9,7 @@ const uuid = require('node-uuid');
 const IdentityListController = require('../../../../lib/services/identity/controllers/identity-list-controller');
 
 describe('Identity List Controller', function () {
-	// TODO: Undo this @kixxauth
-	// const TYPES = Object.freeze(['platform', 'viewer', 'cat', 'horse']);
-	const TYPES = Object.freeze(['viewer']);
+	const TYPES = Object.freeze(['platform', 'viewer', 'cat', 'horse']);
 	const type = _.sample(TYPES);
 	let bus;
 	let handler;
