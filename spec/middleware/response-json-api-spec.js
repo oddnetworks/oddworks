@@ -17,6 +17,7 @@ const jsonApiSchema = require('../helpers/json-api-schema.json');
 
 const COLLECTION = require('../fixtures/collections/collection-0.json');
 const COLLECTION_1 = require('../fixtures/collections/collection-1.json');
+const COLLECTION_2 = require('../fixtures/collections/collection-2.json');
 const REL_0 = require('../fixtures/videos/video-0.json');
 const REL_1 = require('../fixtures/videos/video-1.json');
 const REL_2 = require('../fixtures/videos/video-2.json');
@@ -90,7 +91,8 @@ describe('Middleware Response JSON API', function () {
 					bus.sendCommand({role, cmd, type: 'video'}, REL_B),
 					bus.sendCommand({role, cmd, type: 'video'}, REL_C),
 					bus.sendCommand({role, cmd, type: 'collection'}, COLLECTION),
-					bus.sendCommand({role, cmd, type: 'collection'}, COLLECTION_1)
+					bus.sendCommand({role, cmd, type: 'collection'}, COLLECTION_1),
+					bus.sendCommand({role, cmd, type: 'collection'}, COLLECTION_2)
 				]);
 			})
 			.then(_.noop)
@@ -261,6 +263,7 @@ describe('Middleware Response JSON API', function () {
 		it('has an included array', function () {
 			expect(Array.isArray(res.body.included)).toBe(true);
 			expect(res.body.included.length).toBe(3);
+			// console.log(JSON.stringify(res.body, null, 2));
 		});
 
 		it('has included resources with self links', function () {
@@ -454,7 +457,7 @@ describe('Middleware Response JSON API', function () {
 						type,
 						id: COLLECTION.id,
 						platform: 'platform-id',
-						include: ['entities']
+						include: ['entities', 'video']
 					};
 
 					return bus.query({role, cmd, type}, args).then(result => {
@@ -734,6 +737,70 @@ describe('Middleware Response JSON API', function () {
 			expect(data[1].type).toBe('collection');
 			expect(Object.keys(data[0]).length).toBe(2);
 			expect(Object.keys(data[1]).length).toBe(2);
+		});
+	});
+
+	describe('with a collection that has no relationships', function () {
+		const req = _.cloneDeep(REQ);
+		let res = null;
+		let middleware = null;
+
+		const role = 'store';
+		const cmd = 'get';
+		const type = 'collection';
+
+		const RESPONSES = {
+			NO_RELATIONSHIPS: null
+		};
+
+		beforeAll(function (done) {
+			req.query = {include: 'foobar'};
+			res = mockExpressResponse();
+			res.body = _.cloneDeep(COLLECTION_2);
+
+			middleware = responseJsonApi({bus});
+
+			const args = {
+				channel: 'channel-id',
+				type,
+				id: COLLECTION_2.id,
+				platform: 'platform-id',
+				include: ['foobar']
+			};
+
+			req.url = `/${type}s/${COLLECTION_2.id}?include=foobar`;
+
+			return Promise.resolve(null)
+				.then(() => {
+					return bus.query({role, cmd, type}, args).then(result => {
+						res.body = result;
+						return res;
+					});
+				})
+				.then(res => {
+					return middleware(req, res, err => {
+						if (err) {
+							return done.fail(err);
+						}
+						RESPONSES.NO_RELATIONSHIPS = res;
+					});
+				})
+				.then(_.noop)
+				.then(done)
+				.catch(done.fail);
+		});
+
+		it('returns a valid api response', function (done) {
+			const v = Validator.validate(RESPONSES.NO_RELATIONSHIPS.body, jsonApiSchema);
+			expect(v.valid).toBe(true);
+			done();
+		});
+
+		it('returns with the expected members in the data array', function (done) {
+			const data = (RESPONSES.NO_RELATIONSHIPS.body || {}).data;
+			expect(Object.keys(data.relationships).length).toBe(0);
+			expect(RESPONSES.NO_RELATIONSHIPS.body.included.length).toBe(0);
+			done();
 		});
 	});
 });
