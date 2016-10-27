@@ -92,8 +92,8 @@ describe('Middleware: Response Entitlements', () => {
 		beforeAll(() => {
 			req.identity.channel.features.authentication = {
 				enabled: true,
-				entitlements: {
-					evaluator: `function (viewer, resource) {
+				evaluators: {
+					entitlements: `function (viewer, resource) {
 						if (viewer.attributes.entitlements.indexOf('gold') >= 0) {
 							return true;
 						}
@@ -166,8 +166,8 @@ describe('Middleware: Response Entitlements', () => {
 		beforeAll(() => {
 			req.identity.channel.features.authentication = {
 				enabled: true,
-				entitlements: {
-					evaluator: `function (viewer, resource) {
+				evaluators: {
+					entitlements: `function (viewer, resource) {
 						if (viewer.attributes.entitlements.indexOf('gold') >= 0) {
 							return true;
 						}
@@ -244,8 +244,8 @@ describe('Middleware: Response Entitlements', () => {
 		it('that cannot be parsed', done => {
 			req.identity.channel.features.authentication = {
 				enabled: true,
-				entitlements: {
-					evaluator: `sdsa`
+				evaluators: {
+					entitlements: `sdsa`
 				}
 			};
 
@@ -263,8 +263,8 @@ describe('Middleware: Response Entitlements', () => {
 		it('that cannot be executed', done => {
 			req.identity.channel.features.authentication = {
 				enabled: true,
-				entitlements: {
-					evaluator: `function (viewer, resource) {
+				evaluators: {
+					entitlements: `function (viewer, resource) {
 						if (viewer.attributes.entitlements.contains('gold') >= 0) {
 							return true;
 						}
