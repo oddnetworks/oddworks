@@ -99,7 +99,11 @@ describe('Identity Service Controller', function () {
 				evaluators: {
 					login: `function (bus, req, res, next) {
 						return new Promise(function (resolve, reject) {
-							if (req.body.email === 'viewer999@oddnetworks.com') {
+							if (req.body.email === '401') {
+								reject({status: 401});
+							} else if (req.body.email === '503') {
+								reject({status: 503});
+							} else if (req.body.email === 'viewer999@oddnetworks.com') {
 								const viewer = {
 									id: 'viewer999@oddnetworks.com',
 									type: 'viewer',
@@ -284,7 +288,7 @@ describe('Identity Service Controller', function () {
 			};
 
 			this.controller.login.post(req, res, err => {
-				expect(err).toBeDefined();
+				expect(err.output.statusCode).toBe(401);
 				done();
 			});
 		});
@@ -311,6 +315,46 @@ describe('Identity Service Controller', function () {
 				expect(res.body.entitlements.length).toBe(1);
 				expect(res.body.jwt).toBeDefined();
 				expect(res.body.meta.source).toBe('evaluator');
+				done();
+			});
+		});
+
+		it('replies with a 401 if invalid login', function (done) {
+			const req = {
+				identity: {
+					channel: CHANNEL_EVALUATORS,
+					platform: PLATFORM
+				},
+				body: {
+					type: 'authentication',
+					email: '401',
+					password: ''
+				}
+			};
+
+			this.controller.login.post(req, res, err => {
+				expect(err.isBoom).toBe(true);
+				expect(err.output.statusCode).toBe(401);
+				done();
+			});
+		});
+
+		it('replies with a 503 from upstream server', function (done) {
+			const req = {
+				identity: {
+					channel: CHANNEL_EVALUATORS,
+					platform: PLATFORM
+				},
+				body: {
+					type: 'authentication',
+					email: '503',
+					password: ''
+				}
+			};
+
+			this.controller.login.post(req, res, err => {
+				expect(err.isBoom).toBe(true);
+				expect(err.output.statusCode).toBe(503);
 				done();
 			});
 		});
