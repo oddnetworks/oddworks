@@ -74,8 +74,18 @@ describe('Identity Service Controller', function () {
 		})
 		.reply(401);
 
+	const CHANNEL_NATIVE = {
+		id: 'odd-networks-native',
+		title: 'Odd Networks',
+		features: {
+			authentication: {
+				enabled: true
+			}
+		}
+	};
+
 	const CHANNEL_PROXY = {
-		id: 'odd-networks',
+		id: 'odd-networks-proxy',
 		title: 'Odd Networks',
 		features: {
 			authentication: {
@@ -124,16 +134,44 @@ describe('Identity Service Controller', function () {
 		}
 	};
 
-	const PLATFORM = {
+	const PLATFORM_NATIVE = {
 		id: 'apple-ios',
 		title: 'Apple iOS',
-		channel: 'odd-networks'
+		channel: 'odd-networks-native'
 	};
 
-	const VIEWER = {
+	const PLATFORM_PROXY = {
+		id: 'apple-ios',
+		title: 'Apple iOS',
+		channel: 'odd-networks-proxy'
+	};
+
+	const PLATFORM_EVALUATORS = {
+		id: 'apple-ios',
+		title: 'Apple iOS',
+		channel: 'odd-networks-evals'
+	};
+
+	const VIEWER_NATIVE = {
 		id: 'bingewatcher@oddnetworks.com',
 		type: 'viewer',
-		channel: 'odd-networks',
+		channel: 'odd-networks-native',
+		email: 'bingewatcher@oddnetworks.com',
+		password: '$2a$08$FhvlvDcjj3TtlfGTs.LY4uPX1B4zSVwtpuoh8SQvnOE2KYbyaIwi6',
+		entitlements: ['silver']
+	};
+
+	const VIEWER_PROXY = {
+		id: 'bingewatcher@oddnetworks.com',
+		type: 'viewer',
+		channel: 'odd-networks-proxy',
+		enitlements: ['silver']
+	};
+
+	const VIEWER_EVALUATORS = {
+		id: 'bingewatcher@oddnetworks.com',
+		type: 'viewer',
+		channel: 'odd-networks-evals',
 		enitlements: ['silver']
 	};
 
@@ -166,15 +204,73 @@ describe('Identity Service Controller', function () {
 		})
 		.then(() => {
 			return Promise.join(
+				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL_NATIVE),
 				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL_PROXY),
 				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL_EVALUATORS),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER),
+				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM_NATIVE),
+				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM_PROXY),
+				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM_EVALUATORS),
+				bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER_NATIVE),
+				bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER_PROXY),
+				bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER_EVALUATORS),
 				() => {}
 			);
 		})
 		.then(done)
 		.catch(this.handleError(done));
+	});
+
+	describe('native login', function () {
+		beforeEach(function (done) {
+			res = {
+				status() {
+				},
+				body: {}
+			};
+			done();
+		});
+
+		it('replies with a viewer if valid login', function (done) {
+			const req = {
+				identity: {
+					channel: CHANNEL_NATIVE,
+					platform: PLATFORM_NATIVE
+				},
+				body: {
+					type: 'authentication',
+					email: 'bingewatcher@oddnetworks.com',
+					password: 'ILikeMovie'
+				}
+			};
+
+			this.controller.login.post(req, res, () => {
+				expect(res.body.id).toBe('bingewatcher@oddnetworks.com');
+				expect(res.body.type).toBe('viewer');
+				expect(res.body.channel).toBe('odd-networks-native');
+				expect(res.body.entitlements.length).toBe(1);
+				expect(res.body.jwt).toBeDefined();
+				done();
+			});
+		});
+
+		it('replies with a 401 if invalid login', function (done) {
+			const req = {
+				identity: {
+					channel: CHANNEL_NATIVE,
+					platform: PLATFORM_NATIVE
+				},
+				body: {
+					type: 'authentication',
+					email: 'invalid@oddnetworks.com',
+					password: ''
+				}
+			};
+
+			this.controller.login.post(req, res, err => {
+				expect(err.output.statusCode).toBe(401);
+				done();
+			});
+		});
 	});
 
 	describe('proxies login', function () {
@@ -191,7 +287,7 @@ describe('Identity Service Controller', function () {
 			const req = {
 				identity: {
 					channel: CHANNEL_PROXY,
-					platform: PLATFORM
+					platform: PLATFORM_PROXY
 				},
 				body: {
 					type: 'authentication',
@@ -203,7 +299,7 @@ describe('Identity Service Controller', function () {
 			this.controller.login.post(req, res, () => {
 				expect(res.body.id).toBe('viewer@oddnetworks.com');
 				expect(res.body.type).toBe('viewer');
-				expect(res.body.channel).toBe('odd-networks');
+				expect(res.body.channel).toBe('odd-networks-proxy');
 				expect(res.body.entitlements.length).toBe(2);
 				expect(res.body.jwt).toBeDefined();
 				expect(res.body.meta.jwt).toBeDefined();
@@ -212,7 +308,7 @@ describe('Identity Service Controller', function () {
 					.then(viewer => {
 						expect(viewer.id).toBe('viewer@oddnetworks.com');
 						expect(viewer.type).toBe('viewer');
-						expect(viewer.channel).toBe('odd-networks');
+						expect(viewer.channel).toBe('odd-networks-proxy');
 						expect(viewer.entitlements.length).toBe(2);
 						expect(viewer.meta.jwt).toBeDefined();
 
@@ -225,7 +321,7 @@ describe('Identity Service Controller', function () {
 			const req = {
 				identity: {
 					channel: CHANNEL_PROXY,
-					platform: PLATFORM
+					platform: PLATFORM_PROXY
 				},
 				body: {
 					type: 'authentication',
@@ -237,7 +333,7 @@ describe('Identity Service Controller', function () {
 			this.controller.login.post(req, res, () => {
 				expect(res.body.id).toBe('viewer@oddnetworks.com');
 				expect(res.body.type).toBe('viewer');
-				expect(res.body.channel).toBe('odd-networks');
+				expect(res.body.channel).toBe('odd-networks-proxy');
 				expect(res.body.entitlements.length).toBe(2);
 				expect(res.body.jwt).toBeDefined();
 				expect(res.body.meta.jwt).toBeDefined();
@@ -254,7 +350,7 @@ describe('Identity Service Controller', function () {
 			const req = {
 				identity: {
 					channel: CHANNEL_PROXY,
-					platform: PLATFORM
+					platform: PLATFORM_PROXY
 				},
 				body: {
 					type: 'authentication',
@@ -266,7 +362,7 @@ describe('Identity Service Controller', function () {
 			this.controller.login.post(req, res, () => {
 				expect(res.body.id).toBe('bingewatcher@oddnetworks.com');
 				expect(res.body.type).toBe('viewer');
-				expect(res.body.channel).toBe('odd-networks');
+				expect(res.body.channel).toBe('odd-networks-proxy');
 				expect(res.body.entitlements.length).toBe(2);
 				expect(res.body.jwt).toBeDefined();
 				expect(res.body.meta.jwt).toBeDefined();
@@ -278,7 +374,7 @@ describe('Identity Service Controller', function () {
 			const req = {
 				identity: {
 					channel: CHANNEL_PROXY,
-					platform: PLATFORM
+					platform: PLATFORM_PROXY
 				},
 				body: {
 					type: 'authentication',
@@ -299,7 +395,7 @@ describe('Identity Service Controller', function () {
 			const req = {
 				identity: {
 					channel: CHANNEL_EVALUATORS,
-					platform: PLATFORM
+					platform: PLATFORM_EVALUATORS
 				},
 				body: {
 					type: 'authentication',
@@ -323,7 +419,7 @@ describe('Identity Service Controller', function () {
 			const req = {
 				identity: {
 					channel: CHANNEL_EVALUATORS,
-					platform: PLATFORM
+					platform: PLATFORM_EVALUATORS
 				},
 				body: {
 					type: 'authentication',
@@ -343,7 +439,7 @@ describe('Identity Service Controller', function () {
 			const req = {
 				identity: {
 					channel: CHANNEL_EVALUATORS,
-					platform: PLATFORM
+					platform: PLATFORM_EVALUATORS
 				},
 				body: {
 					type: 'authentication',
