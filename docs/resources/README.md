@@ -108,6 +108,8 @@ __Type:__ `video`
 - __images__ Array - contains [Image](#image) objects.
 - __sources__ Array - contains one or more [Source](#source) objects.
 - __duration__ Integer - the duration of the video in milliseconds. Default: `0`
+- __position__ Integer - the position of the video in milliseconds for the requesting [Viewer](#viewer). Default: `0`
+- __complete__ Boolean - mark the video as completely watched for the requesting [Viewer](#viewer). Default: `false`
 - __genres__ Array - contains a string of genres.
 - __cast__ Array - contains [Cast](#cast) objects.
 - __releaseDate__ String - ISO 8601 date string.
