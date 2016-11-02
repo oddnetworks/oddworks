@@ -138,13 +138,13 @@ __Type:__ `collection`
 
 ## Progress
 
+This resource is used to update [Video](#video) progress based on a [Viewer](#viewer) and is not exposed through the API other than to `POST` progress data.
+
 __Type:__ `progress`
 
 ### Attributes
 
 - __channel__ String
-- __viewer__ String
-- __video__ String
 - __position__ Integer - the current position of the viewer's progress on the video. Default: `0`
 - __complete__ Boolean - has the viewer completed watching the video. Default: `false`
 
