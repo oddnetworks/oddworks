@@ -123,7 +123,7 @@ describe('Identity Viewers Relationship Controller', function () {
 				};
 
 				this.controller.progress.post(req, res, () => {
-					expect(res.body.id).toBe(`${VIEWER.id}:${VIDEO_1.id}`);
+					expect(res.body.id).toBe(`${VIDEO_1.id}:${VIEWER.id}`);
 					expect(res.body.type).toBe('progress');
 					expect(res.body.position).toBe(131313);
 					expect(res.body.complete).toBe(false);
@@ -133,7 +133,7 @@ describe('Identity Viewers Relationship Controller', function () {
 						complete: true
 					};
 					this.controller.progress.post(req, res2, () => {
-						expect(res2.body.id).toBe(`${VIEWER.id}:${VIDEO_1.id}`);
+						expect(res2.body.id).toBe(`${VIDEO_1.id}:${VIEWER.id}`);
 						expect(res2.body.type).toBe('progress');
 						expect(res2.body.position).toBe(20000);
 						expect(res2.body.complete).toBe(true);
