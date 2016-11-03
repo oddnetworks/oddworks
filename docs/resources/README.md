@@ -108,6 +108,8 @@ __Type:__ `video`
 - __images__ Array - contains [Image](#image) objects.
 - __sources__ Array - contains one or more [Source](#source) objects.
 - __duration__ Integer - the duration of the video in milliseconds. Default: `0`
+- __position__ Integer - the position of the video in milliseconds for the requesting [Viewer](#viewer). Default: `0`
+- __complete__ Boolean - mark the video as completely watched for the requesting [Viewer](#viewer). Default: `false`
 - __genres__ Array - contains a string of genres.
 - __cast__ Array - contains [Cast](#cast) objects.
 - __releaseDate__ String - ISO 8601 date string.
@@ -136,13 +138,13 @@ __Type:__ `collection`
 
 ## Progress
 
+This resource is used to update [Video](#video) progress based on a [Viewer](#viewer) and is not exposed through the API other than to `POST` progress data.
+
 __Type:__ `progress`
 
 ### Attributes
 
 - __channel__ String
-- __viewer__ String
-- __video__ String
 - __position__ Integer - the current position of the viewer's progress on the video. Default: `0`
 - __complete__ Boolean - has the viewer completed watching the video. Default: `false`
 
