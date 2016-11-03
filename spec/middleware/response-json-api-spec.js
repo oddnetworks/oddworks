@@ -782,6 +782,9 @@ describe('Middleware Response JSON API', function () {
 						if (err) {
 							return done.fail(err);
 						}
+						// 500 set on res.status here in json-response middleware
+						// doesn't reach this part of the test'
+						// console.log('FROM SPEC: ', res);
 						RESPONSES.NO_RELATIONSHIPS = res;
 					});
 				})
@@ -798,6 +801,7 @@ describe('Middleware Response JSON API', function () {
 
 		it('returns with the expected members in the data array', function (done) {
 			const data = (RESPONSES.NO_RELATIONSHIPS.body || {}).data;
+			expect(RESPONSES.NO_RELATIONSHIPS.statusCode).toBe(500);
 			expect(Object.keys(data.relationships).length).toBe(0);
 			expect(RESPONSES.NO_RELATIONSHIPS.body.included.length).toBe(0);
 			done();
