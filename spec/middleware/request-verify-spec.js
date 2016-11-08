@@ -1,4 +1,4 @@
-/* global describe, beforeAll, it, expect */
+/* global describe, beforeEach, it, expect */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
@@ -10,278 +10,83 @@ describe('Middleware: Request Verify', () => {
 	let req;
 	let res;
 
-	beforeAll(function () {
+	beforeEach(function () {
 		bus = this.createBus();
 
 		req = {
 			identity: {
 				channel: {id: 'channel-id', features: {authentication: {}}},
-				viewer: {id: 'viewer-id', attributes: {entitlements: null}}
+				viewer: {id: 'viewer-id', attributes: {entitlements: ['gold', 'monthly']}}
 			}
 		};
 		res = {body: {data: null}};
 	});
 
-	describe('entitles true when auth is disabled', () => {
-		beforeAll(() => {
-			req.identity.channel.features.authentication = {
-				enabled: false
-			};
-			req.identity.viewer.attributes.entitlements = ['gold', 'monthly'];
-		});
+	it('does not verify when there is no viewer', done => {
+		delete req.identity.viewer;
 
-		it('single entity', done => {
-			res.body.data = {
-				id: 'some-video',
-				meta: {}
-			};
+		res.body.data = {
+			id: 'some-video',
+			meta: {}
+		};
 
-			requestVerify({bus})(req, res, function () {
-				expect(res.body.data.meta.entitled).toBe(true);
-				done();
-			});
-		});
-
-		it('single entity with included', done => {
-			res.body.data = {
-				id: 'some-video',
-				meta: {}
-			};
-			res.body.included = [{
-				id: 'some-video',
-				meta: {}
-			}, {
-				id: 'some-video',
-				meta: {}
-			}, {
-				id: 'some-video',
-				meta: {}
-			}];
-
-			requestVerify({bus})(req, res, function () {
-				expect(res.body.data.meta.entitled).toBe(true);
-				expect(res.body.included[0].meta.entitled).toBe(true);
-				expect(res.body.included[1].meta.entitled).toBe(true);
-				expect(res.body.included[2].meta.entitled).toBe(true);
-				done();
-			});
-		});
-
-		it('multiple entities', done => {
-			res.body.data = [{
-				id: 'some-video',
-				meta: {}
-			}, {
-				id: 'some-video',
-				meta: {}
-			}, {
-				id: 'some-video',
-				meta: {}
-			}];
-
-			requestVerify({bus})(req, res, function () {
-				expect(res.body.data[0].meta.entitled).toBe(true);
-				expect(res.body.data[1].meta.entitled).toBe(true);
-				expect(res.body.data[2].meta.entitled).toBe(true);
-				done();
-			});
+		requestVerify({bus})(req, res, function (err) {
+			expect(err).toBeUndefined();
+			done();
 		});
 	});
 
-	describe('entitles true when auth is enabled with evaluator', () => {
-		beforeAll(() => {
-			req.identity.channel.features.authentication = {
-				enabled: true,
-				evaluators: {
-					entitlements: `function (viewer, resource) {
-						if (viewer.attributes.entitlements.indexOf('gold') >= 0) {
-							return true;
-						}
-						return false;
-					}`
-				}
-			};
-			req.identity.viewer.attributes.entitlements = ['gold', 'monthly'];
-		});
+	it('does not verify when evaluator fails', done => {
+		req.identity.channel.features.authentication.evaluators = {
+			verify: `function (bus, req, res) {
+				return Promise.reject(Boom.unauthorized());
+			}`
+		};
 
-		it('single entity', done => {
-			res.body.data = {
-				id: 'some-video',
-				meta: {}
-			};
+		res.body.data = {
+			id: 'some-video',
+			meta: {}
+		};
 
-			requestVerify({bus})(req, res, function () {
-				expect(res.body.data.meta.entitled).toBe(true);
-				done();
-			});
-		});
-
-		it('single entity with included', done => {
-			res.body.data = {
-				id: 'some-video',
-				meta: {}
-			};
-			res.body.included = [{
-				id: 'some-video',
-				meta: {}
-			}, {
-				id: 'some-video',
-				meta: {}
-			}, {
-				id: 'some-video',
-				meta: {}
-			}];
-
-			requestVerify({bus})(req, res, function () {
-				expect(res.body.data.meta.entitled).toBe(true);
-				expect(res.body.included[0].meta.entitled).toBe(true);
-				expect(res.body.included[1].meta.entitled).toBe(true);
-				expect(res.body.included[2].meta.entitled).toBe(true);
-				done();
-			});
-		});
-
-		it('multiple entities', done => {
-			res.body.data = [{
-				id: 'some-video',
-				meta: {}
-			}, {
-				id: 'some-video',
-				meta: {}
-			}, {
-				id: 'some-video',
-				meta: {}
-			}];
-
-			requestVerify({bus})(req, res, function () {
-				expect(res.body.data[0].meta.entitled).toBe(true);
-				expect(res.body.data[1].meta.entitled).toBe(true);
-				expect(res.body.data[2].meta.entitled).toBe(true);
-				done();
-			});
+		requestVerify({bus})(req, res, function (err) {
+			expect(err).toBeDefined();
+			expect(err.output.statusCode).toBeDefined(401);
+			done();
 		});
 	});
 
-	describe('entitles false when auth is enabled with evaluator', () => {
-		beforeAll(() => {
-			req.identity.channel.features.authentication = {
-				enabled: true,
-				evaluators: {
-					entitlements: `function (viewer, resource) {
-						if (viewer.attributes.entitlements.indexOf('gold') >= 0) {
-							return true;
-						}
-						return false;
-					}`
-				}
-			};
-			req.identity.viewer.attributes.entitlements = ['silver'];
-		});
+	it('does not verify when evaluator is malformed', done => {
+		req.identity.channel.features.authentication.evaluators = {
+			verify: `dsadsadsassda`
+		};
 
-		it('single entity', done => {
-			res.body.data = {
-				id: 'some-video',
-				meta: {}
-			};
+		res.body.data = {
+			id: 'some-video',
+			meta: {}
+		};
 
-			requestVerify({bus})(req, res, function () {
-				expect(res.body.data.meta.entitled).toBe(false);
-				done();
-			});
-		});
-
-		it('single entity with included', done => {
-			res.body.data = {
-				id: 'some-video',
-				meta: {}
-			};
-			res.body.included = [{
-				id: 'some-video',
-				meta: {}
-			}, {
-				id: 'some-video',
-				meta: {}
-			}, {
-				id: 'some-video',
-				meta: {}
-			}];
-
-			requestVerify({bus})(req, res, function () {
-				expect(res.body.data.meta.entitled).toBe(false);
-				expect(res.body.included[0].meta.entitled).toBe(false);
-				expect(res.body.included[1].meta.entitled).toBe(false);
-				expect(res.body.included[2].meta.entitled).toBe(false);
-				done();
-			});
-		});
-
-		it('multiple entities', done => {
-			res.body.data = [{
-				id: 'some-video',
-				meta: {}
-			}, {
-				id: 'some-video',
-				meta: {}
-			}, {
-				id: 'some-video',
-				meta: {}
-			}];
-
-			requestVerify({bus})(req, res, function () {
-				expect(res.body.data[0].meta.entitled).toBe(false);
-				expect(res.body.data[1].meta.entitled).toBe(false);
-				expect(res.body.data[2].meta.entitled).toBe(false);
-				done();
-			});
+		requestVerify({bus})(req, res, function (err) {
+			expect(err).toBeDefined();
+			expect(err.output.statusCode).toBeDefined(401);
+			done();
 		});
 	});
 
-	describe('entitles false when auth is enabled with bad evaluator', () => {
-		beforeAll(() => {
-			req.identity.viewer.attributes.entitlements = ['silver'];
-		});
+	it('does verify when evaluator passes', done => {
+		req.identity.channel.features.authentication.evaluators = {
+			verify: `function (bus, req, res) {
+				return Promise.resolve(true);
+			}`
+		};
 
-		it('that cannot be parsed', done => {
-			req.identity.channel.features.authentication = {
-				enabled: true,
-				evaluators: {
-					entitlements: `sdsa`
-				}
-			};
+		res.body.data = {
+			id: 'some-video',
+			meta: {}
+		};
 
-			res.body.data = {
-				id: 'some-video',
-				meta: {}
-			};
-
-			requestVerify({bus})(req, res, function () {
-				expect(res.body.data.meta.entitled).toBe(false);
-				done();
-			});
-		});
-
-		it('that cannot be executed', done => {
-			req.identity.channel.features.authentication = {
-				enabled: true,
-				evaluators: {
-					entitlements: `function (viewer, resource) {
-						if (viewer.attributes.entitlements.contains('gold') >= 0) {
-							return true;
-						}
-						return false;
-					}`
-				}
-			};
-
-			res.body.data = {
-				id: 'some-video',
-				meta: {}
-			};
-
-			requestVerify({bus})(req, res, function () {
-				expect(res.body.data.meta.entitled).toBe(false);
-				done();
-			});
+		requestVerify({bus})(req, res, function (err) {
+			expect(err).toBeUndefined();
+			done();
 		});
 	});
 });
