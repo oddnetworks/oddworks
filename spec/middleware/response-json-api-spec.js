@@ -803,4 +803,78 @@ describe('Middleware Response JSON API', function () {
 			done();
 		});
 	});
+
+	describe('with search results', function () {
+		let req = null;
+		let res = null;
+		let middleware = null;
+		let resources = null;
+
+		const resourceFactory = () => {
+			const collection = _.cloneDeep(COLLECTION);
+			collection.id = _.uniqueId('random-resource-');
+			return collection;
+		};
+
+		beforeAll(function (done) {
+			middleware = responseJsonApi({bus, allowPartialIncluded: true});
+			resources = _.range(3).map(resourceFactory);
+			done();
+		});
+
+		it('formats meta with defaults', function (done) {
+			req = _.cloneDeep(REQ);
+			req.url = '/search';
+			req.query = {
+				q: 'testing'
+			};
+
+			res = mockExpressResponse();
+
+			res.body = resources;
+
+			return middleware(req, res, err => {
+				if (err) {
+					return done.fail(err);
+				}
+				expect(res.body.meta.query.q).toBe('testing');
+				expect(res.body.meta.query.types[0]).toBe('video');
+				expect(res.body.meta.query.types[1]).toBe('collection');
+				expect(res.body.meta.page.limit).toBe(10);
+				expect(res.body.meta.page.offset).toBe(0);
+				expect(res.body.meta.sort).toBe(null);
+				done();
+			});
+		});
+
+		it('formats meta with querystrings', function (done) {
+			req = _.cloneDeep(REQ);
+			req.url = '/search';
+			req.query = {
+				q: 'testing',
+				types: 'collection',
+				page: {
+					limit: 2,
+					offset: 5
+				},
+				sort: '-title'
+			};
+
+			res = mockExpressResponse();
+
+			res.body = resources;
+
+			return middleware(req, res, err => {
+				if (err) {
+					return done.fail(err);
+				}
+				expect(res.body.meta.query.q).toBe('testing');
+				expect(res.body.meta.query.types[0]).toBe('collection');
+				expect(res.body.meta.page.limit).toBe(2);
+				expect(res.body.meta.page.offset).toBe(5);
+				expect(res.body.meta.sort).toBe('-title');
+				done();
+			});
+		});
+	});
 });
