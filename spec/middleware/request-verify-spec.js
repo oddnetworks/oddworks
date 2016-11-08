@@ -22,7 +22,7 @@ describe('Middleware: Request Verify', () => {
 		res = {body: {data: null}};
 	});
 
-	it('does not verify when there is no viewer', done => {
+	it('bypasses verify when there is no viewer', done => {
 		delete req.identity.viewer;
 
 		res.body.data = {
@@ -39,7 +39,7 @@ describe('Middleware: Request Verify', () => {
 	it('does not verify when evaluator fails', done => {
 		req.identity.channel.features.authentication.evaluators = {
 			verify: `function (bus, req, res) {
-				return Promise.reject(Boom.unauthorized());
+				return Promise.reject(Boom.unauthorized('Your account is no longer valid.'));
 			}`
 		};
 
@@ -49,8 +49,10 @@ describe('Middleware: Request Verify', () => {
 		};
 
 		requestVerify({bus})(req, res, function (err) {
-			expect(err).toBeDefined();
-			expect(err.output.statusCode).toBeDefined(401);
+			expect(err.isBoom).toBe(true);
+			expect(err.output.statusCode).toBe(401);
+			expect(err.output.payload.error).toBe('Unauthorized');
+			expect(err.output.payload.message).toBe('Your account is no longer valid.');
 			done();
 		});
 	});
@@ -66,8 +68,10 @@ describe('Middleware: Request Verify', () => {
 		};
 
 		requestVerify({bus})(req, res, function (err) {
-			expect(err).toBeDefined();
-			expect(err.output.statusCode).toBeDefined(401);
+			expect(err.isBoom).toBe(true);
+			expect(err.output.statusCode).toBe(401);
+			expect(err.output.payload.error).toBe('Unauthorized');
+			expect(err.output.payload.message).toBeDefined();
 			done();
 		});
 	});
