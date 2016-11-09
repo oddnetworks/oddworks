@@ -278,7 +278,7 @@ describe('Middleware Response JSON API', function () {
 		});
 
 		it('adds a meta block', function () {
-			expect(res.body.meta).toEqual({extra: 'info', channel: 'channel-id', platform: 'platform-id'});
+			expect(res.body.meta).toEqual({extra: 'info', channel: 'channel-id', platform: 'platform-id', query: {include: 'entities,video'}});
 		});
 	});
 
@@ -804,7 +804,7 @@ describe('Middleware Response JSON API', function () {
 		});
 	});
 
-	describe('with search results', function () {
+	describe('with query params', function () {
 		let req = null;
 		let res = null;
 		let middleware = null;
@@ -822,41 +822,14 @@ describe('Middleware Response JSON API', function () {
 			done();
 		});
 
-		it('formats meta with defaults', function (done) {
-			req = _.cloneDeep(REQ);
-			req.url = '/search';
-			req.query = {
-				q: 'testing'
-			};
-
-			res = mockExpressResponse();
-
-			res.body = resources;
-
-			return middleware(req, res, err => {
-				if (err) {
-					return done.fail(err);
-				}
-				expect(res.body.meta.query.q).toBe('testing');
-				expect(res.body.meta.query.types[0]).toBe('video');
-				expect(res.body.meta.query.types[1]).toBe('collection');
-				expect(res.body.meta.page.limit).toBe(10);
-				expect(res.body.meta.page.offset).toBe(0);
-				expect(res.body.meta.sort).toBe(null);
-				done();
-			});
-		});
-
 		it('formats meta with querystrings', function (done) {
 			req = _.cloneDeep(REQ);
 			req.url = '/search';
 			req.query = {
 				q: 'testing',
 				types: 'collection',
-				page: {
-					limit: 2,
-					offset: 5
-				},
+				limit: 2,
+				offset: 5,
 				sort: '-title'
 			};
 
@@ -869,10 +842,10 @@ describe('Middleware Response JSON API', function () {
 					return done.fail(err);
 				}
 				expect(res.body.meta.query.q).toBe('testing');
-				expect(res.body.meta.query.types[0]).toBe('collection');
-				expect(res.body.meta.page.limit).toBe(2);
-				expect(res.body.meta.page.offset).toBe(5);
-				expect(res.body.meta.sort).toBe('-title');
+				expect(res.body.meta.query.types).toBe('collection');
+				expect(res.body.meta.query.limit).toBe(2);
+				expect(res.body.meta.query.offset).toBe(5);
+				expect(res.body.meta.query.sort).toBe('-title');
 				done();
 			});
 		});
