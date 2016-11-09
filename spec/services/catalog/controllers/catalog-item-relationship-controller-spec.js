@@ -102,9 +102,11 @@ describe('Catalog Item Relationship Controller', function () {
 				relationshipKey: 'entities'
 			},
 			query: {},
-			identity: {channel: {id: CHANNEL.id},
-			platform: {id: PLATFORM.id},
-			viewer: {id: VIEWER.id}}
+			identity: {
+				channel: {id: CHANNEL.id},
+				platform: {id: PLATFORM.id},
+				viewer: {id: VIEWER.id}
+			}
 		};
 		const res = {
 			body: {},
@@ -125,9 +127,11 @@ describe('Catalog Item Relationship Controller', function () {
 				relationshipKey: 'entities'
 			},
 			query: {sort: 'title'},
-			identity: {channel: {id: CHANNEL.id},
-			platform: {id: PLATFORM.id},
-			viewer: {id: VIEWER.id}}
+			identity: {
+				channel: {id: CHANNEL.id},
+				platform: {id: PLATFORM.id},
+				viewer: {id: VIEWER.id}
+			}
 		};
 		const res = {
 			body: {},
@@ -158,9 +162,11 @@ describe('Catalog Item Relationship Controller', function () {
 				relationshipKey: 'entities'
 			},
 			query: {sort: '-title'},
-			identity: {channel: {id: CHANNEL.id},
-			platform: {id: PLATFORM.id},
-			viewer: {id: VIEWER.id}}
+			identity: {
+				channel: {id: CHANNEL.id},
+				platform: {id: PLATFORM.id},
+				viewer: {id: VIEWER.id}
+			}
 		};
 		const res = {
 			body: {},
@@ -191,9 +197,11 @@ describe('Catalog Item Relationship Controller', function () {
 				relationshipKey: 'entities'
 			},
 			query: {sort: 'meta.episode'},
-			identity: {channel: {id: CHANNEL.id},
-			platform: {id: PLATFORM.id},
-			viewer: {id: VIEWER.id}}
+			identity: {
+				channel: {id: CHANNEL.id},
+				platform: {id: PLATFORM.id},
+				viewer: {id: VIEWER.id}
+			}
 		};
 		const res = {
 			body: {},
@@ -228,9 +236,11 @@ describe('Catalog Item Relationship Controller', function () {
 				offset: '1',
 				limit: 3
 			},
-			identity: {channel: {id: CHANNEL.id},
-			platform: {id: PLATFORM.id},
-			viewer: {id: VIEWER.id}}
+			identity: {
+				channel: {id: CHANNEL.id},
+				platform: {id: PLATFORM.id},
+				viewer: {id: VIEWER.id}
+			}
 		};
 		const res = {
 			body: {},

@@ -155,7 +155,7 @@ describe('Middleware Response JSON API', function () {
 		});
 
 		it('adds a meta block', function () {
-			expect(res.body.meta).toEqual({channel: 'channel-id', platform: 'platform-id'});
+			expect(res.body.meta).toEqual({extra: 'info', channel: 'channel-id', platform: 'platform-id'});
 		});
 	});
 
@@ -278,7 +278,7 @@ describe('Middleware Response JSON API', function () {
 		});
 
 		it('adds a meta block', function () {
-			expect(res.body.meta).toEqual({channel: 'channel-id', platform: 'platform-id'});
+			expect(res.body.meta).toEqual({extra: 'info', channel: 'channel-id', platform: 'platform-id', query: {include: 'entities,video'}});
 		});
 	});
 
@@ -801,6 +801,53 @@ describe('Middleware Response JSON API', function () {
 			expect(Object.keys(data.relationships).length).toBe(0);
 			expect(RESPONSES.NO_RELATIONSHIPS.body.included.length).toBe(0);
 			done();
+		});
+	});
+
+	describe('with query params', function () {
+		let req = null;
+		let res = null;
+		let middleware = null;
+		let resources = null;
+
+		const resourceFactory = () => {
+			const collection = _.cloneDeep(COLLECTION);
+			collection.id = _.uniqueId('random-resource-');
+			return collection;
+		};
+
+		beforeAll(function (done) {
+			middleware = responseJsonApi({bus, allowPartialIncluded: true});
+			resources = _.range(3).map(resourceFactory);
+			done();
+		});
+
+		it('formats meta with querystrings', function (done) {
+			req = _.cloneDeep(REQ);
+			req.url = '/search';
+			req.query = {
+				q: 'testing',
+				types: 'collection',
+				limit: 2,
+				offset: 5,
+				sort: '-title'
+			};
+
+			res = mockExpressResponse();
+
+			res.body = resources;
+
+			return middleware(req, res, err => {
+				if (err) {
+					return done.fail(err);
+				}
+				expect(res.body.meta.query.q).toBe('testing');
+				expect(res.body.meta.query.types).toBe('collection');
+				expect(res.body.meta.query.limit).toBe(2);
+				expect(res.body.meta.query.offset).toBe(5);
+				expect(res.body.meta.query.sort).toBe('-title');
+				done();
+			});
 		});
 	});
 });
