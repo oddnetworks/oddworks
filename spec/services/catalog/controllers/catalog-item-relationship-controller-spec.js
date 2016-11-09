@@ -217,7 +217,7 @@ describe('Catalog Item Relationship Controller', function () {
 		});
 	});
 
-	it('with page query param, something happens', function (done) {
+	it('with limit and offset query param, something happens', function (done) {
 		const req = {
 			params: {
 				id: COLLECTION_1.id,
@@ -225,10 +225,8 @@ describe('Catalog Item Relationship Controller', function () {
 			},
 			query: {
 				sort: 'title',
-				page: {
-					offset: '1',
-					limit: 3
-				}
+				offset: '1',
+				limit: 3
 			},
 			identity: {channel: {id: CHANNEL.id},
 			platform: {id: PLATFORM.id},
@@ -242,7 +240,73 @@ describe('Catalog Item Relationship Controller', function () {
 		this.controller.relationship.get(req, res, () => {
 			const data = res.body;
 			expect(data.length).toBe(3);
-			expect(data[0].id).toBe('1111-10');
+			expect(data[0].id).toBe('1111-4');
+			expect(data[1].id).toBe('1111-5');
+			expect(data[2].id).toBe('1111-10');
+			done();
+		});
+	});
+
+	it('with just limit, offset defaults to 0', function (done) {
+		const req = {
+			params: {
+				id: COLLECTION_1.id,
+				relationshipKey: 'entities'
+			},
+			query: {
+				sort: 'title',
+				limit: 3
+			},
+			identity: {channel: {id: CHANNEL.id},
+			platform: {id: PLATFORM.id},
+			viewer: {id: VIEWER.id}}
+		};
+		const res = {
+			body: {},
+			status() {}
+		};
+
+		this.controller.relationship.get(req, res, () => {
+			const data = res.body;
+			expect(data.length).toBe(3);
+			expect(data[0].id).toBe('1111-3');
+			expect(data[1].id).toBe('1111-4');
+			expect(data[2].id).toBe('1111-5');
+			done();
+		});
+	});
+
+	it('with just offset, limit defaults to null', function (done) {
+		const req = {
+			params: {
+				id: COLLECTION_1.id,
+				relationshipKey: 'entities'
+			},
+			query: {
+				sort: 'title',
+				offset: 1
+			},
+			identity: {channel: {id: CHANNEL.id},
+			platform: {id: PLATFORM.id},
+			viewer: {id: VIEWER.id}}
+		};
+		const res = {
+			body: {},
+			status() {}
+		};
+
+		this.controller.relationship.get(req, res, () => {
+			const data = res.body;
+			expect(data.length).toBe(9);
+			expect(data[0].id).toBe('1111-4');
+			expect(data[1].id).toBe('1111-5');
+			expect(data[2].id).toBe('1111-10');
+			expect(data[3].id).toBe('1111-11');
+			expect(data[4].id).toBe('1111-30');
+			expect(data[5].id).toBe('1111-300');
+			expect(data[6].id).toBe('1111-A');
+			expect(data[7].id).toBe('1111-B');
+			expect(data[8].id).toBe('1111-C');
 			done();
 		});
 	});
