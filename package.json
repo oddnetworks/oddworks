@@ -1,6 +1,6 @@
 {
   "name": "@oddnetworks/oddworks",
-  "version": "4.5.1",
+  "version": "4.5.2",
   "description": "An extensible media platform for OTT devices.",
   "main": "./lib/oddworks.js",
   "scripts": {
