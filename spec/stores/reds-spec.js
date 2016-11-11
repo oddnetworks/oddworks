@@ -9,6 +9,8 @@ const fakeredis = require('fakeredis');
 const redisStore = require('../../lib/stores/redis');
 const redsStore = require('../../lib/stores/reds');
 
+const catalogService = require('../../lib/services/catalog');
+
 describe('reds Store', function () {
 	const redisClient = fakeredis.createClient();
 	let bus;
@@ -24,8 +26,6 @@ describe('reds Store', function () {
 		{id: 'collection-2', type: 'collection', title: 'Collection Two', channel: 'odd-networks'},
 		{id: 'collection-3', type: 'collection', title: 'Collection Three', channel: 'odd-networks'}
 	];
-
-	const RESOURCES = VIDEOS.concat(COLLECTIONS);
 
 	const RESPONSES = {
 		videoResults: null,
@@ -46,17 +46,28 @@ describe('reds Store', function () {
 		.then(store => {
 			return redsStore(bus, {
 				redis: redisClient,
+				autoindex: true,
 				store
 			});
 		})
 		.then(() => {
-			return Promise.map(RESOURCES, resource => {
+			return catalogService(bus, {
+				updateFrequency: 1
+			});
+		})
+		.then(() => {
+			return Promise.map(VIDEOS, resource => {
 				return bus.sendCommand({role: 'store', cmd: 'set', type: resource.type}, resource);
 			});
 		})
 		.then(() => {
-			return Promise.map(RESOURCES, resource => {
+			return Promise.map(VIDEOS, resource => {
 				return bus.sendCommand({role: 'store', cmd: 'index', type: resource.type}, {id: resource.id, text: resource.title});
+			});
+		})
+		.then(() => {
+			return Promise.map(COLLECTIONS, resource => {
+				return bus.sendCommand({role: 'catalog', cmd: 'setItem'}, resource);
 			});
 		})
 		.then(() => {
