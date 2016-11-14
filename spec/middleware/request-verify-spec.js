@@ -36,6 +36,24 @@ describe('Middleware: Request Verify', () => {
 		});
 	});
 
+	it('bypasses verify when viewer has not expired', done => {
+		req.identity.viewer.meta = {
+			internal: {
+				expires: Date.now() + 10000
+			}
+		};
+
+		res.body.data = {
+			id: 'some-video',
+			meta: {}
+		};
+
+		requestVerify({bus})(req, res, function (err) {
+			expect(err).toBeUndefined();
+			done();
+		});
+	});
+
 	it('does not verify when evaluator fails', done => {
 		req.identity.channel.features.authentication.evaluators = {
 			verify: `function (bus, req, res) {
