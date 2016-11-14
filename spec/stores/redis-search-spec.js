@@ -16,21 +16,26 @@ describe('Redis Search Store', function () {
 	let bus;
 
 	const VIDEOS = [
-		{id: 'video-1', type: 'video', title: 'Video One', channel: 'odd-networks'},
-		{id: 'video-2', type: 'video', title: 'Video Two', channel: 'odd-networks'},
-		{id: 'video-3', type: 'video', title: 'Video Three', channel: 'odd-networks'}
+		{id: 'video-1', type: 'video', title: 'Video One', channel: 'odd-networks', meta: {internal: {searchable: true}}},
+		{id: 'video-2', type: 'video', title: 'Video Two', channel: 'odd-networks', meta: {internal: {searchable: true}}},
+		{id: 'video-3', type: 'video', title: 'Video Three', channel: 'odd-networks', meta: {internal: {searchable: true}}},
+		{id: 'video-4', type: 'video', title: 'Video Four', channel: 'odd-networks'},
+		{id: 'video-5', type: 'video', title: 'Video Three', channel: 'odd-networks'}
 	];
 
 	const COLLECTIONS = [
-		{id: 'collection-1', type: 'collection', title: 'Collection One', channel: 'odd-networks'},
-		{id: 'collection-2', type: 'collection', title: 'Collection Two', channel: 'odd-networks'},
-		{id: 'collection-3', type: 'collection', title: 'Collection Three', channel: 'odd-networks'}
+		{id: 'collection-1', type: 'collection', title: 'Collection One', channel: 'odd-networks', meta: {internal: {searchable: true}}},
+		{id: 'collection-2', type: 'collection', title: 'Collection Two', channel: 'odd-networks', meta: {internal: {searchable: true}}},
+		{id: 'collection-3', type: 'collection', title: 'Collection Three', channel: 'odd-networks', meta: {internal: {searchable: true}}}
 	];
+
+	const RESOURCES = VIDEOS.concat(COLLECTIONS);
 
 	const RESPONSES = {
 		videoResults: null,
 		threeResults: null,
-		noResults: null
+		noResults: null,
+		threeResultsAgain: null
 	};
 
 	Promise.promisifyAll(fakeredis.RedisClient.prototype);
@@ -56,18 +61,15 @@ describe('Redis Search Store', function () {
 			});
 		})
 		.then(() => {
-			return Promise.map(VIDEOS, resource => {
+			// Set the all resources and let autoindexing happen
+			return Promise.map(RESOURCES, resource => {
 				return bus.sendCommand({role: 'store', cmd: 'set', type: resource.type}, resource);
 			});
 		})
 		.then(() => {
-			return Promise.map(VIDEOS, resource => {
-				return bus.sendCommand({role: 'store', cmd: 'index', type: resource.type}, {id: resource.id, text: resource.title});
-			});
-		})
-		.then(() => {
+			// Force indexing of collections
 			return Promise.map(COLLECTIONS, resource => {
-				return bus.sendCommand({role: 'catalog', cmd: 'setItem'}, resource);
+				return bus.sendCommand({role: 'store', cmd: 'index', type: resource.type}, {id: resource.id, text: resource.title});
 			});
 		})
 		.then(() => {
@@ -85,6 +87,14 @@ describe('Redis Search Store', function () {
 		})
 		.then(noResults => {
 			RESPONSES.noResults = noResults;
+
+			return bus.sendCommand({role: 'store', cmd: 'remove', type: 'collection'}, {id: 'collection-3', type: 'collection', channel: 'odd-networks'});
+		})
+		.then(() => {
+			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'three'});
+		})
+		.then(threeResultsAgain => {
+			RESPONSES.threeResultsAgain = threeResultsAgain;
 
 			return true;
 		})
@@ -114,6 +124,14 @@ describe('Redis Search Store', function () {
 	describe('No Results', function () {
 		it('should have 0 results', function (done) {
 			expect(RESPONSES.noResults.length).toBe(0);
+			done();
+		});
+	});
+
+	describe('"three" Results Again', function () {
+		it('should have 1 result of a video since collection was deindexed', function (done) {
+			expect(RESPONSES.threeResultsAgain.length).toBe(1);
+			expect(RESPONSES.threeResultsAgain[0].id).toBe('video-3');
 			done();
 		});
 	});
