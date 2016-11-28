@@ -609,7 +609,7 @@ describe('Middleware Response JSON API', function () {
 					return middleware(req, res, err => {
 						RESULTS.ERRORS = _.cloneDeep(res);
 						if (err) {
-							return done.fail(err);
+							RESULTS.ERRORS = err;
 						}
 						return null;
 					});
@@ -622,7 +622,6 @@ describe('Middleware Response JSON API', function () {
 						if (err) {
 							return done.fail(err);
 						}
-						done();
 					});
 				})
 				.then(_.noop)
@@ -630,27 +629,32 @@ describe('Middleware Response JSON API', function () {
 				.catch(this.handleError(done));
 		});
 		describe('and partial results NOT allowed', function () {
-			it('formats response body to valid jsonapi.org schema', function () {
+			it('formats response body to valid jsonapi.org schema', function (done) {
 				const body = RESULTS.ERRORS.body;
 				const v = Validator.validate(body, jsonApiSchema);
 				expect(v.valid).toBe(true);
+				done();
 			});
 
-			it('has missing items in the errors array', function () {
-				const body = RESULTS.ERRORS.body;
-				expect(body.errors).toBeTruthy();
-				expect(body.errors.length).toBe(8);
+			it('has missing items in the data array', function (done) {
+				const body = RESULTS.ERRORS;
+				expect(body.data).toBeTruthy();
+				expect(body.data.length).toBe(8);
+				expect(body.isBoom).toBe(true);
+				expect(body.output.statusCode).toBe(500);
+				done();
 			});
 		});
 
 		describe('and partial results ARE allowed', function () {
-			it('formats response body to valid jsonapi.org schema', function () {
+			it('formats response body to valid jsonapi.org schema', function (done) {
 				const body = RESULTS.SUCCESS.body;
 				const v = Validator.validate(body, jsonApiSchema);
 				expect(v.valid).toBe(true);
+				done();
 			});
 
-			it('has only present entities in the included array', function () {
+			it('has only present entities in the included array', function (done) {
 				const body = RESULTS.SUCCESS.body;
 				// console.log('RES.BODY:  ', JSON.stringify(res.body, ' ', 2));
 				// console.log('INCLUDED:  ', JSON.stringify(res.body.included, ' ', 2));
@@ -658,6 +662,7 @@ describe('Middleware Response JSON API', function () {
 				expect(body.included).toBeDefined();
 				expect(body.included.length).toBe(3);
 				expect(body.included.length).toBe(body.data.relationships.entities.data.length);
+				done();
 			});
 		});
 	});
@@ -796,10 +801,10 @@ describe('Middleware Response JSON API', function () {
 				})
 				.then(res => {
 					return middleware(req, res, err => {
-						if (err) {
-							return done.fail(err);
-						}
 						RESPONSES.NO_RELATIONSHIPS = res;
+						if (err) {
+							RESPONSES.NO_RELATIONSHIPS = err;
+						}
 					});
 				})
 				.then(_.noop)
