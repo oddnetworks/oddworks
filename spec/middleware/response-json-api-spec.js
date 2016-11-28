@@ -169,6 +169,11 @@ describe('Middleware Response JSON API', function () {
 			res = mockExpressResponse();
 			middleware = responseJsonApi({bus});
 			req.url = 'https://localhost:3000/collections';
+			req.query = {
+				offset: 0,
+				limit: null,
+				sort: null
+			};
 
 			return Promise.resolve(null)
 				// Load seed data (without using include)
@@ -187,6 +192,7 @@ describe('Middleware Response JSON API', function () {
 
 					return bus.query({role, cmd, type}, args).then(result => {
 						res.body = result;
+						res.meta = {total: result.length, count: result.length};
 					});
 				})
 				.then(() => {
@@ -209,6 +215,17 @@ describe('Middleware Response JSON API', function () {
 
 		it('has no included array', function () {
 			expect(res.body.included).not.toBeDefined();
+		});
+
+		it('has response metadata about result set', function () {
+			expect(res.body.meta.count).toBe(3);
+			expect(res.body.meta.total).toBe(3);
+		});
+
+		it('has response metadata about query parameters', function () {
+			expect(res.body.meta.query.offset).toBe(0);
+			expect(res.body.meta.query.limit).toBe(null);
+			expect(res.body.meta.query.sort).toBe(null);
 		});
 	});
 
@@ -278,7 +295,7 @@ describe('Middleware Response JSON API', function () {
 		});
 
 		it('adds a meta block', function () {
-			expect(res.body.meta).toEqual({channel: 'channel-id', platform: 'platform-id'});
+			expect(res.body.meta).toEqual({channel: 'channel-id', platform: 'platform-id', query: {include: ['entities', 'video']}});
 		});
 	});
 
@@ -379,15 +396,15 @@ describe('Middleware Response JSON API', function () {
 			resources = _.range(14).map(resourceFactory);
 
 			req = _.cloneDeep(REQ);
-			req.url = `/collections?${querystring.stringify({'page[limit]': 14, 'page[offset]': 0})}`;
+			req.url = `/collections?${querystring.stringify({limit: 14, offset: 0})}`;
 
 			res = mockExpressResponse();
 
 			res.body = resources;
 			res.body.linksQueries = {
 				next: {
-					'page[limit]': 10,
-					'page[offset]': 11
+					limit: 14,
+					offset: 15
 				}
 			};
 
@@ -413,20 +430,20 @@ describe('Middleware Response JSON API', function () {
 
 		it('sets the resource self link', function () {
 			const links = res.body.links;
-			expect(links.self).toBe('https://example.com:3000/collections?page%5Blimit%5D=14&page%5Boffset%5D=0');
+			expect(links.self).toBe('https://example.com:3000/collections?limit=14&offset=0');
 			const urlObject = url.parse(links.self);
 			const query = querystring.parse(urlObject.query);
-			expect(query['page[limit]']).toBe('14');
-			expect(query['page[offset]']).toBe('0');
+			expect(query.limit).toBe('14');
+			expect(query.offset).toBe('0');
 		});
 
 		it('sets the resource next link', function () {
 			const links = res.body.links;
-			expect(links.next).toBe('https://example.com:3000/collections?page%5Blimit%5D=10&page%5Boffset%5D=11');
+			expect(links.next).toBe('https://example.com:3000/collections?limit=14&offset=15');
 			const urlObject = url.parse(links.next);
 			const query = querystring.parse(urlObject.query);
-			expect(query['page[limit]']).toBe('10');
-			expect(query['page[offset]']).toBe('11');
+			expect(query.limit).toBe('14');
+			expect(query.offset).toBe('15');
 		});
 	});
 
@@ -805,6 +822,53 @@ describe('Middleware Response JSON API', function () {
 			expect(Object.keys(data.relationships).length).toBe(0);
 			expect(RESPONSES.NO_RELATIONSHIPS.body.included.length).toBe(0);
 			done();
+		});
+	});
+
+	describe('with query params', function () {
+		let req = null;
+		let res = null;
+		let middleware = null;
+		let resources = null;
+
+		const resourceFactory = () => {
+			const collection = _.cloneDeep(COLLECTION);
+			collection.id = _.uniqueId('random-resource-');
+			return collection;
+		};
+
+		beforeAll(function (done) {
+			middleware = responseJsonApi({bus, allowPartialIncluded: true});
+			resources = _.range(3).map(resourceFactory);
+			done();
+		});
+
+		it('formats meta with querystrings', function (done) {
+			req = _.cloneDeep(REQ);
+			req.url = '/search';
+			req.query = {
+				q: 'testing',
+				types: 'collection',
+				limit: 2,
+				offset: 5,
+				sort: '-title'
+			};
+
+			res = mockExpressResponse();
+
+			res.body = resources;
+
+			return middleware(req, res, err => {
+				if (err) {
+					return done.fail(err);
+				}
+				expect(res.body.meta.query.q).toBe('testing');
+				expect(res.body.meta.query.types).toBe('collection');
+				expect(res.body.meta.query.limit).toBe(2);
+				expect(res.body.meta.query.offset).toBe(5);
+				expect(res.body.meta.query.sort).toBe('-title');
+				done();
+			});
 		});
 	});
 });

@@ -1,6 +1,6 @@
 {
   "name": "@oddnetworks/oddworks",
-  "version": "4.3.6",
+  "version": "4.6.3",
   "description": "An extensible media platform for OTT devices.",
   "main": "./lib/oddworks.js",
   "scripts": {
@@ -41,6 +41,7 @@
     "dynalite": "~1.0.0",
     "fakeredis": "~1.0.0",
     "jasmine": "^2.5.2",
+    "jasmine-fail-fast": "^2.0.0",
     "jsonschema": "^1.1.0",
     "mock-aws": "^1.2.3",
     "nock": "^8.1.0",

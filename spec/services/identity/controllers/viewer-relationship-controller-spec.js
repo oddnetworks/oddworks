@@ -59,6 +59,17 @@ describe('Identity Viewers Relationship Controller', function () {
 		}
 	};
 
+	const OTHER_VIEWER = {
+		id: 'other@oddnetworks.com',
+		type: 'viewer',
+		channel: 'odd-networks',
+		relationships: {
+			watchlist: {
+				data: []
+			}
+		}
+	};
+
 	beforeAll(function (done) {
 		bus = this.createBus();
 		this.service = null;
@@ -115,6 +126,51 @@ describe('Identity Viewers Relationship Controller', function () {
 			done();
 		});
 
+		describe('as platform without viewer JWT', function () {
+			it('returns 401', function (done) {
+				const req = {
+					identity: {
+						channel: CHANNEL,
+						platform: PLATFORM
+					},
+					params: {
+						id: 'bingewatcher@oddnetworks.com'
+					}
+				};
+
+				this.controller.viewerRelationship.get(req, res, err => {
+					expect(err.isBoom).toBe(true);
+					expect(err.output.statusCode).toBe(401);
+					expect(err.output.payload.error).toBe('Unauthorized');
+					expect(err.output.payload.message).toBe('Viewer not found.');
+					done();
+				});
+			});
+		});
+
+		describe('as platform with non-matching JWT', function () {
+			it('returns 403', function (done) {
+				const req = {
+					identity: {
+						channel: CHANNEL,
+						platform: PLATFORM,
+						viewer: OTHER_VIEWER
+					},
+					params: {
+						id: 'bingewatcher@oddnetworks.com'
+					}
+				};
+
+				this.controller.viewerRelationship.get(req, res, err => {
+					expect(err.isBoom).toBe(true);
+					expect(err.output.statusCode).toBe(403);
+					expect(err.output.payload.error).toBe('Forbidden');
+					expect(err.output.payload.message).toBe('Viewer specified in JWT does not match requested viewer.');
+					done();
+				});
+			});
+		});
+
 		describe('as platform', function () {
 			it('returns the watchlist for a viewer', function (done) {
 				const req = {
@@ -163,6 +219,52 @@ describe('Identity Viewers Relationship Controller', function () {
 				body: {}
 			};
 			done();
+		});
+
+		describe('as platform without viewer JWT', function () {
+			it('returns 401', function (done) {
+				const req = {
+					identity: {
+						channel: CHANNEL,
+						platform: PLATFORM
+					},
+					params: {
+						id: 'bingewatcher@oddnetworks.com'
+					},
+					body: {id: VIDEO_2.id, type: 'video'}
+				};
+
+				this.controller.viewerRelationship.post(req, res, err => {
+					expect(err.isBoom).toBe(true);
+					expect(err.output.statusCode).toBe(401);
+					expect(err.output.payload.error).toBe('Unauthorized');
+					expect(err.output.payload.message).toBe('Viewer not found.');
+					done();
+				});
+			});
+		});
+
+		describe('as platform with non-matching JWT', function () {
+			it('returns 403', function (done) {
+				const req = {
+					identity: {
+						channel: CHANNEL,
+						platform: PLATFORM,
+						viewer: OTHER_VIEWER
+					},
+					params: {
+						id: 'bingewatcher@oddnetworks.com'
+					}
+				};
+
+				this.controller.viewerRelationship.post(req, res, err => {
+					expect(err.isBoom).toBe(true);
+					expect(err.output.statusCode).toBe(403);
+					expect(err.output.payload.error).toBe('Forbidden');
+					expect(err.output.payload.message).toBe('Viewer specified in JWT does not match requested viewer.');
+					done();
+				});
+			});
 		});
 
 		describe('as platform', function () {
@@ -219,6 +321,51 @@ describe('Identity Viewers Relationship Controller', function () {
 			done();
 		});
 
+		describe('as platform without viewer JWT', function () {
+			it('returns 401', function (done) {
+				const req = {
+					identity: {
+						channel: CHANNEL,
+						platform: PLATFORM
+					},
+					params: {
+						id: 'bingewatcher@oddnetworks.com'
+					},
+					body: {id: VIDEO_2.id, type: 'video'}
+				};
+
+				this.controller.viewerRelationship.delete(req, res, err => {
+					expect(err.isBoom).toBe(true);
+					expect(err.output.statusCode).toBe(401);
+					expect(err.output.payload.error).toBe('Unauthorized');
+					expect(err.output.payload.message).toBe('Viewer not found.');
+					done();
+				});
+			});
+		});
+
+		describe('as platform with non-matching JWT', function () {
+			it('returns 403', function (done) {
+				const req = {
+					identity: {
+						channel: CHANNEL,
+						platform: PLATFORM,
+						viewer: OTHER_VIEWER
+					},
+					params: {
+						id: 'bingewatcher@oddnetworks.com'
+					}
+				};
+
+				this.controller.viewerRelationship.delete(req, res, err => {
+					expect(err.isBoom).toBe(true);
+					expect(err.output.statusCode).toBe(403);
+					expect(err.output.payload.error).toBe('Forbidden');
+					expect(err.output.payload.message).toBe('Viewer specified in JWT does not match requested viewer.');
+					done();
+				});
+			});
+		});
 		describe('as platform', function () {
 			it('deletes an item on the watchlist for a viewer', function (done) {
 				const req = {

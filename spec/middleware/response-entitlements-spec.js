@@ -33,6 +33,7 @@ describe('Middleware: Response Entitlements', () => {
 		it('single entity', done => {
 			res.body.data = {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			};
 
@@ -45,16 +46,20 @@ describe('Middleware: Response Entitlements', () => {
 		it('single entity with included', done => {
 			res.body.data = {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			};
 			res.body.included = [{
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}, {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}, {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}];
 
@@ -70,12 +75,15 @@ describe('Middleware: Response Entitlements', () => {
 		it('multiple entities', done => {
 			res.body.data = [{
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}, {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}, {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}];
 
@@ -107,6 +115,7 @@ describe('Middleware: Response Entitlements', () => {
 		it('single entity', done => {
 			res.body.data = {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			};
 
@@ -119,16 +128,20 @@ describe('Middleware: Response Entitlements', () => {
 		it('single entity with included', done => {
 			res.body.data = {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			};
 			res.body.included = [{
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}, {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}, {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}];
 
@@ -144,12 +157,15 @@ describe('Middleware: Response Entitlements', () => {
 		it('multiple entities', done => {
 			res.body.data = [{
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}, {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}, {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}];
 
@@ -181,6 +197,7 @@ describe('Middleware: Response Entitlements', () => {
 		it('single entity', done => {
 			res.body.data = {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			};
 
@@ -193,16 +210,20 @@ describe('Middleware: Response Entitlements', () => {
 		it('single entity with included', done => {
 			res.body.data = {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			};
 			res.body.included = [{
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}, {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}, {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}];
 
@@ -218,12 +239,15 @@ describe('Middleware: Response Entitlements', () => {
 		it('multiple entities', done => {
 			res.body.data = [{
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}, {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}, {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			}];
 
@@ -251,6 +275,7 @@ describe('Middleware: Response Entitlements', () => {
 
 			res.body.data = {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			};
 
@@ -275,6 +300,7 @@ describe('Middleware: Response Entitlements', () => {
 
 			res.body.data = {
 				id: 'some-video',
+				type: 'video',
 				meta: {}
 			};
 
