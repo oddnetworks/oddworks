@@ -16,8 +16,8 @@ describe('Redis Search Store', function () {
 	let bus;
 
 	const VIDEOS = [
-		{id: 'video-1', type: 'video', title: 'Video One', channel: 'odd-networks', meta: {internal: {searchable: true}}},
-		{id: 'video-2', type: 'video', title: 'Video Two', channel: 'odd-networks', meta: {internal: {searchable: true}}},
+		{id: 'video-1', type: 'video', title: 'Video One', channel: 'odd-networks', tags: ['clips', 'short form', 'highlights'], meta: {internal: {searchable: true}}},
+		{id: 'video-2', type: 'video', title: 'Video Two', channel: 'odd-networks', tags: ['clips'], meta: {internal: {searchable: true}}},
 		{id: 'video-3', type: 'video', title: 'Video Three', channel: 'odd-networks', meta: {internal: {searchable: true}}},
 		{id: 'video-4', type: 'video', title: 'Video Four', channel: 'odd-networks'},
 		{id: 'video-5', type: 'video', title: 'Video Three', channel: 'odd-networks'}
@@ -35,6 +35,7 @@ describe('Redis Search Store', function () {
 		videoResults: null,
 		threeResults: null,
 		noResults: null,
+		tagResults: null,
 		threeResultsAgain: null
 	};
 
@@ -88,6 +89,11 @@ describe('Redis Search Store', function () {
 		.then(noResults => {
 			RESPONSES.noResults = noResults;
 
+			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'clip'});
+		})
+		.then(tagResults => {
+			RESPONSES.tagResults = tagResults;
+
 			return bus.sendCommand({role: 'store', cmd: 'remove', type: 'collection'}, {id: 'collection-3', type: 'collection', channel: 'odd-networks'});
 		})
 		.then(() => {
@@ -132,6 +138,13 @@ describe('Redis Search Store', function () {
 		it('should have 1 result of a video since collection was deindexed', function (done) {
 			expect(RESPONSES.threeResultsAgain.length).toBe(1);
 			expect(RESPONSES.threeResultsAgain[0].id).toBe('video-3');
+			done();
+		});
+	});
+
+	describe('Tag Results', function () {
+		it('should have 1 result', function (done) {
+			expect(RESPONSES.tagResults.length).toBe(2);
 			done();
 		});
 	});

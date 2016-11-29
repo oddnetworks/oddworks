@@ -16,7 +16,7 @@ describe('reds Store', function () {
 	let bus;
 
 	const VIDEOS = [
-		{id: 'video-1', type: 'video', title: 'Video One', channel: 'odd-networks', meta: {internal: {searchable: true}}},
+		{id: 'video-1', type: 'video', title: 'Video One', channel: 'odd-networks', genres: ['ott', 'televition', 'on-demand'], meta: {internal: {searchable: true}}},
 		{id: 'video-2', type: 'video', title: 'Video Two', channel: 'odd-networks', meta: {internal: {searchable: true}}},
 		{id: 'video-3', type: 'video', title: 'Video Three', channel: 'odd-networks', meta: {internal: {searchable: true}}},
 		{id: 'video-4', type: 'video', title: 'Video Four', channel: 'odd-networks'},
@@ -34,6 +34,7 @@ describe('reds Store', function () {
 	const RESPONSES = {
 		videoResults: null,
 		threeResults: null,
+		genreResults: null,
 		noResults: null,
 		threeResultsAgain: null
 	};
@@ -88,6 +89,11 @@ describe('reds Store', function () {
 		.then(noResults => {
 			RESPONSES.noResults = noResults;
 
+			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'ott'});
+		})
+		.then(genreResults => {
+			RESPONSES.genreResults = genreResults;
+
 			return bus.sendCommand({role: 'store', cmd: 'remove', type: 'collection'}, {id: 'collection-3', type: 'collection', channel: 'odd-networks'});
 		})
 		.then(() => {
@@ -124,6 +130,13 @@ describe('reds Store', function () {
 	describe('No Results', function () {
 		it('should have 0 results', function (done) {
 			expect(RESPONSES.noResults.length).toBe(0);
+			done();
+		});
+	});
+
+	describe('Genre Results', function () {
+		it('should have 1 result', function (done) {
+			expect(RESPONSES.genreResults.length).toBe(1);
 			done();
 		});
 	});
