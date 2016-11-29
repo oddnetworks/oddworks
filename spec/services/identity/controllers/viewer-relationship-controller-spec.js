@@ -287,7 +287,30 @@ describe('Identity Viewers Relationship Controller', function () {
 						done();
 					});
 			});
+
+			it('returns 422', function (done) {
+				const req = {
+					identity: {
+						channel: CHANNEL,
+						platform: PLATFORM,
+						viewer: VIEWER
+					},
+					params: {
+						id: 'bingewatcher@oddnetworks.com'
+					},
+					body: {id: 'viewer-1', type: 'viewer'}
+				};
+
+				this.controller.viewerRelationship.post(req, res, err => {
+					expect(err.isBoom).toBe(true);
+					expect(err.output.statusCode).toBe(422);
+					expect(err.output.payload.error).toBe('Unprocessable Entity');
+					expect(err.output.payload.message).toBe('Resources is not of type video or collection.');
+					done();
+				});
+			});
 		});
+
 		describe('as admin', function () {
 			it('posts an exiting item to the watchlist for a viewer', function (done) {
 				const req = {
@@ -385,6 +408,28 @@ describe('Identity Viewers Relationship Controller', function () {
 						expect(viewer.relationships.watchlist.data.length).toBe(2);
 						done();
 					});
+			});
+
+			it('returns 422', function (done) {
+				const req = {
+					identity: {
+						channel: CHANNEL,
+						platform: PLATFORM,
+						viewer: VIEWER
+					},
+					params: {
+						id: 'bingewatcher@oddnetworks.com'
+					},
+					body: {id: 'viewer-1', type: 'viewer'}
+				};
+
+				this.controller.viewerRelationship.delete(req, res, err => {
+					expect(err.isBoom).toBe(true);
+					expect(err.output.statusCode).toBe(422);
+					expect(err.output.payload.error).toBe('Unprocessable Entity');
+					expect(err.output.payload.message).toBe('Resources is not of type video or collection.');
+					done();
+				});
 			});
 		});
 		describe('as admin', function () {
