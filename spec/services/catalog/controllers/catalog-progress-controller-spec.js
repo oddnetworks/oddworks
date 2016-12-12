@@ -127,6 +127,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					expect(res.body.type).toBe('progress');
 					expect(res.body.position).toBe(131313);
 					expect(res.body.complete).toBe(false);
+					expect(res.body.meta.updatedAt).toBeDefined();
 
 					req.body = {
 						position: 20000,
