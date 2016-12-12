@@ -284,6 +284,7 @@ describe('Identity Viewers Relationship Controller', function () {
 				this.controller.viewerRelationship.post(req, res)
 					.then(viewer => {
 						expect(viewer.relationships.watchlist.data.length).toBe(3);
+						expect(viewer.relationships.watchlist.data[2].meta.updatedAt).toBeDefined();
 						done();
 					});
 			});
@@ -328,6 +329,7 @@ describe('Identity Viewers Relationship Controller', function () {
 				this.controller.viewerRelationship.post(req, res)
 					.then(viewer => {
 						expect(viewer.relationships.watchlist.data.length).toBe(3);
+						expect(viewer.relationships.watchlist.data[2].meta.updatedAt).toBeDefined();
 						done();
 					});
 			});
