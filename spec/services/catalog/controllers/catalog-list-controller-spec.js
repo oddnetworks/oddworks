@@ -301,7 +301,7 @@ describe('Catalog List Controller', function () {
 
 				it('return a 400 error', function () {
 					expect(error.output.payload.statusCode).toBe(400);
-					expect(error.output.payload.message).toBe('The "channel" query parameter is required');
+					expect(error.output.payload.message).toBe('The "channel" query parameter is required when none included in the JSON Web Token');
 				});
 			});
 
@@ -660,7 +660,7 @@ describe('Catalog List Controller', function () {
 
 				it('return a 422 error', function () {
 					expect(error.output.payload.statusCode).toBe(422);
-					expect(error.output.payload.message).toBe('The "channel" attribute is required');
+					expect(error.output.payload.message).toBe('The "channel" attribute is required when none included in the JSON Web Token');
 				});
 			});
 
