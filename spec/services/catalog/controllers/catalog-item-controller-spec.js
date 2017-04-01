@@ -1,4 +1,4 @@
-/* global describe, beforeAll, it, expect, spyOn, xdescribe */
+/* global describe, beforeAll, it, expect, spyOn */
 /* eslint prefer-arrow-callback: 0 */
 /* eslint-disable max-nested-callbacks */
 'use strict';
@@ -395,13 +395,170 @@ describe('Catalog Item Controller', function () {
 	});
 
 	describe('DELETE', function () {
+		const TYPE = 'video';
+
+		const bus = {
+			query() {
+				return Promise.resolve(null);
+			},
+			sendCommand() {
+				return Promise.resolve(null);
+			}
+		};
+
+		const handler = CatalogItemController.create({bus, type: TYPE});
+
 		describe('platform request', function () {
-			describe('not found', function () {
+			const req = createRequest({
+				method: 'DELETE',
+				params: {
+					id: 'VIDEO_ID'
+				},
+				identity: {
+					platform: {id: 'PLATFORM'},
+					channel: {id: 'CHANNEL'}
+				}
+			});
+
+			const res = createResponse();
+
+			let execError = null;
+
+			beforeAll(function (done) {
+				handler(req, res, err => {
+					execError = err || null;
+					return done();
+				});
+			});
+
+			it('rejects with a forbidden error', function () {
+				expect(execError instanceof Error).toBe(true);
+				expect(execError.message).toBe(`Platforms may not delete resources`);
+				const payload = _.get(execError, 'output.payload', {});
+				expect(payload.statusCode).toBe(403);
 			});
 		});
 
 		describe('admin request', function () {
-			describe('not found', function () {
+			const request = createRequest({
+				method: 'DELETE',
+				params: {
+					id: 'VIDEO_ID'
+				},
+				identity: {
+					audience: ['admin']
+				},
+				query: {
+					channel: 'channel-id'
+				}
+			});
+
+			describe('when channel query param missing', function () {
+				const req = _.merge({}, request, {
+					query: {
+						channel: null
+					}
+				});
+
+				const res = createResponse();
+
+				let execError = null;
+
+				beforeAll(function (done) {
+					handler(req, res, err => {
+						execError = err || null;
+						return done();
+					});
+				});
+
+				it('rejects with a bad request error', function () {
+					expect(execError instanceof Error).toBe(true);
+					expect(execError.message).toBe(`The "channel" query parameter is required when none included in the JSON Web Token`);
+					const payload = _.get(execError, 'output.payload', {});
+					expect(payload.statusCode).toBe(400);
+				});
+			});
+
+			describe('when channel not found', function () {
+				const req = request;
+				const res = createResponse();
+
+				let execError = null;
+
+				beforeAll(function (done) {
+					spyOn(bus, 'query').and.returnValue(Promise.resolve(null));
+
+					handler(req, res, err => {
+						execError = err || null;
+						return done();
+					});
+				});
+
+				it('rejects with a forbidden error', function () {
+					expect(execError instanceof Error).toBe(true);
+					expect(execError.message).toBe(`Channel "channel-id" does not exist`);
+					const payload = _.get(execError, 'output.payload', {});
+					expect(payload.statusCode).toBe(403);
+				});
+			});
+
+			describe('when channel present', function () {
+				const req = request;
+				const res = createResponse();
+
+				let execError = null;
+
+				beforeAll(function (done) {
+					spyOn(bus, 'query').and.returnValue(
+						Promise.resolve({type: 'channel', id: req.query.channel})
+					);
+
+					spyOn(bus, 'sendCommand').and.returnValue(
+						Promise.resolve(true)
+					);
+
+					handler(req, res, err => {
+						execError = err || null;
+						return done();
+					});
+				});
+
+				it('does not have an error', function () {
+					expect(execError).toBe(null);
+				});
+
+				it('calls store get() for channel', function () {
+					expect(bus.query).toHaveBeenCalledTimes(1);
+
+					let args = bus.query.calls.argsFor(0);
+					const pattern = args[0];
+					args = args[1];
+
+					expect(pattern).toEqual({role: 'store', cmd: 'get', type: 'channel'});
+					expect(args.type).toBe('channel');
+					expect(args.id).toEqual('channel-id');
+				});
+
+				it('calls catalog removeItem() for resource', function () {
+					expect(bus.sendCommand).toHaveBeenCalledTimes(1);
+
+					let args = bus.sendCommand.calls.argsFor(0);
+					const pattern = args[0];
+					args = args[1];
+
+					expect(pattern).toEqual({role: 'catalog', cmd: 'removeItem'});
+					expect(args.type).toBe(TYPE);
+					expect(args.id).toBe(req.params.id);
+					expect(args.channel).toEqual('channel-id');
+				});
+
+				it('sets status code 200', function () {
+					expect(res.statusCode).toBe(200);
+				});
+
+				it('assigns an empty body', function () {
+					expect(res.body).toEqual({});
+				});
 			});
 		});
 	});
