@@ -14,8 +14,10 @@ exports.createBus = () => {
 
 exports.handleError = done => {
 	return function (err) {
-		console.error('Error report from testing:');
-		console.error(err.stack);
+		err = err || 'Reported error Object is falsy';
+		console.error();
+		console.error('-- Error report from testing:');
+		console.error(err.stack || err.message || err);
 		return done.fail(err);
 	};
 };

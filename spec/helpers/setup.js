@@ -3,14 +3,15 @@
 'use strict';
 const support = require('../support/');
 
-const SETUP_TIMEOUT = 5000;
-
-beforeAll(function (done) {
+beforeAll(function () {
+	console.log('jasmine test beforeAll setup');
 	this.createBus = support.createBus;
 	this.handleError = support.handleError;
-	done();
-}, SETUP_TIMEOUT);
+	console.log('jasmine test beforeAll setup complete');
+});
 
-afterAll(function (done) {
-	done();
+afterAll(function () {
+	console.log();
+	console.log('jasmine test afterAll teardown');
+	console.log('jasmine test afterAll teardown complete');
 });
