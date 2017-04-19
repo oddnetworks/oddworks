@@ -680,6 +680,77 @@ describe('Redis Store', function () {
 			});
 		});
 
+		describe('with paging', function () {
+			const RESULTS = {
+				page1: null,
+				page2: null
+			};
+
+			const limit = 5;
+
+			beforeAll(function (done) {
+				Promise.resolve(null)
+					// Get the first page.
+					.then(() => {
+						return bus.query({role, cmd: 'scan', type}, {
+							channel: 'hbogo',
+							limit,
+							lastEvaluatedKey: {}
+						});
+					})
+					.then(res => {
+						RESULTS.page1 = res;
+					})
+					// Get the second page using the lastEvaluatedKey.
+					.then(() => {
+						return bus.query({role, cmd: 'scan', type}, {
+							channel: 'hbogo',
+							limit,
+							lastEvaluatedKey: RESULTS.page1.lastEvaluatedKey
+						});
+					})
+					.then(res => {
+						RESULTS.page2 = res;
+					})
+					.then(done)
+					.catch(this.handleError(done));
+			});
+
+			it('returns requested pages', function () {
+				expect(RESULTS.page1).toBeTruthy();
+				expect(RESULTS.page2).toBeTruthy();
+
+				expect(Array.isArray(RESULTS.page1.results)).toBe(true);
+				expect(Array.isArray(RESULTS.page2.results)).toBe(true);
+
+				expect(typeof RESULTS.page1.lastEvaluatedKey.cursor).toBe('number');
+				expect(typeof RESULTS.page2.lastEvaluatedKey.cursor).toBe('number');
+			});
+
+			it('has fuzzy length limit', function () {
+				expect(RESULTS.page1.results.length >= limit).toBe(true);
+				expect(RESULTS.page2.results.length >= limit).toBe(true);
+			});
+
+			it('has no duplicates between pages', function () {
+				const firstPage = RESULTS.page1.results.map(item => item.id);
+				const secondPage = RESULTS.page2.results.map(item => item.id);
+
+				secondPage.forEach(id => {
+					expect(firstPage).not.toContain(id);
+				});
+			});
+
+			it('returns only specified type', function () {
+				let types = RESULTS.page1.results.map(item => item.type);
+				types = types.concat(RESULTS.page2.results.map(item => item.type));
+				types = _.uniq(types);
+
+				expect(types.length).toBe(1);
+				expect(types[0]).toBe('video');
+			});
+		});
+
 		describe('with wrong channel', function () {
 			let results;
 
