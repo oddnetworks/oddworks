@@ -24,7 +24,6 @@
     "body-parser": "~1.15.0",
     "boom": "~4.2.0",
     "debug": "~2.2.0",
-    "dynamodb-marshaler": "~2.0.0",
     "express": "~4.14.0",
     "header-parser": "~1.0.0",
     "jsonwebtoken": "~7.1.0",
