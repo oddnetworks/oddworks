@@ -133,6 +133,18 @@ Get updates on Odd Networks's development and chat with the project maintainers 
 * Submit an [issue](https://github.com/oddnetworks/oddworks/issues).
 * Read and subscribe to [The Odd Networks Tech Blog](http://oddcast.oddnetworks.com/).
 
+## Docker
+We use Docker to check that our tests run on the different versions of Node.
+If you have Docker running, you can use the Dockerfiles like this:
+- build an image from the Dockerfile that you want to use 
+    ```
+	docker build -t image_name -f name_of_dockerfile .
+	```
+- run the docker image that was just built
+    ```
+	docker run --rm image_name
+	```
+
 ## More Information
 
 For additional help getting [up and running with Oddworks have a look at this blog post](https://medium.com/@OddNetworks/up-and-running-with-the-oddworks-server-199c897c4224#.n0pes4t1n)
