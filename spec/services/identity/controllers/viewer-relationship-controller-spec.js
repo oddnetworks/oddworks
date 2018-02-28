@@ -55,6 +55,17 @@ describe('Identity Viewers Relationship Controller', function () {
 					{id: VIDEO_1.id, type: 'video'},
 					{id: COLLECTION_1.id, type: 'collection'}
 				]
+			},
+			library: {
+				data: [
+					{id: VIDEO_1.id, type: 'video'},
+					{id: COLLECTION_1.id, type: 'collection'}
+				]
+			},
+			platforms: {
+				data: [
+					{id: 'apple-ios', type: 'platform'}
+				]
 			}
 		}
 	};
@@ -65,6 +76,12 @@ describe('Identity Viewers Relationship Controller', function () {
 		channel: 'odd-networks',
 		relationships: {
 			watchlist: {
+				data: []
+			},
+			library: {
+				data: []
+			},
+			platforms: {
 				data: []
 			}
 		}
@@ -94,7 +111,9 @@ describe('Identity Viewers Relationship Controller', function () {
 		.then(service => {
 			this.service = service;
 			this.controller = {
-				viewerRelationship: new service.ViewerRelationshipController({bus, relationship: 'watchlist'})
+				viewerRelationshipWatchlist: new service.ViewerRelationshipController({bus, relationship: 'watchlist'}),
+				viewerRelationshipLibrary: new service.ViewerRelationshipController({bus, relationship: 'library'}),
+				viewerRelationshipPlatforms: new service.ViewerRelationshipController({bus, relationship: 'platforms'})
 			};
 		})
 		// Initialize an catalog service
@@ -138,7 +157,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					}
 				};
 
-				this.controller.viewerRelationship.get(req, res, err => {
+				this.controller.viewerRelationshipWatchlist.get(req, res, err => {
 					expect(err.isBoom).toBe(true);
 					expect(err.output.statusCode).toBe(401);
 					expect(err.output.payload.error).toBe('Unauthorized');
@@ -161,7 +180,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					}
 				};
 
-				this.controller.viewerRelationship.get(req, res, err => {
+				this.controller.viewerRelationshipWatchlist.get(req, res, err => {
 					expect(err.isBoom).toBe(true);
 					expect(err.output.statusCode).toBe(403);
 					expect(err.output.payload.error).toBe('Forbidden');
@@ -184,7 +203,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					}
 				};
 
-				this.controller.viewerRelationship.get(req, res, () => {
+				this.controller.viewerRelationshipWatchlist.get(req, res, () => {
 					expect(res.body.length).toBe(2);
 					done();
 				});
@@ -203,10 +222,88 @@ describe('Identity Viewers Relationship Controller', function () {
 					}
 				};
 
-				this.controller.viewerRelationship.get(req, res, () => {
+				this.controller.viewerRelationshipWatchlist.get(req, res, () => {
 					expect(res.body.length).toBe(2);
 					done();
 				});
+			});
+		});
+	});
+
+	describe('as platform', function () {
+		it('returns the library for a viewer', function (done) {
+			const req = {
+				identity: {
+					channel: CHANNEL,
+					platform: PLATFORM,
+					viewer: VIEWER
+				},
+				params: {
+					id: 'bingewatcher@oddnetworks.com'
+				}
+			};
+
+			this.controller.viewerRelationshipLibrary.get(req, res, () => {
+				expect(res.body.length).toBe(2);
+				done();
+			});
+		});
+	});
+	describe('as admin', function () {
+		it('returns the library for a viewer', function (done) {
+			const req = {
+				identity: {
+					channel: CHANNEL,
+					platform: PLATFORM,
+					audience: ['admin']
+				},
+				params: {
+					id: 'bingewatcher@oddnetworks.com'
+				}
+			};
+
+			this.controller.viewerRelationshipLibrary.get(req, res, () => {
+				expect(res.body.length).toBe(2);
+				done();
+			});
+		});
+	});
+
+	describe('as platform', function () {
+		it('returns the platforms for a viewer', function (done) {
+			const req = {
+				identity: {
+					channel: CHANNEL,
+					platform: PLATFORM,
+					viewer: VIEWER
+				},
+				params: {
+					id: 'bingewatcher@oddnetworks.com'
+				}
+			};
+
+			this.controller.viewerRelationshipPlatforms.get(req, res, () => {
+				expect(res.body.length).toBe(1);
+				done();
+			});
+		});
+	});
+	describe('as admin', function () {
+		it('returns the platforms for a viewer', function (done) {
+			const req = {
+				identity: {
+					channel: CHANNEL,
+					platform: PLATFORM,
+					audience: ['admin']
+				},
+				params: {
+					id: 'bingewatcher@oddnetworks.com'
+				}
+			};
+
+			this.controller.viewerRelationshipPlatforms.get(req, res, () => {
+				expect(res.body.length).toBe(1);
+				done();
 			});
 		});
 	});
@@ -234,7 +331,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					body: {id: VIDEO_2.id, type: 'video'}
 				};
 
-				this.controller.viewerRelationship.post(req, res, err => {
+				this.controller.viewerRelationshipWatchlist.post(req, res, err => {
 					expect(err.isBoom).toBe(true);
 					expect(err.output.statusCode).toBe(401);
 					expect(err.output.payload.error).toBe('Unauthorized');
@@ -257,7 +354,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					}
 				};
 
-				this.controller.viewerRelationship.post(req, res, err => {
+				this.controller.viewerRelationshipWatchlist.post(req, res, err => {
 					expect(err.isBoom).toBe(true);
 					expect(err.output.statusCode).toBe(403);
 					expect(err.output.payload.error).toBe('Forbidden');
@@ -281,7 +378,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					body: {id: VIDEO_2.id, type: 'video'}
 				};
 
-				this.controller.viewerRelationship.post(req, res)
+				this.controller.viewerRelationshipWatchlist.post(req, res)
 					.then(viewer => {
 						expect(viewer.relationships.watchlist.data.length).toBe(3);
 						expect(viewer.relationships.watchlist.data[2].meta.updatedAt).toBeDefined();
@@ -302,7 +399,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					body: {id: 'viewer-1', type: 'viewer'}
 				};
 
-				this.controller.viewerRelationship.post(req, res, err => {
+				this.controller.viewerRelationshipWatchlist.post(req, res, err => {
 					expect(err.isBoom).toBe(true);
 					expect(err.output.statusCode).toBe(422);
 					expect(err.output.payload.error).toBe('Unprocessable Entity');
@@ -326,7 +423,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					body: {id: VIDEO_2.id, type: 'video'}
 				};
 
-				this.controller.viewerRelationship.post(req, res)
+				this.controller.viewerRelationshipWatchlist.post(req, res)
 					.then(viewer => {
 						expect(viewer.relationships.watchlist.data.length).toBe(3);
 						expect(viewer.relationships.watchlist.data[2].meta.updatedAt).toBeDefined();
@@ -359,7 +456,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					body: {id: VIDEO_2.id, type: 'video'}
 				};
 
-				this.controller.viewerRelationship.delete(req, res, err => {
+				this.controller.viewerRelationshipWatchlist.delete(req, res, err => {
 					expect(err.isBoom).toBe(true);
 					expect(err.output.statusCode).toBe(401);
 					expect(err.output.payload.error).toBe('Unauthorized');
@@ -382,7 +479,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					}
 				};
 
-				this.controller.viewerRelationship.delete(req, res, err => {
+				this.controller.viewerRelationshipWatchlist.delete(req, res, err => {
 					expect(err.isBoom).toBe(true);
 					expect(err.output.statusCode).toBe(403);
 					expect(err.output.payload.error).toBe('Forbidden');
@@ -405,7 +502,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					body: {id: VIDEO_2.id, type: 'video'}
 				};
 
-				this.controller.viewerRelationship.delete(req, res)
+				this.controller.viewerRelationshipWatchlist.delete(req, res)
 					.then(viewer => {
 						expect(viewer.relationships.watchlist.data.length).toBe(2);
 						done();
@@ -425,7 +522,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					body: {id: 'viewer-1', type: 'viewer'}
 				};
 
-				this.controller.viewerRelationship.delete(req, res, err => {
+				this.controller.viewerRelationshipWatchlist.delete(req, res, err => {
 					expect(err.isBoom).toBe(true);
 					expect(err.output.statusCode).toBe(422);
 					expect(err.output.payload.error).toBe('Unprocessable Entity');
@@ -448,7 +545,7 @@ describe('Identity Viewers Relationship Controller', function () {
 					body: {id: VIDEO_1.id, type: 'video'}
 				};
 
-				this.controller.viewerRelationship.delete(req, res)
+				this.controller.viewerRelationshipWatchlist.delete(req, res)
 					.then(viewer => {
 						expect(Array.isArray(viewer.relationships.watchlist.data)).toBe(false);
 						expect(viewer.relationships.watchlist.data.id).toBe(COLLECTION_1.id);
