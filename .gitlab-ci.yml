@@ -22,7 +22,7 @@ node-6:
     NODE_ENV: test
     DATA_DIR: ./test/data
   before_script:
-    - npm install
+    - npm install && npm rebuild
   script:
     - npm test
   cache:
@@ -36,7 +36,7 @@ node-8:
     NODE_ENV: test
     DATA_DIR: ./test/data
   before_script:
-    - npm install
+    - npm install && npm rebuild
   script:
     - npm test
   cache:
