@@ -127,7 +127,6 @@ Get updates on Odd Networks's development and chat with the project maintainers 
 
 * [Contribute] (http://github.com/oddnetworks/oddworks/tree/master/CONTRIBUTING.md)
 * Follow [@oddnetworks on Twitter](https://twitter.com/Oddnetworks).
-* Join [the official Slack room](http://slack.oddnetworks.com/).
 * Submit an [issue](https://gitlab.com/oddnetworks/oddworks/core/issues).
 * Read and subscribe to [The Odd Networks Tech Blog](http://oddcast.oddnetworks.com/).
 

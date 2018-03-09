@@ -28,14 +28,12 @@ We want to stress that the most important thing is the contibution and not the t
 We want to grow an open and stress free environment for all. The general rules are treat others with the respect you would like to be treated with. We reserve the right to refuse participation to any person whom we feel is not following these simple concepts. For a more detailed version of this code of conduct you can review [Our Official Code of Conduct.](http://contributor-covenant.org/version/1/4/) Violations or concerns with the Code of Conduct may be reported [here.](conduct@oddnetworks.com)
 
 ##  <a name="questions">Questions or Concerns</a>
-If you have a question regarding Oddworks or contributing, the best way to get in touch is via our [Slack Channel.](http://slack.oddnetworks.com) If you need to use good old email we can be reached [here.](mailto:hello@oddnetworks.com)
+If you have a question regarding Oddworks or contributing, the best way to get in touch is [here.](mailto:hello@oddnetworks.com)
 
 ##  <a name="structure">Project Structure</a>
 Oddworks is designed to be modular and supports a plug-in architecture. The main Oddworks project is a [Node](http://nodejs.org) module that is incorporated into your server project in order to interface with Oddworks, the API and make use of the device SDKs. Other modules include example projects that show how to create server architecures of different types or provide a rich set of sample data to get your started.
 
 Please make sure you submit your contribution to the correct project. If your contribution is a general plug-in, for example a new Store type, submit directly to Oddworks and we will find a home for it. If you have a new server example again submit to Oddworks. If you are offering a correction, bug fix or feature update be sure to submit to the correct repository.
-
-If you're not sure hit us up in our [Slack Channel.](http://slack.oddnetworks.com)
 
 ##  <a name="how">How to Contribute</a>
 No contribution is too small or unimportant. This is a large project and all help is appreciated. Your simple correction to a typo in our documentation may make the intent clearer and frees others to work on different parts of the project.
