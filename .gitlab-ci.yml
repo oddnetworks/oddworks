@@ -6,7 +6,7 @@ node-4:
   image: node:4
   variables:
     NODE_ENV: test
-    DATA_DIR=./test/data
+    DATA_DIR: ./test/data
   before_script:
     - npm install
   script:
@@ -20,7 +20,7 @@ node-6:
   image: node:6
   variables:
     NODE_ENV: test
-    DATA_DIR=./test/data
+    DATA_DIR: ./test/data
   before_script:
     - npm install
   script:
@@ -34,7 +34,7 @@ node-8:
   image: node:8
   variables:
     NODE_ENV: test
-    DATA_DIR=./test/data
+    DATA_DIR: ./test/data
   before_script:
     - npm install
   script:
