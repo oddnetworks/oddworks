@@ -1,4 +1,4 @@
 # Oddworks
 
-- [Resources](https://github.com/oddnetworks/oddworks/tree/master/docs/resources)
-- [Testing](https://github.com/oddnetworks/oddworks/tree/master/docs/testing)
+- [Resources](https://gitlab.com/oddnetworks/oddworks/core/tree/master/docs/resources)
+- [Testing](https://gitlab.com/oddnetworks/oddworks/core/tree/master/docs/testing)

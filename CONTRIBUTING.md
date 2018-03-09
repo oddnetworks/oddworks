@@ -35,7 +35,7 @@ Oddworks is designed to be modular and supports a plug-in architecture. The main
 
 Please make sure you submit your contribution to the correct project. If your contribution is a general plug-in, for example a new Store type, submit directly to Oddworks and we will find a home for it. If you have a new server example again submit to Oddworks. If you are offering a correction, bug fix or feature update be sure to submit to the correct repository.
 
-If you're not sure hit us up in our [Slack Channel.](http://slack.oddnetworks.com)  
+If you're not sure hit us up in our [Slack Channel.](http://slack.oddnetworks.com)
 
 ##  <a name="how">How to Contribute</a>
 No contribution is too small or unimportant. This is a large project and all help is appreciated. Your simple correction to a typo in our documentation may make the intent clearer and frees others to work on different parts of the project.
@@ -43,14 +43,14 @@ No contribution is too small or unimportant. This is a large project and all hel
 Here are the general areas you can contribute:
 
 ###<a name="bugs">Bugs</a>
-If you find a bug in any of our projects please create an issue in [Github](https://github.com/oddnetworks/oddworks) under the appropriate project.
+If you find a bug in any of our projects please [create an issue](https://gitlab.com/oddnetworks/oddworks) under the appropriate project.
 
 - **The best way to get a bug fixed is to code it up and submit a pull request explaining the issue and your fix. We like these a lot.**
 - Please be certain the 'bug' is a 'bug.' Its possible Oddworks is working as designed. In this case, your 'bug' would be a feature request.
 - Check that you have the latest versions of all modules.
 - Are you sure the bug is in Oddworks and not in your code used to implement Oddworks?
 - Check the existing issues to see if it has already been reported. Feel free to include additional information on existing issues.
-- When creating a new issue, create a clear title so its obvious what the problem is 
+- When creating a new issue, create a clear title so its obvious what the problem is
 - Describe, with as much detail as possible, what the problem is.
 - Indicate the expected behavior vs the actual behavior
 - List any steps that can be taken to reproduce the error **(being able to reproduce errors is the first step to fixing them)**
@@ -63,10 +63,10 @@ If you would like to see some new functionality added to Oddworks by all means m
 
 - **The best way to get a new feature into Oddworks is to code it up and submit a pull request outlining the feature and reasoning behind it**
 - We can not guarantee any features will be implemented but we can guarantee we will read requests and give them consideration.
-- Are you certain we don't already support your feature? Perhaps in a different way than your considered? 
+- Are you certain we don't already support your feature? Perhaps in a different way than your considered?
 - Would your feature contradict a design decision or specification we are commited to supporting?
 - Does the feature have broad appeal? i.e. would you be the only one to benefit?
-- If we don't already have your feature or its not on the roadmap create a new [Github](https://github.com/oddnetworks/oddworks) issue and tag it with 'feature request'
+- If we don't already have your feature or its not on the roadmap create a new [issue](https://gitlab.com/oddnetworks/oddworks/core/issues) and tag it with 'feature request'
 - Provide a clear title
 - Include a thorough description explaining the problem the feature request would solve and the methods to solve it, if known.
 - Explain any conflicts the new feature may create
@@ -76,7 +76,7 @@ If you would like to see some new functionality added to Oddworks by all means m
 ### <a name="code">Code</a>
 **By far our favorite type of contribution is code. If you see a bug or want a new feature implemented, the single best thing you can do to see it included is to provide us with the code to solve the problem.**
 
-- To submit code follow [githubs guidelines for working with pull requests](https://help.github.com/articles/using-pull-requests/)
+- To submit code follow [GitHub's guidelines for working with pull requests](https://help.github.com/articles/using-pull-requests/)
 - Always use a new branch for your pull request (keep this one in mind when you start work on a new item)
 - Limit the pull request to a single feature or bug
 - Provide a clear explanation of what the code submitted will do
@@ -90,10 +90,10 @@ If you would like to see some new functionality added to Oddworks by all means m
 - If you don't catch it Travis will and we will kick it back to you for review.
 - Don't reinvent wheels or ask us to make exceptions to specifications
 - We follow the [JSON API spec](http://jsonapi.org) any code you work with should continue to follow this spec.
- 
+
 ##  <a name="notes">Notes</a>
 **No contribution is too small. A single typo fix is helpful. All input is welcome and apprecitated.**
 
 Some suggestions or pull requests may not be implemented but we will strive to explain why when that happens. We are honored you chose to contribute to our project but sometimes or goals are in different areas. We offer our sincere thanks and hope there are no hard feelings if we don't add your feature.
 
-**Remember code is real. Talk is cheap. We welcome you to contribute to the discussion in our [Slack Channel.](http://slack.oddnetworks.com) but its not a bug report, feature request or pull request until you make an issue or a pull request in [Github](https://github.com/oddnetworks/oddworks).**
+**Remember code is real. Talk is cheap. We welcome you to contribute by [making an issue or a pull request](https://githlab.com/oddnetworks/oddworks/core).**
