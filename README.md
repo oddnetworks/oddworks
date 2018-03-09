@@ -1,6 +1,6 @@
 # Oddworks
 
-[![Build Status](https://travis-ci.org/oddnetworks/oddworks.svg?branch=master)](https://travis-ci.org/oddnetworks/oddworks)
+[![pipeline status](https://gitlab.com/oddnetworks/oddworks/core/badges/master/pipeline.svg)](https://gitlab.com/oddnetworks/oddworks/core/commits/master)
 [![Dependency Status](https://david-dm.org/oddnetworks/oddworks.svg)](https://david-dm.org/oddnetworks/oddworks)
 
 __Oddworks__ is an open source video distribution platform built to destroy the barriers to streaming television. Use it to:
@@ -27,7 +27,7 @@ _Become your own video distribution channel!_
 
 Oddworks is made up of several loosely coupled services. All of these services are automatically installed as dependencies when you install Oddworks. Oddworks uses [NPM](https://www.npmjs.com/) for dependency and package management (see [Technology](#technology) below).
 
-### [stores](https://github.com/oddnetworks/oddworks/tree/master/lib/stores)
+### [stores](https://gitlab.com/oddnetworks/oddworks/core/tree/master/lib/stores)
 
 The content server is also database agnostic in which you can store your entities in whatever database engine you like or a combination of any.
 
@@ -40,11 +40,11 @@ Currently Oddworks has support for the following:
 
 The implementation of these can be found in the `./lib/stores` directory.
 
-### [services](https://github.com/oddnetworks/oddworks/tree/master/lib/services)
+### [services](https://gitlab.com/oddnetworks/oddworks/core/tree/master/lib/services)
 
-- [catalog](https://github.com/oddnetworks/oddworks/blob/master/lib/services/catalog) (responsible for views, collections, and videos)
-- [identity](https://github.com/oddnetworks/oddworks/blob/master/lib/services/identity) (responsible for channels, platforms, viewers, authentication, and entitlements)
-- [server](https://github.com/oddnetworks/oddworks/blob/master/lib/services/identity) (a Node.js HTTP server)
+- [catalog](https://gitlab.com/oddnetworks/oddworks/core/blob/master/lib/services/catalog) (responsible for views, collections, and videos)
+- [identity](https://gitlab.com/oddnetworks/oddworks/core/blob/master/lib/services/identity) (responsible for channels, platforms, viewers, authentication, and entitlements)
+- [server](https://gitlab.com/oddnetworks/oddworks/core/blob/master/lib/services/identity) (a Node.js HTTP server)
 
 The implementation of these can be found in the `./lib/services` directory.
 
@@ -77,7 +77,7 @@ const oddworks = require('@oddnetworks/oddworks');
 
 ### CLI
 
-The [Oddworks CLI](https://github.com/oddnetworks/oddworks-cli) is also available
+The [Oddworks CLI](https://gitlab.com/oddnetworks/oddworks/core-cli) is also available
 
 ```
 > npm install -g @oddnetworks/oddworks-cli
@@ -92,8 +92,8 @@ Current example content server implementations can be found (with their instruct
 
 ## platform SDKs
 
-* [Apple iOS & tvOS SDK](https://github.com/oddnetworks/oddworks-ios-tvos-sdk) Used for iPhone, iPad, and Apple TV.
-* [Android SDK](https://github.com/oddnetworks/oddworks-android-sdk) Used for mobile, tablet, Android TV, and Fire TV.
+* [Apple iOS & tvOS SDK](https://gitlab.com/oddnetworks/oddworks/core-ios-tvos-sdk) Used for iPhone, iPad, and Apple TV.
+* [Android SDK](https://gitlab.com/oddnetworks/oddworks/core-android-sdk) Used for mobile, tablet, Android TV, and Fire TV.
 * [Roku SDK](https://github.com/oddnetworks/odd-roku-sdk)
 * [JavaScript SDK](https://github.com/oddnetworks/odd-javascript-sdk) for use in [Windows Universal](https://msdn.microsoft.com/en-us/windows/uwp/get-started/universal-application-platform-guide) and web applications.
 
@@ -128,7 +128,7 @@ Get updates on Odd Networks's development and chat with the project maintainers 
 * [Contribute] (http://github.com/oddnetworks/oddworks/tree/master/CONTRIBUTING.md)
 * Follow [@oddnetworks on Twitter](https://twitter.com/Oddnetworks).
 * Join [the official Slack room](http://slack.oddnetworks.com/).
-* Submit an [issue](https://github.com/oddnetworks/oddworks/issues).
+* Submit an [issue](https://gitlab.com/oddnetworks/oddworks/core/issues).
 * Read and subscribe to [The Odd Networks Tech Blog](http://oddcast.oddnetworks.com/).
 
 ## More Information

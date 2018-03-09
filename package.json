@@ -11,13 +11,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/oddnetworks/oddworks.git"
+    "url": "https://gitlab.com/oddnetworks/oddworks/core.git"
   },
   "author": "Odd Networks",
   "bugs": {
-    "url": "https://github.com/oddnetworks/oddworks/issues"
+    "url": "https://gitlab.com/oddnetworks/oddworks/core/issues"
   },
-  "homepage": "https://github.com/oddnetworks/oddworks",
+  "homepage": "https://gitlab.com/oddnetworks/oddworks/core",
   "dependencies": {
     "bcrypt": "^0.8.7",
     "bluebird": "~3.4.0",
