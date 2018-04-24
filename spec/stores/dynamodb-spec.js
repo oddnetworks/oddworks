@@ -78,9 +78,9 @@ describe('DynamoDB Store', function () {
 		bus = this.createBus();
 
 		const dynamodb = new AWS.DynamoDB({
-			accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-			secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-			region: process.env.AWS_DYNAMODB_REGION,
+			accessKeyId: 'x',
+			secretAccessKey: 'x',
+			region: 'us-east-1',
 			endpoint: process.env.AWS_DYNAMODB_ENDPOINT
 		});
 		Promise.promisifyAll(dynamodb);

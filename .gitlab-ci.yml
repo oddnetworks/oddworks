@@ -31,9 +31,6 @@ node-6:
   variables:
     NODE_ENV: test
     DATA_DIR: ./test/data
-    AWS_ACCESS_KEY_ID: x
-    AWS_SECRET_ACCESS_KEY: x
-    AWS_DYNAMODB_REGION: us-east-1
     AWS_DYNAMODB_ENDPOINT: http://dynamodb:8000
   before_script:
     - npm install && npm rebuild
