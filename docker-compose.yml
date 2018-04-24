@@ -1,0 +1,19 @@
+version: '3'
+services:
+  oddworks:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: oddnetworks/oddworks:dev
+    environment:
+      - NODE_ENV=test
+      - AWS_ACCESS_KEY_ID=x
+      - AWS_SECRET_ACCESS_KEY=x
+      - AWS_DYNAMODB_REGION=us-east-1
+      - AWS_DYNAMODB_ENDPOINT=http://dynamodb:8000
+    volumes:
+      - .:/opt/app
+    depends_on:
+      - dynamodb
+  dynamodb:
+    image: cnadiminti/dynamodb-local

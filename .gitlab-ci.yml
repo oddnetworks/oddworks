@@ -4,9 +4,16 @@ stages:
 node-4:
   stage: test
   image: node:4
+  services:
+    - name: cnadiminti/dynamodb-local
+      alias: dynamodb
   variables:
     NODE_ENV: test
     DATA_DIR: ./test/data
+    AWS_ACCESS_KEY_ID: x
+    AWS_SECRET_ACCESS_KEY: x
+    AWS_DYNAMODB_REGION: us-east-1
+    AWS_DYNAMODB_ENDPOINT: http://dynamodb:8000
   before_script:
     - npm install && npm rebuild
   script:
@@ -18,9 +25,13 @@ node-4:
 node-6:
   stage: test
   image: node:6
+  services:
+    - name: cnadiminti/dynamodb-local
+      alias: dynamodb
   variables:
     NODE_ENV: test
     DATA_DIR: ./test/data
+    AWS_DYNAMODB_ENDPOINT: http://dynamodb:8000
   before_script:
     - npm install && npm rebuild
   script:
@@ -32,9 +43,16 @@ node-6:
 node-8:
   stage: test
   image: node:8
+  services:
+    - name: cnadiminti/dynamodb-local
+      alias: dynamodb
   variables:
     NODE_ENV: test
     DATA_DIR: ./test/data
+    AWS_ACCESS_KEY_ID: x
+    AWS_SECRET_ACCESS_KEY: x
+    AWS_DYNAMODB_REGION: us-east-1
+    AWS_DYNAMODB_ENDPOINT: http://dynamodb:8000
   before_script:
     - npm install && npm rebuild
   script:

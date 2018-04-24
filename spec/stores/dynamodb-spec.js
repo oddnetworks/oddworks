@@ -5,7 +5,6 @@
 
 const Promise = require('bluebird');
 const _ = require('lodash');
-const dynalite = require('dynalite')({createTableMs: 1});
 const AWS = require('aws-sdk');
 
 const dynamodbStore = require('../../lib/stores/dynamodb/');
@@ -78,37 +77,39 @@ describe('DynamoDB Store', function () {
 	beforeAll(function (done) {
 		bus = this.createBus();
 
-		dynalite.listen(4567, err => {
-			if (err) {
-				return done.fail(err);
-			}
+		const dynamodb = new AWS.DynamoDB({
+			accessKeyId: 'x',
+			secretAccessKey: 'x',
+			region: 'us-east-1',
+			endpoint: process.env.AWS_DYNAMODB_ENDPOINT
+		});
+		Promise.promisifyAll(dynamodb);
 
-			const dynamodb = new AWS.DynamoDB({
-				accessKeyId: 'test',
-				secretAccessKey: 'test',
-				region: 'us-east-1',
-				endpoint: 'http://localhost:4567'
-			});
-			Promise.promisifyAll(dynamodb);
-
-			Promise
+		dynamodb.listTablesAsync()
+			.then(res => {
+				return Promise.all(_.map(res.TableNames, table => {
+					return dynamodb.deleteTableAsync({TableName: table});
+				}));
+			})
+			.then(() => {
+				return Promise
 				.all([
 					dynamodb.createTableAsync(TABLES.CHANNEL),
 					dynamodb.createTableAsync(TABLES.COLLECTION),
 					dynamodb.createTableAsync(TABLES.VIDEO)
-				])
-				.then(() => {
-					return dynamodbStore(bus, {
-						types: ['channel', 'video', 'collection'],
-						dynamodb
-					});
-				})
-				.then(store => {
-					this.store = store;
-					done();
-				})
-				.catch(this.handleError(done));
-		});
+				]);
+			})
+			.then(() => {
+				return dynamodbStore(bus, {
+					types: ['channel', 'video', 'collection'],
+					dynamodb
+				});
+			})
+			.then(store => {
+				this.store = store;
+				done();
+			})
+			.catch(this.handleError(done));
 	});
 
 	describe('cmd:get', function () {
@@ -888,7 +889,7 @@ describe('DynamoDB Store', function () {
 						});
 
 					// Add a randos to make sure they're not found.
-					entities.push({type: 'foo', id: _.sample(IDS)});
+					entities.push({type: 'video', id: 'does-not-exist'});
 					entities.push({type: 'video', id: 'bbarbaz-209348'});
 					entities.push({type: 'collection', id: 'bbarbaz-209348'});
 
