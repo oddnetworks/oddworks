@@ -37,7 +37,6 @@
   },
   "devDependencies": {
     "aws-sdk": "~2.6.0",
-    "dynalite": "~1.0.0",
     "fakeredis": "~1.0.0",
     "jasmine": "^2.5.2",
     "jasmine-fail-fast": "^2.0.0",
