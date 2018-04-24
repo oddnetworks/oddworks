@@ -5,7 +5,8 @@ node-4:
   stage: test
   image: node:4
   services:
-    - cnadiminti/dynamodb-local
+    - name: cnadiminti/dynamodb-local
+      alias: dynamodb
   variables:
     NODE_ENV: test
     DATA_DIR: ./test/data
@@ -25,7 +26,8 @@ node-6:
   stage: test
   image: node:6
   services:
-    - cnadiminti/dynamodb-local
+    - name: cnadiminti/dynamodb-local
+      alias: dynamodb
   variables:
     NODE_ENV: test
     DATA_DIR: ./test/data
@@ -45,7 +47,8 @@ node-8:
   stage: test
   image: node:8
   services:
-    - cnadiminti/dynamodb-local
+    - name: cnadiminti/dynamodb-local
+      alias: dynamodb
   variables:
     NODE_ENV: test
     DATA_DIR: ./test/data
