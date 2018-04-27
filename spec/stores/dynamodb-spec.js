@@ -681,9 +681,8 @@ describe('DynamoDB Store', function () {
 		beforeAll(function (done) {
 			Promise.resolve(entities)
 				.then(entities => {
-					const cmd = 'set';
 					return Promise.all(entities.map(entity => {
-						return bus.sendCommand({role, cmd, type}, entity);
+						return bus.sendCommand({role, cmd: 'set', type}, entity);
 					}));
 				})
 				.then(() => {
