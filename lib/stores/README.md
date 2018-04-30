@@ -97,9 +97,9 @@ The `args` Object must have an `.id`, `.type`, and `.channel` attribute. However
 * An Array of Objects with at least `{channel, type, id}`
 
 #### batchGet
-`bus.query({role: 'store', cmd: 'batchGet', type: TYPE}, args)`
+`bus.query({role: 'store', cmd: 'batchGet'}, args)`
 
-Scans for records of a specific `TYPE`.
+Scans for records identified by `keys`.
 
 **Args**
 

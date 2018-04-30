@@ -11,6 +11,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=x
       - AWS_DYNAMODB_REGION=us-east-1
       - AWS_DYNAMODB_ENDPOINT=http://dynamodb:8000
+    command: sh -c "/bin/bash"
     volumes:
       - .:/opt/app
     depends_on:

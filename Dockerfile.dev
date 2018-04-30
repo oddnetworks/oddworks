@@ -7,7 +7,8 @@ RUN \
 	chmod -R 777 /opt/app && \
 	apk update && \
 	apk --no-cache --update add \
-	bash make g++ python
+	bash make g++ python py-pip jq && \
+	pip install awscli
 
 ENV PS1='$NODE_ENV-${debian_chroot:+($debian_chroot)}\u@\h:\w\$ ' \
 	PROJECT_DIR=/opt/app \

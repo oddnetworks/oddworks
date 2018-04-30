@@ -66,6 +66,29 @@ Fetch a single content item.
 
 When fetching a catalog resource it will be decorated with `meta` Object requested from **{role: 'identity', cmd: 'config'}**. The provided channel, platform and viewer objects will be used to compose the `meta` Object using a merge algorithm.
 
+#### fetchItems
+`bus.query({role: 'catalog', cmd: 'fetchItems'}, args)`
+
+Fetch multiple content items.
+
+**Args**
+
+* args.channel - String *required*
+* args.keys - Array of key Objects containing `id` and `type`
+  * id - String *required*
+  * type - String *required*
+* args.platform - Object
+* args.viewer - Object
+
+**Result**
+
+* An Array of Objects with at least `{channel, type, id, meta}`
+
+**Feature Flags**
+
+When fetching catalog resources it will be decorated with `meta` Object requested from **{role: 'identity', cmd: 'config'}**. The provided channel, platform, and viewer objects will be used to compose the `meta` Object using a merge algorithm.
+
+
 #### fetchItemList
 `bus.query({role: 'catalog', cmd: 'fetchItemList'}, args)`
 
