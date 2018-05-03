@@ -5,7 +5,7 @@
 
 const Promise = require('bluebird');
 const _ = require('lodash');
-const uuid = require('node-uuid');
+const uuid = require('uuid/v4');
 const IdentityChannelsListController = require('../../../../lib/services/identity/controllers/identity-channels-list-controller');
 
 describe('Identity Channels List Controller', function () {
@@ -48,13 +48,13 @@ describe('Identity Channels List Controller', function () {
 
 		bus.commandHandler({role: 'store', cmd: 'set', type: 'channel'}, args => {
 			args = _.cloneDeep(args);
-			args.id = args.id || uuid.v4();
+			args.id = args.id || uuid();
 			return Promise.resolve(_.merge({type: 'channel'}, args));
 		});
 
 		bus.queryHandler({role: 'store', cmd: 'scan', type: 'channel'}, () => {
 			const results = _.range(11).map(() => {
-				return {type: 'channel', id: uuid.v4()};
+				return {type: 'channel', id: uuid()};
 			});
 
 			results.push({type: 'channel', id: 'jwt-channel-id'});

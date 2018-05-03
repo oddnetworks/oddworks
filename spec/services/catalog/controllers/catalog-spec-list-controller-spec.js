@@ -5,7 +5,7 @@
 
 const Promise = require('bluebird');
 const _ = require('lodash');
-const uuid = require('node-uuid');
+const uuid = require('uuid/v4');
 const CatalogSpecListController = require('../../../../lib/services/catalog/controllers/catalog-spec-list-controller');
 
 describe('Catalog List Controller', function () {
@@ -57,7 +57,7 @@ describe('Catalog List Controller', function () {
 		bus.queryHandler({role: 'catalog', cmd: 'fetchItemSpecList'}, args => {
 			const channel = args.channel;
 			const results = _.range(11).map(() => {
-				return {channel, type, id: uuid.v4()};
+				return {channel, type, id: uuid()};
 			});
 
 			return Promise.resolve(results);
