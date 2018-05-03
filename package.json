@@ -1,13 +1,13 @@
 {
   "name": "@oddnetworks/oddworks",
-  "version": "4.11.0",
+  "version": "4.11.1",
   "description": "An extensible media platform for OTT devices.",
   "main": "./lib/oddworks.js",
   "scripts": {
     "setup": "npm link",
     "test": "NODE_ENV=test npm run lint && NODE_ENV=test npm run sec && NODE_ENV=test jasmine",
     "lint": "xo",
-    "sec": "./node_modules/.bin/nsp check -o summary --warn-only"
+    "sec": "nsp check --reporter summary"
   },
   "repository": {
     "type": "git",
@@ -19,21 +19,21 @@
   },
   "homepage": "https://gitlab.com/oddnetworks/oddworks/core",
   "dependencies": {
-    "bcrypt": "^0.8.7",
-    "bluebird": "~3.4.0",
+    "bcrypt": "~2.0.1",
+    "bluebird": "~3.5.1",
     "body-parser": "~1.18.2",
-    "boom": "~4.3.1",
-    "debug": "~2.6.9",
+    "boom": "~7.2.0",
+    "debug": "~3.1.0",
     "express": "~4.16.3",
     "header-parser": "~1.0.0",
     "jsonwebtoken": "~8.2.1",
-    "lodash": "~4.16.0",
-    "node-uuid": "~1.4.0",
+    "lodash": "~4.17.10",
     "object-property-natural-sort": "0.0.4",
-    "oddcast": "2.2.0",
+    "oddcast": "~2.2.2",
     "redis-search": "~0.0.1",
-    "reds": "^0.2.5",
-    "superagent": "^3.8.2"
+    "reds": "~0.2.5",
+    "superagent": "~3.8.3",
+    "uuid": "~3.2.1"
   },
   "devDependencies": {
     "aws-sdk": "~2.6.0",
@@ -43,7 +43,7 @@
     "jsonschema": "^1.1.0",
     "mock-aws": "^1.2.3",
     "nock": "^8.1.0",
-    "nsp": "~2.6.0",
+    "nsp": "~3.2.1",
     "xo": "0.16.0"
   },
   "xo": {

@@ -5,7 +5,7 @@
 
 const Promise = require('bluebird');
 const _ = require('lodash');
-const uuid = require('node-uuid');
+const uuid = require('uuid/v4');
 const IdentityListController = require('../../../../lib/services/identity/controllers/identity-list-controller');
 
 describe('Identity List Controller', function () {
@@ -62,7 +62,7 @@ describe('Identity List Controller', function () {
 			bus.queryHandler({role: 'store', cmd: 'scan', type}, args => {
 				const channel = args.channel;
 				return Promise.resolve(_.range(11).map(() => {
-					return {channel, type, id: uuid.v4()};
+					return {channel, type, id: uuid()};
 				}));
 			});
 		});
