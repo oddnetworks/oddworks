@@ -12,12 +12,9 @@ node-6:
     DATA_DIR: ./test/data
     AWS_DYNAMODB_ENDPOINT: http://dynamodb:8000
   before_script:
-    - npm install && npm rebuild
+    - npm install
   script:
     - npm test
-  cache:
-    paths:
-      - node_modules/
 
 node-8:
   stage: test
@@ -30,12 +27,9 @@ node-8:
     DATA_DIR: ./test/data
     AWS_DYNAMODB_ENDPOINT: http://dynamodb:8000
   before_script:
-    - npm install && npm rebuild
+    - npm install
   script:
     - npm test
-  cache:
-    paths:
-      - node_modules/
 
 node-10:
   stage: test
@@ -48,9 +42,6 @@ node-10:
     DATA_DIR: ./test/data
     AWS_DYNAMODB_ENDPOINT: http://dynamodb:8000
   before_script:
-    - npm install && npm rebuild
+    - npm install
   script:
     - npm test
-  cache:
-    paths:
-      - node_modules/
