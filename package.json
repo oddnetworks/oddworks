@@ -7,7 +7,7 @@
     "setup": "npm link",
     "test": "NODE_ENV=test npm run lint && NODE_ENV=test npm run sec && NODE_ENV=test jasmine",
     "lint": "xo",
-    "sec": "nsp check --reporter summary"
+    "sec": "nsp check --reporter table --filter 2"
   },
   "repository": {
     "type": "git",
