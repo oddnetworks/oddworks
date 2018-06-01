@@ -49,63 +49,63 @@ describe('reds Store', function () {
 			types: ['video', 'collection'],
 			redis: redisClient
 		})
-		.then(store => {
-			return redsStore(bus, {
-				redis: redisClient,
-				autoindex: true,
-				store
-			});
-		})
-		.then(() => {
-			return catalogService(bus, {
-				updateFrequency: 1
-			});
-		})
-		.then(() => {
-			// Set the all resources and let autoindexing happen
-			return Promise.map(RESOURCES, resource => {
-				return bus.sendCommand({role: 'store', cmd: 'set', type: resource.type}, resource);
-			});
-		})
-		.then(() => {
-			// Force indexing of collections
-			return Promise.map(COLLECTIONS, resource => {
-				return bus.sendCommand({role: 'store', cmd: 'index', type: resource.type}, {id: resource.id, text: resource.title});
-			});
-		})
-		.then(() => {
-			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'video'});
-		})
-		.then(videoResults => {
-			RESPONSES.videoResults = videoResults;
+			.then(store => {
+				return redsStore(bus, {
+					redis: redisClient,
+					autoindex: true,
+					store
+				});
+			})
+			.then(() => {
+				return catalogService(bus, {
+					updateFrequency: 1
+				});
+			})
+			.then(() => {
+				// Set the all resources and let autoindexing happen
+				return Promise.map(RESOURCES, resource => {
+					return bus.sendCommand({role: 'store', cmd: 'set', type: resource.type}, resource);
+				});
+			})
+			.then(() => {
+				// Force indexing of collections
+				return Promise.map(COLLECTIONS, resource => {
+					return bus.sendCommand({role: 'store', cmd: 'index', type: resource.type}, {id: resource.id, text: resource.title});
+				});
+			})
+			.then(() => {
+				return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'video'});
+			})
+			.then(videoResults => {
+				RESPONSES.videoResults = videoResults;
 
-			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'three'});
-		})
-		.then(threeResults => {
-			RESPONSES.threeResults = threeResults;
+				return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'three'});
+			})
+			.then(threeResults => {
+				RESPONSES.threeResults = threeResults;
 
-			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'Al is awesome'});
-		})
-		.then(noResults => {
-			RESPONSES.noResults = noResults;
+				return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'Al is awesome'});
+			})
+			.then(noResults => {
+				RESPONSES.noResults = noResults;
 
-			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'ott'});
-		})
-		.then(genreResults => {
-			RESPONSES.genreResults = genreResults;
+				return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'ott'});
+			})
+			.then(genreResults => {
+				RESPONSES.genreResults = genreResults;
 
-			return bus.sendCommand({role: 'store', cmd: 'remove', type: 'collection'}, {id: 'collection-3', type: 'collection', channel: 'odd-networks'});
-		})
-		.then(() => {
-			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'three'});
-		})
-		.then(threeResultsAgain => {
-			RESPONSES.threeResultsAgain = threeResultsAgain;
+				return bus.sendCommand({role: 'store', cmd: 'remove', type: 'collection'}, {id: 'collection-3', type: 'collection', channel: 'odd-networks'});
+			})
+			.then(() => {
+				return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'three'});
+			})
+			.then(threeResultsAgain => {
+				RESPONSES.threeResultsAgain = threeResultsAgain;
 
-			return true;
-		})
-		.then(done)
-		.catch(this.handleError(done));
+				return true;
+			})
+			.then(done)
+			.catch(this.handleError(done));
 	});
 
 	describe('"video" Results', function () {

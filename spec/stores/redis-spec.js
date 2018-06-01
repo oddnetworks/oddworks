@@ -40,11 +40,11 @@ describe('Redis Store', function () {
 			types: ['channel', 'video', 'collection'],
 			redis: fakeredis.createClient()
 		})
-		.then(store => {
-			this.store = store;
-			done();
-		})
-		.catch(this.handleError(done));
+			.then(store => {
+				this.store = store;
+				done();
+			})
+			.catch(this.handleError(done));
 	});
 
 	describe('cmd:get', function () {

@@ -92,8 +92,7 @@ describe('DynamoDB Store', function () {
 				}));
 			})
 			.then(() => {
-				return Promise
-				.all([
+				return Promise.all([
 					dynamodb.createTableAsync(TABLES.CHANNEL),
 					dynamodb.createTableAsync(TABLES.COLLECTION),
 					dynamodb.createTableAsync(TABLES.VIDEO)

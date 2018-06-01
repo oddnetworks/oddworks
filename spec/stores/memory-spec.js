@@ -35,11 +35,11 @@ describe('Memory Store', function () {
 		memoryStore(bus, {
 			types: ['channel', 'video', 'collection']
 		})
-		.then(store => {
-			this.store = store;
-			done();
-		})
-		.catch(done.fail);
+			.then(store => {
+				this.store = store;
+				done();
+			})
+			.catch(done.fail);
 	});
 
 	describe('cmd:get', function () {

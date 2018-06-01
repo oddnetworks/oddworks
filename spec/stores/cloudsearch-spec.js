@@ -45,66 +45,66 @@ describe('Cloudsearch Store', function () {
 			types: ['video', 'collection'],
 			redis: redisClient
 		})
-		.then(store => {
-			return cloudsearchStore(bus, {
-				cloudsearch,
-				store
-			});
-		})
-		.then(() => {
-			return Promise.map(RESOURCES, resource => {
-				return bus.sendCommand({role: 'store', cmd: 'set', type: resource.type}, resource);
-			});
-		})
-		.then(() => {
-			aws.mock('CloudSearchDomain', 'search', {
-				hits: {
-					hit: [
-						{id: 'video-1'},
-						{id: 'video-2'},
-						{id: 'video-3'}
-					]
-				}
-			});
+			.then(store => {
+				return cloudsearchStore(bus, {
+					cloudsearch,
+					store
+				});
+			})
+			.then(() => {
+				return Promise.map(RESOURCES, resource => {
+					return bus.sendCommand({role: 'store', cmd: 'set', type: resource.type}, resource);
+				});
+			})
+			.then(() => {
+				aws.mock('CloudSearchDomain', 'search', {
+					hits: {
+						hit: [
+							{id: 'video-1'},
+							{id: 'video-2'},
+							{id: 'video-3'}
+						]
+					}
+				});
 
-			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'video'});
-		})
-		.then(videoResults => {
-			RESPONSES.videoResults = videoResults;
+				return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'video'});
+			})
+			.then(videoResults => {
+				RESPONSES.videoResults = videoResults;
 
-			aws.restore('CloudSearchDomain');
-			aws.mock('CloudSearchDomain', 'search', {
-				hits: {
-					hit: [
-						{id: 'video-3'},
-						{id: 'collection-3'}
-					]
-				}
-			});
+				aws.restore('CloudSearchDomain');
+				aws.mock('CloudSearchDomain', 'search', {
+					hits: {
+						hit: [
+							{id: 'video-3'},
+							{id: 'collection-3'}
+						]
+					}
+				});
 
-			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'three'});
-		})
-		.then(threeResults => {
-			RESPONSES.threeResults = threeResults;
+				return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'three'});
+			})
+			.then(threeResults => {
+				RESPONSES.threeResults = threeResults;
 
-			aws.restore('CloudSearchDomain');
-			aws.mock('CloudSearchDomain', 'search', {
-				hits: {
-					hit: []
-				}
-			});
+				aws.restore('CloudSearchDomain');
+				aws.mock('CloudSearchDomain', 'search', {
+					hits: {
+						hit: []
+					}
+				});
 
-			return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'Al is awesome'});
-		})
-		.then(noResults => {
-			RESPONSES.noResults = noResults;
+				return bus.query({role: 'store', cmd: 'query'}, {channel: 'odd-networks', query: 'Al is awesome'});
+			})
+			.then(noResults => {
+				RESPONSES.noResults = noResults;
 
-			aws.restore('CloudSearchDomain');
+				aws.restore('CloudSearchDomain');
 
-			return true;
-		})
-		.then(done)
-		.catch(this.handleError(done));
+				return true;
+			})
+			.then(done)
+			.catch(this.handleError(done));
 	});
 
 	describe('"video" Results', function () {

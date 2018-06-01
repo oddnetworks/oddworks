@@ -64,35 +64,35 @@ describe('Identity Viewers Relationship Controller', function () {
 			types: ['channel', 'platform', 'viewer', 'video', 'collection', 'progress'],
 			redis: fakeredis.createClient()
 		})
-		.then(store => {
-			this.store = store;
-		})
-		.then(() => {
-			return catalogService(bus);
-		})
-		.then(service => {
-			this.service = service;
-			this.controller = {
-				progress: new service.CatalogProgressController({bus})
-			};
-		})
-		.then(() => {
-			return identityService(bus, {
-				jwtSecret: 'secret'
-			});
-		})
-		.then(() => {
-			return Promise.join(
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'video'}, VIDEO_1),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'video'}, VIDEO_2),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER),
-				() => {}
-			);
-		})
-		.then(done)
-		.catch(this.handleError(done));
+			.then(store => {
+				this.store = store;
+			})
+			.then(() => {
+				return catalogService(bus);
+			})
+			.then(service => {
+				this.service = service;
+				this.controller = {
+					progress: new service.CatalogProgressController({bus})
+				};
+			})
+			.then(() => {
+				return identityService(bus, {
+					jwtSecret: 'secret'
+				});
+			})
+			.then(() => {
+				return Promise.join(
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'video'}, VIDEO_1),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'video'}, VIDEO_2),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER),
+					() => {}
+				);
+			})
+			.then(done)
+			.catch(this.handleError(done));
 	});
 
 	describe('POST', function () {

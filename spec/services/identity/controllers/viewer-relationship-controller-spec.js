@@ -99,40 +99,40 @@ describe('Identity Viewers Relationship Controller', function () {
 			types: ['channel', 'platform', 'viewer', 'video', 'collection'],
 			redis: fakeredis.createClient()
 		})
-		.then(store => {
-			this.store = store;
-		})
-		// Initialize an identity service
-		.then(() => {
-			return identityService(bus, {
-				jwtSecret: 'secret'
-			});
-		})
-		.then(service => {
-			this.service = service;
-			this.controller = {
-				viewerRelationshipWatchlist: new service.ViewerRelationshipController({bus, relationship: 'watchlist'}),
-				viewerRelationshipLibrary: new service.ViewerRelationshipController({bus, relationship: 'library'}),
-				viewerRelationshipPlatforms: new service.ViewerRelationshipController({bus, relationship: 'platforms'})
-			};
-		})
-		// Initialize an catalog service
-		.then(() => {
-			return catalogService(bus);
-		})
-		.then(() => {
-			return Promise.join(
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'video'}, VIDEO_1),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'video'}, VIDEO_2),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'collection'}, COLLECTION_1),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER),
-				() => {}
-			);
-		})
-		.then(done)
-		.catch(this.handleError(done));
+			.then(store => {
+				this.store = store;
+			})
+			// Initialize an identity service
+			.then(() => {
+				return identityService(bus, {
+					jwtSecret: 'secret'
+				});
+			})
+			.then(service => {
+				this.service = service;
+				this.controller = {
+					viewerRelationshipWatchlist: new service.ViewerRelationshipController({bus, relationship: 'watchlist'}),
+					viewerRelationshipLibrary: new service.ViewerRelationshipController({bus, relationship: 'library'}),
+					viewerRelationshipPlatforms: new service.ViewerRelationshipController({bus, relationship: 'platforms'})
+				};
+			})
+			// Initialize an catalog service
+			.then(() => {
+				return catalogService(bus);
+			})
+			.then(() => {
+				return Promise.join(
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'video'}, VIDEO_1),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'video'}, VIDEO_2),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'collection'}, COLLECTION_1),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER),
+					() => {}
+				);
+			})
+			.then(done)
+			.catch(this.handleError(done));
 	});
 
 	describe('GET', function () {
