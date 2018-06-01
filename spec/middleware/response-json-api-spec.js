@@ -732,17 +732,17 @@ describe('Middleware Response JSON API', function () {
 			middleware = responseJsonApi({bus});
 
 			return Promise.resolve(null)
-					.then(() => {
-						return middleware(req, res, err => {
-							if (err) {
-								return done.fail(err);
-							}
-							RESPONSES.ARRAY_RES = res;
-						});
-					})
-					.then(_.noop)
-					.then(done)
-					.catch(done.fail);
+				.then(() => {
+					return middleware(req, res, err => {
+						if (err) {
+							return done.fail(err);
+						}
+						RESPONSES.ARRAY_RES = res;
+					});
+				})
+				.then(_.noop)
+				.then(done)
+				.catch(done.fail);
 		});
 
 		it('returns a valid api response', function () {

@@ -25,24 +25,24 @@ describe('Catalog Service fetchItem', function () {
 			types: ['collectionSpec', 'collection'],
 			redis: fakeredis.createClient()
 		})
-		.then(store => {
-			this.store = store;
-		})
-		// Initialize an identity service
-		.then(() => {
-			return identityService(bus, {});
-		})
-		// Initialize the catalog service
-		.then(() => {
-			return catalogService(bus, {
-				updateFrequency: 1
-			});
-		})
-		.then(service => {
-			this.service = service;
-		})
-		.then(done)
-		.catch(this.handleError(done));
+			.then(store => {
+				this.store = store;
+			})
+			// Initialize an identity service
+			.then(() => {
+				return identityService(bus, {});
+			})
+			// Initialize the catalog service
+			.then(() => {
+				return catalogService(bus, {
+					updateFrequency: 1
+				});
+			})
+			.then(service => {
+				this.service = service;
+			})
+			.then(done)
+			.catch(this.handleError(done));
 	});
 
 	describe('with spec and maxAge', function () {

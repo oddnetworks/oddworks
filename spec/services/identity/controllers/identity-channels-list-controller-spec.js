@@ -261,7 +261,7 @@ describe('Identity Channels List Controller', function () {
 
 				it('assigns the resource to the response body', function () {
 					expect(res.body.type).toBe(type);
-					expect(res.body.id).toMatch(/^[0-9a-z\-]{36}$/);
+					expect(res.body.id).toMatch(/^[0-9a-z-]{36}$/);
 					expect(res.body.foo).toBe('bar');
 				});
 			});

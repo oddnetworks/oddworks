@@ -187,37 +187,37 @@ describe('Identity Service Controller', function () {
 			types: ['channel', 'platform', 'viewer'],
 			redis: fakeredis.createClient()
 		})
-		.then(store => {
-			this.store = store;
-		})
-		// Initialize an identity service
-		.then(() => {
-			return identityService(bus, {
-				jwtSecret: 'secret'
-			});
-		})
-		.then(service => {
-			this.service = service;
-			this.controller = {
-				login: new service.IdentityLoginController({bus})
-			};
-		})
-		.then(() => {
-			return Promise.join(
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL_NATIVE),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL_PROXY),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL_EVALUATORS),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM_NATIVE),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM_PROXY),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM_EVALUATORS),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER_NATIVE),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER_PROXY),
-				bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER_EVALUATORS),
-				() => {}
-			);
-		})
-		.then(done)
-		.catch(this.handleError(done));
+			.then(store => {
+				this.store = store;
+			})
+			// Initialize an identity service
+			.then(() => {
+				return identityService(bus, {
+					jwtSecret: 'secret'
+				});
+			})
+			.then(service => {
+				this.service = service;
+				this.controller = {
+					login: new service.IdentityLoginController({bus})
+				};
+			})
+			.then(() => {
+				return Promise.join(
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL_NATIVE),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL_PROXY),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'channel'}, CHANNEL_EVALUATORS),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM_NATIVE),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM_PROXY),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'platform'}, PLATFORM_EVALUATORS),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER_NATIVE),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER_PROXY),
+					bus.sendCommand({role: 'store', cmd: 'set', type: 'viewer'}, VIEWER_EVALUATORS),
+					() => {}
+				);
+			})
+			.then(done)
+			.catch(this.handleError(done));
 	});
 
 	describe('native login', function () {
