@@ -5,9 +5,8 @@
   "main": "./lib/oddworks.js",
   "scripts": {
     "setup": "npm link",
-    "test": "NODE_ENV=test npm run lint && NODE_ENV=test npm run sec && NODE_ENV=test jasmine",
-    "lint": "xo",
-    "sec": "nsp check --reporter table --filter 2"
+    "test": "NODE_ENV=test npm run lint && NODE_ENV=test jasmine",
+    "lint": "xo"
   },
   "repository": {
     "type": "git",
@@ -43,7 +42,6 @@
     "jsonschema": "^1.2.4",
     "mock-aws": "1.x.x",
     "nock": "8.x.x",
-    "nsp": "3.x.x",
     "xo": "^0.21.1"
   },
   "xo": {
